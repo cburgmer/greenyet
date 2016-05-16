@@ -1,6 +1,6 @@
 (defproject greenyet "0.1.0"
-  :description "Is your machine park green yet?"
-  :url "http://github.com/cburgmer/greenyet"
+  :description "Are my machines green yet?"
+  :url "https://github.com/cburgmer/greenyet"
   :license {:name "BSD 2-Clause"
             :url "http://opensource.org/licenses/BSD-2-Clause"}
   :plugins [[lein-ring "0.9.7"]]
