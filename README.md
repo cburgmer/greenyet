@@ -1,14 +1,11 @@
 # greenyet
 
-A Clojure library designed to ... well, that part is up to you.
+One dashboard to rule them all, those lousy machines. Are they green yet?
 
 ## Usage
 
-FIXME
+    $ lein ring server
 
-## License
+## More
 
-Copyright © 2016 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Reach out to [@cburgmer](https://twitter.com/cburgmer) for feedback and ideas.
