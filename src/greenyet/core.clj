@@ -25,14 +25,17 @@
 
 
 (defn- host-as-html [host]
-  [:td {:class (:color host)}
+  [:td {:class (str/join " " ["host" (some-> host
+                                             :color
+                                             name)])}
    (:host host)])
 
 (defn- environment-table-as-html [environments rows]
   (html [:head
-         [:style (str/join "\n" [".green { background-color: green; }"
-                                 ".yellow { background-color: yellow; }"
-                                 ".red { background-color: red; }"])]]
+         [:style (str/join "\n" [".host.green { background-color: green; }"
+                                 ".host.yellow { background-color: yellow; }"
+                                 ".host { background-color: red; }"
+                                 ".host:empty { background: gray; }"])]]
         [:body
          [:table
           [:thead
