@@ -4,7 +4,7 @@ One dashboard to rule them all, those lousy machines. Are they green yet?
 
 ## Usage
 
-    $ lein ring server
+    $ CONFIG_DIR=example lein ring server
     $ ./example/run_mock_service.sh
 
 ## More
