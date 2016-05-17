@@ -1,12 +1,30 @@
 (ns greenyet.core
   (:require [hiccup.core :refer [html]]
+            [clj-http.client :as client]
             [clojure.string :as str]))
 
-(def dummy-host-list [{:host "abcd1234" :environment "DEV" :system "MySystem"}
-                      {:host "xyz123" :environment "PROD" :system "MySystem"}
-                      {:host "fgh456" :environment "DEV" :system "AnotherSystem"}])
 
-(def host-list-with-status (map #(assoc % :color :yellow) dummy-host-list))
+(def dummy-host-list [{:host "localhost" :environment "DEV" :system "MySystem"}
+                      {:host "localhost" :environment "PROD" :system "MySystem"}
+                      {:host "localhost" :environment "DEV" :system "AnotherSystem"}])
+
+
+(defn- fetch-status [url]
+  (try
+    (let [status (:status (client/get url))]
+      (if (= 200 status)
+        :green
+        :red))
+    (catch Exception _
+      :red)))
+
+(defn- status-url [host]
+  (format "http://%s:8000/found" (:host host)))
+
+(defn- with-status [host]
+  (let [status (fetch-status (status-url host))]
+    (assoc host
+           :color status)))
 
 
 (defn- host-for-environment [host-list environment]
@@ -51,7 +69,11 @@
                 (host-as-html host))])]]]))
 
 
-(defn handler [x]
+(defn- render [host-list-with-status]
   (let [environments (distinct (map :environment host-list-with-status))
         rows (environment-table environments host-list-with-status)]
-    {:body (environment-table-as-html environments rows)}))
+    (environment-table-as-html environments rows)))
+
+(defn handler [_]
+  (let [host-list-with-status (map with-status dummy-host-list)]
+    {:body (render host-list-with-status)}))
