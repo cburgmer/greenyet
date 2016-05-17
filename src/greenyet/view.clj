@@ -42,7 +42,7 @@
           [:tbody
            (for [row rows]
              [:tr
-              [:td (:system (first row))]
+              [:td (some :system row)]
               (for [host row]
                 (host-as-html host))])]]]))
 
