@@ -13,6 +13,8 @@
 (defn- environment-table [environments host-list]
   (->> host-list
        (group-by :system)
+       (sort (fn [[system1 _] [system2 _]]
+               (compare system1 system2)))
        (map (fn [[_ system-host-list]]
               (system-row environments system-host-list)))))
 
@@ -46,6 +48,6 @@
 
 
 (defn render [host-list-with-status]
-  (let [environments (distinct (map :environment host-list-with-status))
+  (let [environments (sort (distinct (map :environment host-list-with-status)))
         rows (environment-table environments host-list-with-status)]
     (environment-table-as-html environments rows)))
