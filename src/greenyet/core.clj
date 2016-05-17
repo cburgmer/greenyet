@@ -6,11 +6,6 @@
             [clojure.string :as str]))
 
 
-(def dummy-host-list [{:hostname "localhost" :environment "DEV" :system "MySystem"}
-                      {:hostname "localhost" :environment "PROD" :system "MySystem"}
-                      {:hostname "localhost" :environment "DEV" :system "AnotherSystem"}])
-
-
 (defn- fetch-status [url]
   (try
     (let [status (:status (client/get url))]
@@ -19,10 +14,6 @@
         :red))
     (catch Exception _
       :red)))
-
-(defn- read-status-url-config [config-dir]
-  (let [config-file (io/file config-dir "status_url.yaml")]
-    (yaml/parse-string (slurp config-file))))
 
 (defn- status-url [host status-url-config]
   (let [host-config (first (filter #(= (:system %) (:system host)) status-url-config))
@@ -83,12 +74,21 @@
     (environment-table-as-html environments rows)))
 
 
+(defn- read-host-list [config-dir]
+  (let [host-list-file (io/file config-dir "hosts.yaml")]
+    (yaml/parse-string (slurp host-list-file))))
+
+(defn- read-status-url-config [config-dir]
+  (let [config-file (io/file config-dir "status_url.yaml")]
+    (yaml/parse-string (slurp config-file))))
+
 (def status-url-config (read-status-url-config "example"))
 
 (println status-url-config)
 
 
 (defn handler [_]
-  (let [host-list-with-status (map (fn [host] (with-status host status-url-config))
-                                   dummy-host-list)]
+  (let [host-list (read-host-list "example")
+        host-list-with-status (map (fn [host] (with-status host status-url-config))
+                                   host-list)]
     {:body (render host-list-with-status)}))

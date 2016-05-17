@@ -1,0 +1,10 @@
+---
+- hostname: localhost
+  environment: DEV
+  system: MySystem
+- hostname: localhost
+  environment: PROD
+  system: MySystem
+- hostname: localhost
+  environment: DEV
+  system: AnotherSystem
