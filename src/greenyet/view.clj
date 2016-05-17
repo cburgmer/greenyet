@@ -25,6 +25,7 @@
 
 (defn- environment-table-as-html [environments rows]
   (html [:head
+         [:meta {:http-equiv "refresh" :content "5"}]
          [:style (str/join "\n" [".host.green { background-color: green; }"
                                  ".host.yellow { background-color: yellow; }"
                                  ".host { background-color: red; }"
