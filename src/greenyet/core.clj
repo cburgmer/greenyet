@@ -1,12 +1,14 @@
 (ns greenyet.core
   (:require [hiccup.core :refer [html]]
             [clj-http.client :as client]
+            [clj-yaml.core :as yaml]
+            [clojure.java.io :as io]
             [clojure.string :as str]))
 
 
-(def dummy-host-list [{:host "localhost" :environment "DEV" :system "MySystem"}
-                      {:host "localhost" :environment "PROD" :system "MySystem"}
-                      {:host "localhost" :environment "DEV" :system "AnotherSystem"}])
+(def dummy-host-list [{:hostname "localhost" :environment "DEV" :system "MySystem"}
+                      {:hostname "localhost" :environment "PROD" :system "MySystem"}
+                      {:hostname "localhost" :environment "DEV" :system "AnotherSystem"}])
 
 
 (defn- fetch-status [url]
@@ -18,11 +20,17 @@
     (catch Exception _
       :red)))
 
-(defn- status-url [host]
-  (format "http://%s:8000/found" (:host host)))
+(defn- read-status-url-config [config-dir]
+  (let [config-file (io/file config-dir "status_url.yaml")]
+    (yaml/parse-string (slurp config-file))))
 
-(defn- with-status [host]
-  (let [status (fetch-status (status-url host))]
+(defn- status-url [host status-url-config]
+  (let [host-config (first (filter #(= (:system %) (:system host)) status-url-config))
+        url-template (:url host-config)]
+    (str/replace url-template #"%host%" (:hostname host))))
+
+(defn- with-status [host status-url-config]
+  (let [status (fetch-status (status-url host status-url-config))]
     (assoc host
            :color status)))
 
@@ -46,7 +54,7 @@
   [:td {:class (str/join " " ["host" (some-> host
                                              :color
                                              name)])}
-   (:host host)])
+   (:hostname host)])
 
 (defn- environment-table-as-html [environments rows]
   (html [:head
@@ -74,6 +82,13 @@
         rows (environment-table environments host-list-with-status)]
     (environment-table-as-html environments rows)))
 
+
+(def status-url-config (read-status-url-config "example"))
+
+(println status-url-config)
+
+
 (defn handler [_]
-  (let [host-list-with-status (map with-status dummy-host-list)]
+  (let [host-list-with-status (map (fn [host] (with-status host status-url-config))
+                                   dummy-host-list)]
     {:body (render host-list-with-status)}))

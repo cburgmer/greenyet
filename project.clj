@@ -8,5 +8,6 @@
                  [ring/ring-core "1.4.0"]
                  [ring/ring-jetty-adapter "1.4.0"]
                  [clj-http "3.1.0"]
-                 [hiccup "1.0.5"]]
+                 [hiccup "1.0.5"]
+                 [clj-yaml "0.4.0"]]
   :ring {:handler greenyet.core/handler})

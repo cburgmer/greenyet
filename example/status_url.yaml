@@ -1,0 +1,5 @@
+---
+- system: MySystem
+  url: http://%host%:8000/found
+- system: AnotherSystem
+  url: http://%host%:8000/not_found
