@@ -1,41 +1,33 @@
 (ns greenyet.status
   (:require [cheshire.core :as j]
-            [clj-http
-             [client :as client]
-             [util :refer [parse-content-type]]]
+            [clj-http.client :as client]
             [clojure.string :as str]))
 
-(defn- application-status [json]
-  (let [color (:color json)]
+(defn- application-status [json color-conf]
+  (let [color (get json (keyword color-conf))]
     (cond
       (= "green" color) :green
       (= "yellow" color) :yellow
       :else :red)))
 
-(defn- content-type [response]
-  (-> response
-      :headers
-      (get "Content-Type")
-      parse-content-type
-      :content-type))
-
-(defn- fetch-status [url]
+(defn- fetch-status [url {color-conf :color}]
   (try
     (let [response (client/get url)]
       (if (= 200 (:status response))
-        (if (= :application/json (content-type response))
-          (application-status (j/parse-string (:body response) true))
+        (if color-conf
+          (application-status (j/parse-string (:body response) true)
+                              color-conf)
           :green)
         :red))
     (catch Exception _
       :red)))
 
-(defn- status-url [host status-url-config]
-  (let [host-config (first (filter #(= (:system %) (:system host)) status-url-config))
-        url-template (:url host-config)]
-    (str/replace url-template #"%host%" (:hostname host))))
+(defn- status-url [host {url-template :url}]
+  (str/replace url-template #"%host%" (:hostname host)))
 
 (defn with-status [host status-url-config]
-  (let [status (fetch-status (status-url host status-url-config))]
+  (let [host-config (first (filter #(= (:system %) (:system host)) status-url-config))
+        url (status-url host host-config)
+        status (fetch-status url host-config)]
     (assoc host
            :color status)))

@@ -11,6 +11,11 @@
   [{:service "the_service"
     :url url}])
 
+(defn- a-url-config-with-status [url key]
+  [{:service "the_service"
+    :url url
+    :color key}])
+
 (defn- json-response [body]
   (fn [_]
     {:status 200
@@ -33,14 +38,25 @@
   (testing "should return red for color red"
     (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:color "red"})}
       (is (= :red
-             (:color (sut/with-status a-host (a-url-config "http://%host%/status.json")))))))
+             (:color (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" "color")))))))
 
   (testing "should return yellow for color yellow"
     (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:color "yellow"})}
       (is (= :yellow
-             (:color (sut/with-status a-host (a-url-config "http://%host%/status.json")))))))
+             (:color (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" "color")))))))
 
   (testing "should return green for color green"
-    (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:color "green"})}
+    (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:status "green"})}
+      (is (= :green
+             (:color (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" "status")))))))
+
+  (testing "should fail if status key is configured but no JSON is provided"
+    (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (fn [_] {:status 200
+                                                                                :body "some body"})}
+      (is (= :red
+             (:color (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" "status")))))))
+
+  (testing "should only evaluate JSON if configured"
+    (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:color "red"})}
       (is (= :green
              (:color (sut/with-status a-host (a-url-config "http://%host%/status.json"))))))))

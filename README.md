@@ -25,8 +25,11 @@ Config as YAML (remember JSON is a subset):
 
     ``` yaml
     ---
-    - system: MySystem
-      url: http://%host%:8080/status
+    - system: SimpleSystem
+      url: http://%host%:8080/
+    - system: SystemWithStatusJson
+      url: http://%host%:8080/status.json
+      color: "status"
     ```
 
 2. Host list `hosts.yaml`
@@ -35,10 +38,10 @@ Config as YAML (remember JSON is a subset):
     ---
     - hostname: 192.168.0.10
       environment: DEV
-      system: MySystem
+      system: SimpleSystem
     - hostname: 192.168.10.42
       environment: PROD
-      system: MySystem
+      system: SimpleSystem
     ```
 
 ## More

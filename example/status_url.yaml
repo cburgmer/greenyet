@@ -5,5 +5,7 @@
   url: http://%host%:8000/not_found
 - system: SystemStatusRed
   url: http://%host%:8000/red.json
+  color: color
 - system: SystemStatusYellow
   url: http://%host%:8000/yellow.json
+  color: status
