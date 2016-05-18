@@ -7,4 +7,7 @@
   system: MySystem
 - hostname: localhost
   environment: PROD
-  system: AnotherSystem
+  system: SystemWith404
+- hostname: localhost
+  environment: DEV
+  system: SystemStatusRed

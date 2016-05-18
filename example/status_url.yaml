@@ -1,5 +1,7 @@
 ---
 - system: MySystem
   url: http://%host%:8000/found
-- system: AnotherSystem
+- system: SystemWith404
   url: http://%host%:8000/not_found
+- system: SystemStatusRed
+  url: http://%host%:8000/red.json

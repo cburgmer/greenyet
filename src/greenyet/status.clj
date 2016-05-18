@@ -1,12 +1,29 @@
 (ns greenyet.status
-  (:require [clj-http.client :as client]
+  (:require [cheshire.core :as j]
+            [clj-http
+             [client :as client]
+             [util :refer [parse-content-type]]]
             [clojure.string :as str]))
+
+(defn- application-status [json]
+  (if (= "green" (:color json))
+    :green
+    :red))
+
+(defn- content-type [response]
+  (-> response
+      :headers
+      (get "Content-Type")
+      parse-content-type
+      :content-type))
 
 (defn- fetch-status [url]
   (try
-    (let [status (:status (client/get url))]
-      (if (= 200 status)
-        :green
+    (let [response (client/get url)]
+      (if (= 200 (:status response))
+        (if (= :application/json (content-type response))
+          (application-status (j/parse-string (:body response)))
+          :green)
         :red))
     (catch Exception _
       :red)))
