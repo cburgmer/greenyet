@@ -6,6 +6,7 @@
 - system: SystemStatusRed
   url: http://%host%:8000/red.json
   color: color
+  message: message
 - system: SystemStatusYellow
   url: http://%host%:8000/yellow.json
   color: status

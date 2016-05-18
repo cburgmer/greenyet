@@ -16,6 +16,12 @@
     :url url
     :color key}])
 
+(defn- a-url-config-with-status-and-message [url color-key message-key]
+  [{:service "the_service"
+    :url url
+    :color color-key
+    :message message-key}])
+
 (defn- json-response [body]
   (fn [_]
     {:status 200
@@ -94,4 +100,12 @@
     (testing "should report error"
       (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (fn [_] {:status 200
                                                                                   :body "some body"})}
-        (is (some? (:message (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" "status")))))))))
+        (is (some? (:message (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" "status")))))))
+
+    (testing "should return message if configured"
+      (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:status "green"
+                                                                                         :message "up and running"})}
+        (is (= "up and running"
+               (:message (sut/with-status a-host (a-url-config-with-status-and-message "http://%host%/status.json"
+                                                                                       "status"
+                                                                                       "message")))))))))

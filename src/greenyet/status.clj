@@ -16,24 +16,31 @@
     (or (get color-conf key)
         default)))
 
-(defn- application-status [json color-conf]
+(defn- status-color [json color-conf]
   (let [color (extract-color json color-conf)
         green-value (color-value color-conf :green-value "green")
         yellow-value (color-value color-conf :yellow-value "yellow")]
-    {:color (cond
-              (= green-value color) :green
-              (= yellow-value color) :yellow
-              :else :red)}))
+    (cond
+      (= green-value color) :green
+      (= yellow-value color) :yellow
+      :else :red)))
 
-(defn- fetch-status [url {color-conf :color}]
+(defn- status-message [json message-conf]
+  (get json (keyword message-conf)))
+
+(defn- application-status [response {color-conf :color message-conf :message}]
+  (if color-conf
+          (let [json (j/parse-string (:body response) true)]
+            {:color (status-color json color-conf)
+             :message (status-message json message-conf)})
+          {:color :green
+           :message "OK"}))
+
+(defn- fetch-status [url host-config]
   (try
     (let [response (client/get url)]
       (if (= 200 (:status response))
-        (if color-conf
-          (application-status (j/parse-string (:body response) true)
-                              color-conf)
-          {:color :green
-           :message "OK"})
+        (application-status response host-config)
         {:color :red}))
     (catch Exception e
       {:color :red
