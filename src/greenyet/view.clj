@@ -30,9 +30,15 @@
          [:meta {:http-equiv "refresh" :content "5"}]
          [:style (str/join "\n" [".host.green { background-color: green; }"
                                  ".host.yellow { background-color: yellow; }"
-                                 ".host { background-color: red; }"
-                                 ".host:empty { background: gray; }"])]]
+                                 ".host { background-color: red; height: 50px; }"
+                                 ".host:empty { background: lightgray; }"
+                                 "body { font-family: sans-serif; }"
+                                 "table { border-collapse: separate; border-spacing: 0; width: 100%; }"
+                                 "td { text-align: center; padding: 5px; border: solid white 0; border-width: 2px 4px 2px 0; }"
+                                 "td:first-child { text-align: left; padding: 5px 5px 5px 0; width: 200px; }"
+                                 ".project-link { font-size: 0.8rem; text-decoration: none; color: gray; letter-spacing: 0.2rem; }"])]]
         [:body
+         [:a.project-link {:href "https://github.com/cburgmer/greenyet"} "Green yet?"]
          [:table
           [:thead
            [:tr
