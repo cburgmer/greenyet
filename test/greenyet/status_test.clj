@@ -64,4 +64,16 @@
   (testing "should return status from json-path config"
     (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:complex ["some garbage" {:color "yellow"}]})}
       (is (= :yellow
-             (:color (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" {:json-path "$.complex[1].color"}))))))))
+             (:color (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" {:json-path "$.complex[1].color"})))))))
+
+  (testing "should return status with specific color for green status"
+    (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:happy true})}
+      (is (= :green
+             (:color (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" {:json-path "$.happy"
+                                                                                                    :green-value true})))))))
+
+  (testing "should return status with specific color for yellow status"
+    (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:status "pending"})}
+      (is (= :yellow
+             (:color (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" {:json-path "$.status"
+                                                                                                    :yellow-value "pending"}))))))))

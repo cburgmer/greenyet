@@ -13,3 +13,5 @@
   url: http://%host%:8000/complex.json
   color:
     json-path: $.status.main[0]
+    green-value: healthy
+    yellow-value: warning

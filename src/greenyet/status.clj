@@ -10,11 +10,19 @@
     (let [path (:json-path color-conf)]
       (json-path/at-path path json))))
 
+(defn- color-value [color-conf key default]
+  (if (string? color-conf)
+    default
+    (or (get color-conf key)
+        default)))
+
 (defn- application-status [json color-conf]
-  (let [color (extract-color json color-conf)]
+  (let [color (extract-color json color-conf)
+        green-value (color-value color-conf :green-value "green")
+        yellow-value (color-value color-conf :yellow-value "yellow")]
     (cond
-      (= "green" color) :green
-      (= "yellow" color) :yellow
+      (= green-value color) :green
+      (= yellow-value color) :yellow
       :else :red)))
 
 (defn- fetch-status [url {color-conf :color}]

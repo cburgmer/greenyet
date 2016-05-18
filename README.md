@@ -34,6 +34,8 @@ Config as YAML (remember JSON is a subset):
       url: http://%host%:8080/complex.json
       color:
         json-path: "$.complex[1].color" # query as implemented by https://github.com/gga/json-path
+        green-value: "healthy"
+        yellow-value: "warning"
     ```
 
 2. Host list `hosts.yaml`
