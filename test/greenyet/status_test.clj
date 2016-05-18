@@ -59,4 +59,9 @@
   (testing "should only evaluate JSON if configured"
     (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:color "red"})}
       (is (= :green
-             (:color (sut/with-status a-host (a-url-config "http://%host%/status.json"))))))))
+             (:color (sut/with-status a-host (a-url-config "http://%host%/status.json")))))))
+
+  (testing "should return status from json-path config"
+    (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:complex ["some garbage" {:color "yellow"}]})}
+      (is (= :yellow
+             (:color (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" {:json-path "$.complex[1].color"}))))))))

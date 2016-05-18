@@ -30,6 +30,10 @@ Config as YAML (remember JSON is a subset):
     - system: SystemWithStatusJson
       url: http://%host%:8080/status.json
       color: "status"
+    - system: EvenMoreComplexSystem
+      url: http://%host%:8080/complex.json
+      color:
+        json-path: "$.complex[1].color" # query as implemented by https://github.com/gga/json-path
     ```
 
 2. Host list `hosts.yaml`

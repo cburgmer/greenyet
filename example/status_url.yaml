@@ -1,5 +1,5 @@
 ---
-- system: MySystem
+- system: SystemWithSimpleStatusCheck
   url: http://%host%:8000/found
 - system: SystemWith404
   url: http://%host%:8000/not_found
@@ -9,3 +9,7 @@
 - system: SystemStatusYellow
   url: http://%host%:8000/yellow.json
   color: status
+- system: ComplexSystemStatus
+  url: http://%host%:8000/complex.json
+  color:
+    json-path: $.status.main[0]

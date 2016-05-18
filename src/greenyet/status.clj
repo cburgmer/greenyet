@@ -1,10 +1,17 @@
 (ns greenyet.status
   (:require [cheshire.core :as j]
             [clj-http.client :as client]
+            [json-path]
             [clojure.string :as str]))
 
+(defn- extract-color [json color-conf]
+  (if (string? color-conf)
+    (get json (keyword color-conf))
+    (let [path (:json-path color-conf)]
+      (json-path/at-path path json))))
+
 (defn- application-status [json color-conf]
-  (let [color (get json (keyword color-conf))]
+  (let [color (extract-color json color-conf)]
     (cond
       (= "green" color) :green
       (= "yellow" color) :yellow
