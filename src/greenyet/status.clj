@@ -36,16 +36,20 @@
           {:color :green
            :message "OK"}))
 
+(defn- message-for-http-response [response]
+  (format "Status %s: %s" (:status response) (:body response)))
+
 (defn- fetch-status [url host-config]
   (try
     (let [response (client/get url)]
       (if (= 200 (:status response))
         (application-status response host-config)
-        {:color :red}))
+        {:color :red
+         :message (message-for-http-response response)}))
     (catch Exception e
       {:color :red
-       :message (if-let [data (ex-data e)]
-                  (format "Status %s: %s" (:status data) (:body data))
+       :message (if-let [response (ex-data e)]
+                  (message-for-http-response response)
                   (.getMessage e))})))
 
 (defn- status-url [host {url-template :url}]

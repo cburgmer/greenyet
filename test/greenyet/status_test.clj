@@ -91,13 +91,19 @@
         (is (= "OK"
                (:message (sut/with-status a-host (a-url-config "http://%host%/found")))))))
 
-    (testing "should return red for 500"
-      (fake/with-fake-routes-in-isolation {"http://the_host/not_found" (fn [_] {:status 500
+    (testing "for 500"
+      (fake/with-fake-routes-in-isolation {"http://the_host/error" (fn [_] {:status 500
                                                                                 :body "Internal Error"})}
         (is (= "Status 500: Internal Error"
-               (:message (sut/with-status a-host (a-url-config "http://%host%/not_found")))))))
+               (:message (sut/with-status a-host (a-url-config "http://%host%/error")))))))
 
-    (testing "should report error"
+    (testing "for 302"
+      (fake/with-fake-routes-in-isolation {"http://the_host/redirect" (fn [_] {:status 302
+                                                                                :body "Found"})}
+        (is (= "Status 302: Found"
+               (:message (sut/with-status a-host (a-url-config "http://%host%/redirect")))))))
+
+    (testing "for internal exception"
       (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (fn [_] {:status 200
                                                                                   :body "some body"})}
         (is (some? (:message (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" "status")))))))
