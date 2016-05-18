@@ -36,21 +36,21 @@
   (let [config-file (io/file config-dir "status_url.yaml")]
     (yaml/parse-string (slurp config-file))))
 
+(defn- start-polling []
+  (let [host-list (read-host-list config-dir)
+        status-url-config (read-status-url-config config-dir)]
+    (doall (for [host host-list]
+             (poll-status host status-url-config)))))
 
-(defn help []
+
+(defn init []
   (println "Starting greenyet with config")
   (->> config-params
        (map (fn [[env-var value]]
               (format "  %s: '%s'" env-var value)))
        (map println)
-       doall))
+       doall)
+  (start-polling))
 
-(defn- show [x]
+(defn handler [x]
   {:body (view/render (vals @hosts-with-status))})
-
-(def handler
-  (let [host-list (read-host-list config-dir)
-        status-url-config (read-status-url-config config-dir)]
-    (doall (for [host host-list]
-             (poll-status host status-url-config)))
-    show))

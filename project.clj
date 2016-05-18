@@ -12,4 +12,4 @@
                  [hiccup "1.0.5"]
                  [clj-yaml "0.4.0"]]
   :ring {:handler greenyet.core/handler
-         :init greenyet.core/help})
+         :init greenyet.core/init})
