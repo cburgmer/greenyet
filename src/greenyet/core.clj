@@ -6,6 +6,8 @@
              [status :as status]
              [view :as view]]))
 
+(import java.io.FileNotFoundException)
+
 (def ^:private hosts-with-status (atom {}))
 
 (def ^:private config-dir (System/getenv "CONFIG_DIR"))
@@ -50,7 +52,12 @@
               (format "  %s: '%s'" env-var value)))
        (map println)
        doall)
-  (start-polling))
+  (try
+    (start-polling)
+    (catch FileNotFoundException e
+      (binding [*out* *err*]
+        (println (.getMessage e)))
+      (System/exit 1))))
 
 (defn handler [x]
   {:body (view/render (vals @hosts-with-status))})
