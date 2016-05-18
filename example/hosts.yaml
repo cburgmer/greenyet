@@ -11,3 +11,6 @@
 - hostname: localhost
   environment: DEV
   system: SystemStatusRed
+- hostname: localhost
+  environment: DEV
+  system: SystemStatusYellow

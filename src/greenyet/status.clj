@@ -6,9 +6,11 @@
             [clojure.string :as str]))
 
 (defn- application-status [json]
-  (if (= "green" (:color json))
-    :green
-    :red))
+  (let [color (:color json)]
+    (cond
+      (= "green" color) :green
+      (= "yellow" color) :yellow
+      :else :red)))
 
 (defn- content-type [response]
   (-> response
@@ -22,7 +24,7 @@
     (let [response (client/get url)]
       (if (= 200 (:status response))
         (if (= :application/json (content-type response))
-          (application-status (j/parse-string (:body response)))
+          (application-status (j/parse-string (:body response) true))
           :green)
         :red))
     (catch Exception _
