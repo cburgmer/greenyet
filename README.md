@@ -1,6 +1,16 @@
 # greenyet
 
-One dashboard to rule them all, those lousy machines. Are they green yet?
+One status dashboard to rule them all, those lousy microservices. Are they green yet?
+
+## <s>Problem</s> Solution statement
+
+Show the applications statuses across the IT floor, to
+
+1. Encourage good status pages,
+2. Share application health with all stakeholders,
+3. Provide a handy view on environment uptime.
+
+Greenyet polls all your services for status information and gives a traffic light overview on the application health.
 
 ## Usage
 
