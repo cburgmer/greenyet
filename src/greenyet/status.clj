@@ -20,10 +20,10 @@
   (let [color (extract-color json color-conf)
         green-value (color-value color-conf :green-value "green")
         yellow-value (color-value color-conf :yellow-value "yellow")]
-    (cond
-      (= green-value color) :green
-      (= yellow-value color) :yellow
-      :else :red)))
+    {:color (cond
+              (= green-value color) :green
+              (= yellow-value color) :yellow
+              :else :red)}))
 
 (defn- fetch-status [url {color-conf :color}]
   (try
@@ -32,10 +32,14 @@
         (if color-conf
           (application-status (j/parse-string (:body response) true)
                               color-conf)
-          :green)
-        :red))
-    (catch Exception _
-      :red)))
+          {:color :green
+           :message "OK"})
+        {:color :red}))
+    (catch Exception e
+      {:color :red
+       :message (if-let [data (ex-data e)]
+                  (format "Status %s: %s" (:status data) (:body data))
+                  (.getMessage e))})))
 
 (defn- status-url [host {url-template :url}]
   (str/replace url-template #"%host%" (:hostname host)))
@@ -44,5 +48,4 @@
   (let [host-config (first (filter #(= (:system %) (:system host)) status-url-config))
         url (status-url host host-config)
         status (fetch-status url host-config)]
-    (assoc host
-           :color status)))
+    (merge host status)))

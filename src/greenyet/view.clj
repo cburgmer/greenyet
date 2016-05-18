@@ -1,5 +1,6 @@
 (ns greenyet.view
   (:require [clojure.string :as str]
+            [hiccup.util :refer [escape-html]]
             [hiccup.core :refer [html]]))
 
 (defn- host-for-environment [host-list environment]
@@ -23,7 +24,9 @@
   [:td {:class (str/join " " ["host" (some-> host
                                              :color
                                              name)])}
-   (:hostname host)])
+   (escape-html (:hostname host))
+   (when (:message host)
+     [:span.message (escape-html (:message host))])])
 
 (defn- environment-table-as-html [environments rows]
   (html [:head
@@ -32,6 +35,7 @@
                                  ".host.yellow { background-color: yellow; }"
                                  ".host { background-color: red; height: 50px; }"
                                  ".host:empty { background: lightgray; }"
+                                 ".message { display: block; padding-top: 4px; font-style: italic; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; width: 400px; max-height: 8em; margin: auto; }"
                                  "body { font-family: sans-serif; }"
                                  "table { border-collapse: separate; border-spacing: 0; width: 100%; }"
                                  "td { text-align: center; padding: 5px; border: solid white 0; border-width: 2px 4px 2px 0; }"
@@ -44,11 +48,11 @@
            [:tr
             [:td]
             (for [env environments]
-              [:td env])]]
+              [:td (escape-html env)])]]
           [:tbody
            (for [row rows]
              [:tr
-              [:td (some :system row)]
+              [:td (escape-html (some :system row))]
               (for [host row]
                 (host-as-html host))])]]]))
 

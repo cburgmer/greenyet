@@ -76,4 +76,22 @@
     (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:status "pending"})}
       (is (= :yellow
              (:color (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" {:json-path "$.status"
-                                                                                                    :yellow-value "pending"}))))))))
+                                                                                                    :yellow-value "pending"})))))))
+
+  (testing "messages"
+    (testing "simple 200 check"
+      (fake/with-fake-routes-in-isolation {"http://the_host/found" (fn [_] {:status 200
+                                                                            :body ""})}
+        (is (= "OK"
+               (:message (sut/with-status a-host (a-url-config "http://%host%/found")))))))
+
+    (testing "should return red for 500"
+      (fake/with-fake-routes-in-isolation {"http://the_host/not_found" (fn [_] {:status 500
+                                                                                :body "Internal Error"})}
+        (is (= "Status 500: Internal Error"
+               (:message (sut/with-status a-host (a-url-config "http://%host%/not_found")))))))
+
+    (testing "should report error"
+      (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (fn [_] {:status 200
+                                                                                  :body "some body"})}
+        (is (some? (:message (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" "status")))))))))
