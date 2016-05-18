@@ -19,9 +19,9 @@ Greenyet polls all your services for status information and gives a traffic ligh
 
 ### Configuration
 
-Two files are required (YAML/JSON):
+Config as YAML (remember JSON is a subset):
 
-1. status_url.yaml which configures the status URL for each service, e.g.
+1. Status URL config `status_url.yaml`
 
     ``` yaml
     ---
@@ -29,7 +29,7 @@ Two files are required (YAML/JSON):
       url: http://%host%:8080/status
     ```
 
-2. hosts.yaml which includes all the hosts monitored
+2. Host list `hosts.yaml`
 
     ``` yaml
     ---
