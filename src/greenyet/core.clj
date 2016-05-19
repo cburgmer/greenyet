@@ -1,6 +1,7 @@
 (ns greenyet.core
   (:require [clj-yaml.core :as yaml]
             [clojure.core.async :refer [<! go-loop timeout]]
+            [ring.util.response :refer [response charset content-type]]
             [clojure.java.io :as io]
             [greenyet
              [status :as status]
@@ -60,4 +61,6 @@
       (System/exit 1))))
 
 (defn handler [x]
-  {:body (view/render (vals @hosts-with-status))})
+  (-> (response (view/render (vals @hosts-with-status)))
+      (content-type "text/html")
+      (charset "UTF-8")))
