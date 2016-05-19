@@ -4,10 +4,13 @@
             [json-path]
             [clojure.string :as str]))
 
-(defn- extract-color [json color-conf]
-  (if (string? color-conf)
-    (get json (keyword color-conf))
-    (let [path (:json-path color-conf)]
+(defn- get-simple-key [json key]
+  (get json (keyword key)))
+
+(defn- get-complex-key [json key-conf]
+  (if (string? key-conf)
+    (get-simple-key json key-conf)
+    (let [path (:json-path key-conf)]
       (json-path/at-path path json))))
 
 (defn- color-value [color-conf key default]
@@ -17,7 +20,7 @@
         default)))
 
 (defn- status-color [json color-conf]
-  (let [color (extract-color json color-conf)
+  (let [color (get-complex-key json color-conf)
         green-value (color-value color-conf :green-value "green")
         yellow-value (color-value color-conf :yellow-value "yellow")]
     (cond
@@ -25,16 +28,21 @@
       (= yellow-value color) :yellow
       :else :red)))
 
-(defn- status-message [json message-conf]
-  (get json (keyword message-conf)))
+(defn- component-statuses [json {path :json-path color-conf :color name-conf :name}]
+  (when path
+    (->> (json-path/at-path path json)
+         (map (fn [component]
+                {:color (status-color component color-conf)
+                 :name (get-simple-key component name-conf)})))))
 
-(defn- application-status [response {color-conf :color message-conf :message}]
+(defn- application-status [response {color-conf :color message-conf :message components-conf :components}]
   (if color-conf
-          (let [json (j/parse-string (:body response) true)]
-            {:color (status-color json color-conf)
-             :message (status-message json message-conf)})
-          {:color :green
-           :message "OK"}))
+    (let [json (j/parse-string (:body response) true)]
+      {:color (status-color json color-conf)
+       :message (get-simple-key json message-conf)
+       :components (component-statuses json components-conf)})
+    {:color :green
+     :message "OK"}))
 
 (defn- message-for-http-response [response]
   (format "Status %s: %s" (:status response) (:body response)))

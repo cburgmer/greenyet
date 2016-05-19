@@ -11,7 +11,7 @@
   [{:service "the_service"
     :url url}])
 
-(defn- a-url-config-with-status [url key]
+(defn- a-url-config-with-color [url key]
   [{:service "the_service"
     :url url
     :color key}])
@@ -21,6 +21,12 @@
     :url url
     :color color-key
     :message message-key}])
+
+(defn- a-url-config-with-components [url component-config]
+  [{:service "the_service"
+    :url url
+    :color "color"
+    :components component-config}])
 
 (defn- json-response [body]
   (fn [_]
@@ -44,23 +50,23 @@
   (testing "should return red for color red"
     (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:color "red"})}
       (is (= :red
-             (:color (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" "color")))))))
+             (:color (sut/with-status a-host (a-url-config-with-color "http://%host%/status.json" "color")))))))
 
   (testing "should return yellow for color yellow"
     (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:color "yellow"})}
       (is (= :yellow
-             (:color (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" "color")))))))
+             (:color (sut/with-status a-host (a-url-config-with-color "http://%host%/status.json" "color")))))))
 
   (testing "should return green for color green"
     (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:status "green"})}
       (is (= :green
-             (:color (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" "status")))))))
+             (:color (sut/with-status a-host (a-url-config-with-color "http://%host%/status.json" "status")))))))
 
   (testing "should fail if status key is configured but no JSON is provided"
     (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (fn [_] {:status 200
                                                                                 :body "some body"})}
       (is (= :red
-             (:color (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" "status")))))))
+             (:color (sut/with-status a-host (a-url-config-with-color "http://%host%/status.json" "status")))))))
 
   (testing "should only evaluate JSON if configured"
     (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:color "red"})}
@@ -70,19 +76,19 @@
   (testing "should return status from json-path config"
     (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:complex ["some garbage" {:color "yellow"}]})}
       (is (= :yellow
-             (:color (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" {:json-path "$.complex[1].color"})))))))
+             (:color (sut/with-status a-host (a-url-config-with-color "http://%host%/status.json" {:json-path "$.complex[1].color"})))))))
 
   (testing "should return status with specific color for green status"
     (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:happy true})}
       (is (= :green
-             (:color (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" {:json-path "$.happy"
-                                                                                                    :green-value true})))))))
+             (:color (sut/with-status a-host (a-url-config-with-color "http://%host%/status.json" {:json-path "$.happy"
+                                                                                                   :green-value true})))))))
 
   (testing "should return status with specific color for yellow status"
     (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:status "pending"})}
       (is (= :yellow
-             (:color (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" {:json-path "$.status"
-                                                                                                    :yellow-value "pending"})))))))
+             (:color (sut/with-status a-host (a-url-config-with-color "http://%host%/status.json" {:json-path "$.status"
+                                                                                                   :yellow-value "pending"})))))))
 
   (testing "messages"
     (testing "simple 200 check"
@@ -93,20 +99,20 @@
 
     (testing "for 500"
       (fake/with-fake-routes-in-isolation {"http://the_host/error" (fn [_] {:status 500
-                                                                                :body "Internal Error"})}
+                                                                            :body "Internal Error"})}
         (is (= "Status 500: Internal Error"
                (:message (sut/with-status a-host (a-url-config "http://%host%/error")))))))
 
     (testing "for 302"
       (fake/with-fake-routes-in-isolation {"http://the_host/redirect" (fn [_] {:status 302
-                                                                                :body "Found"})}
+                                                                               :body "Found"})}
         (is (= "Status 302: Found"
                (:message (sut/with-status a-host (a-url-config "http://%host%/redirect")))))))
 
     (testing "for internal exception"
       (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (fn [_] {:status 200
                                                                                   :body "some body"})}
-        (is (some? (:message (sut/with-status a-host (a-url-config-with-status "http://%host%/status.json" "status")))))))
+        (is (some? (:message (sut/with-status a-host (a-url-config-with-color "http://%host%/status.json" "status")))))))
 
     (testing "should return message if configured"
       (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:status "green"
@@ -114,4 +120,35 @@
         (is (= "up and running"
                (:message (sut/with-status a-host (a-url-config-with-status-and-message "http://%host%/status.json"
                                                                                        "status"
-                                                                                       "message")))))))))
+                                                                                       "message"))))))))
+
+  (testing "components"
+    (testing "return all statuses"
+      (fake/with-fake-routes-in-isolation {"http://the_host/with_components.json" (json-response {:color "yellow"
+                                                                                                  :components [{:status "green"}
+                                                                                                               {:status "red"}
+                                                                                                               {:status "yellow"}]})}
+        (is (= [{:color :green :name nil} {:color :red :name nil} {:color :yellow :name nil}]
+               (:components (sut/with-status a-host (a-url-config-with-components "http://the_host/with_components.json"
+                                                                                  {:json-path "$.components[*]"
+                                                                                   :color "status"})))))))
+    (testing "handles complex color config"
+      (fake/with-fake-routes-in-isolation {"http://the_host/with_components.json" (json-response {:color "yellow"
+                                                                                                  :components [{:status "healthy"}
+                                                                                                               {:status "whatever"}
+                                                                                                               {:status "warning"}]})}
+        (is (= [{:color :green :name nil} {:color :red :name nil} {:color :yellow :name nil}]
+               (:components (sut/with-status a-host (a-url-config-with-components "http://the_host/with_components.json"
+                                                                                  {:json-path "$.components[*]"
+                                                                                   :color {:json-path "$.status"
+                                                                                           :green-value "healthy"
+                                                                                           :yellow-value "warning"}})))))))
+    (testing "handles name"
+      (fake/with-fake-routes-in-isolation {"http://the_host/with_components.json" (json-response {:color "green"
+                                                                                                  :components [{:status "green"
+                                                                                                                :description "child 1"}]})}
+        (is (= [{:color :green :name "child 1"}]
+               (:components (sut/with-status a-host (a-url-config-with-components "http://the_host/with_components.json"
+                                                                                  {:json-path "$.components[*]"
+                                                                                   :color "status"
+                                                                                   :name "description"})))))))))

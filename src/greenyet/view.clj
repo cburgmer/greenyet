@@ -26,7 +26,14 @@
                                              name)])}
    (escape-html (:hostname host))
    (when (:message host)
-     [:span.message (escape-html (:message host))])])
+     [:span.message (escape-html (:message host))])
+   (when (:components host)
+     [:div.components
+      (for [comp (:components host)]
+       [:div {:class (str/join " " ["component" (some-> comp
+                                                        :color
+                                                        name)])}
+        (:name comp)])])])
 
 (defn- environment-table-as-html [environments rows]
   (html [:head
@@ -35,6 +42,11 @@
                                  ".host.yellow { background-color: yellow; }"
                                  ".host { background-color: red; height: 50px; }"
                                  ".host:empty { background: lightgray; }"
+                                 ".components { background: white; margin: 10px; }"
+                                 ".component.green::before { background-color: green; }"
+                                 ".component.yellow::before { background-color: yellow; }"
+                                 ".component::before { content: ''; display: inline-block; background-color: red; width: 20px; height: 20px; vertical-align: middle; margin-right: 5px; }"
+                                 ".component { display: inline-block; height: 20px; line-height: 20px; margin: 10px; }"
                                  ".message { display: block; padding-top: 4px; font-style: italic; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; width: 400px; max-height: 8em; margin: auto; }"
                                  "body { font-family: sans-serif; }"
                                  "table { border-collapse: separate; border-spacing: 0; width: 100%; }"

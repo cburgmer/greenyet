@@ -1,0 +1,14 @@
+{
+    "color": "yellow",
+    "message": "Job unhappy",
+    "subSystems": [{
+        "name": "Some child system",
+        "status": "green"
+    }, {
+        "name": "Another system",
+        "status": "yellow"
+    }, {
+        "name": "Red system",
+        "status": "red"
+    }]
+}

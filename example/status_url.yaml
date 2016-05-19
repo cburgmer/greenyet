@@ -16,3 +16,11 @@
     json-path: $.status.main[0]
     green-value: healthy
     yellow-value: warning
+- system: ComponentStatuses
+  url: http://%host%:8000/component_status.json
+  color: color
+  message: message
+  components:
+    json-path: $.subSystems
+    color: status
+    name: name

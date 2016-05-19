@@ -17,3 +17,6 @@
 - hostname: localhost
   environment: DEV
   system: ComplexSystemStatus
+- hostname: localhost
+  environment: UAT
+  system: ComponentStatuses
