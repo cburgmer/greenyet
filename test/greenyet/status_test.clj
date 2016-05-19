@@ -128,27 +128,43 @@
                                                                                                   :components [{:status "green"}
                                                                                                                {:status "red"}
                                                                                                                {:status "yellow"}]})}
-        (is (= [{:color :green :name nil} {:color :red :name nil} {:color :yellow :name nil}]
-               (:components (sut/with-status a-host (a-url-config-with-components "http://the_host/with_components.json"
-                                                                                  {:json-path "$.components[*]"
-                                                                                   :color "status"})))))))
+        (is (= [:green :red :yellow]
+               (->> (sut/with-status a-host (a-url-config-with-components "http://the_host/with_components.json"
+                                                                          {:json-path "$.components[*]"
+                                                                           :color "status"}))
+                    :components
+                    (map :color))))))
     (testing "handles complex color config"
       (fake/with-fake-routes-in-isolation {"http://the_host/with_components.json" (json-response {:color "yellow"
                                                                                                   :components [{:status "healthy"}
                                                                                                                {:status "whatever"}
                                                                                                                {:status "warning"}]})}
-        (is (= [{:color :green :name nil} {:color :red :name nil} {:color :yellow :name nil}]
-               (:components (sut/with-status a-host (a-url-config-with-components "http://the_host/with_components.json"
-                                                                                  {:json-path "$.components[*]"
-                                                                                   :color {:json-path "$.status"
-                                                                                           :green-value "healthy"
-                                                                                           :yellow-value "warning"}})))))))
+        (is (= [:green :red :yellow]
+               (->> (a-url-config-with-components "http://the_host/with_components.json"
+                                                  {:json-path "$.components[*]"
+                                                   :color {:json-path "$.status"
+                                                           :green-value "healthy"
+                                                           :yellow-value "warning"}})
+                    (sut/with-status a-host)
+                    :components
+                    (map :color))))))
     (testing "handles name"
       (fake/with-fake-routes-in-isolation {"http://the_host/with_components.json" (json-response {:color "green"
                                                                                                   :components [{:status "green"
                                                                                                                 :description "child 1"}]})}
-        (is (= [{:color :green :name "child 1"}]
+        (is (= [{:color :green :name "child 1" :message nil}]
                (:components (sut/with-status a-host (a-url-config-with-components "http://the_host/with_components.json"
                                                                                   {:json-path "$.components[*]"
                                                                                    :color "status"
-                                                                                   :name "description"})))))))))
+                                                                                   :name "description"})))))))
+    (testing "handles message"
+      (fake/with-fake-routes-in-isolation {"http://the_host/with_components.json" (json-response {:color "green"
+                                                                                                  :components [{:status "green"
+                                                                                                                :description "child 1"
+                                                                                                                :textualStatus "swell"}]})}
+        (is (= [{:color :green :name "child 1" :message "swell"}]
+               (:components (sut/with-status a-host (a-url-config-with-components "http://the_host/with_components.json"
+                                                                                  {:json-path "$.components[*]"
+                                                                                   :color "status"
+                                                                                   :name "description"
+                                                                                   :message "textualStatus"})))))))))

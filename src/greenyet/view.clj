@@ -32,7 +32,8 @@
       (for [comp (:components host)]
        [:div {:class (str/join " " ["component" (some-> comp
                                                         :color
-                                                        name)])}
+                                                        name)])
+              :title (:message comp)}
         (:name comp)])])])
 
 (defn- environment-table-as-html [environments rows]

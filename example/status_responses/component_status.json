@@ -3,10 +3,12 @@
     "message": "Job unhappy",
     "subSystems": [{
         "name": "Some child system",
-        "status": "green"
+        "status": "green",
+        "description": "Operational"
     }, {
         "name": "Another system",
-        "status": "yellow"
+        "status": "yellow",
+        "description": "No up-to-date information"
     }, {
         "name": "Red system",
         "status": "red"

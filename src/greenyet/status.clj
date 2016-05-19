@@ -28,12 +28,13 @@
       (= yellow-value color) :yellow
       :else :red)))
 
-(defn- component-statuses [json {path :json-path color-conf :color name-conf :name}]
+(defn- component-statuses [json {path :json-path color-conf :color name-conf :name message-conf :message}]
   (when path
     (->> (json-path/at-path path json)
          (map (fn [component]
                 {:color (status-color component color-conf)
-                 :name (get-simple-key component name-conf)})))))
+                 :name (get-simple-key component name-conf)
+                 :message (get-simple-key component message-conf)})))))
 
 (defn- application-status [response {color-conf :color message-conf :message components-conf :components}]
   (if color-conf

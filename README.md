@@ -34,9 +34,17 @@ Config as YAML (remember JSON is a subset):
     - system: EvenMoreComplexSystem
       url: http://%host%:8080/complex.json
       color:
-        json-path: "$.complex[1].color" # query as implemented by https://github.com/gga/json-path
+        json-path: $.complex[1].color # query as implemented by https://github.com/gga/json-path
         green-value: "healthy"
         yellow-value: "warning"
+    - system: SystemWithComponents
+      url: http://%host%:8080/with_components.json
+      color: "color"
+      components:
+        json-path: $.subSystems
+        color: "status"
+        message: "description"
+        name: "name"
     ```
 
 2. Host list `hosts.yaml`
