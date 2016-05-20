@@ -52,6 +52,18 @@
                 background: lightgray;
             }
 
+            .message {
+                display: block;
+                padding-top: 4px;
+                font-style: italic;
+                font-size: 0.9rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width: 400px;
+                max-height: 8em;
+                margin: auto;
+            }
+
             .components {
                 background: white;
                 margin: 10px;
@@ -78,16 +90,26 @@
                 margin: 6px;
             }
 
-            .message {
-                display: block;
-                padding-top: 4px;
-                font-style: italic;
-                font-size: 0.9rem;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                width: 400px;
-                max-height: 8em;
-                margin: auto;
+            /* Hide too many green components */
+            .component.green:nth-child(n+6) {
+                display: none;
+            }
+            .more {
+                display: none;
+            }
+            .more::before {
+                content: '...';
+                margin-left: 2rem;
+            }
+            .component.green:nth-child(n+6) ~ .more {
+                display: inline-block;
+            }
+            /* Show on hover */
+            .components:hover .component {
+                display: inline-block;
+            }
+            .components:hover .component ~ .more {
+                display: none;
             }
         </style>
     </head>

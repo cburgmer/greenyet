@@ -3,6 +3,15 @@
             [hiccup.util :refer [escape-html]]
             [hiccup.core :refer [html]]))
 
+(defn- index-of [list item]
+  (count (take-while (partial not= item) list)))
+
+(defn- prefer-order-of [ordered-references coll-to-sort key-func]
+  (sort-by (comp (partial index-of ordered-references)
+                 key-func)
+           coll-to-sort))
+
+
 (defn- host-for-environment [host-list environment]
   (first (filter #(= environment (:environment %)) host-list)))
 
@@ -19,6 +28,7 @@
        (map (fn [[_ system-host-list]]
               (system-row environments system-host-list)))))
 
+(def *color-by-importance* [:red :yellow :green])
 
 (defn- host-as-html [host]
   [:td {:class (str/join " " ["host" (some-> host
@@ -29,12 +39,13 @@
      [:span.message (escape-html (:message host))])
    (when (:components host)
      [:ol.components
-      (for [comp (:components host)]
+      (for [comp (prefer-order-of *color-by-importance* (:components host) :color)]
         [:li {:class (str/join " " ["component" (some-> comp
                                                         :color
                                                         name)])
               :title (:message comp)}
-         (:name comp)])])])
+         (:name comp)])
+      [:li.more]])])
 
 (defn- environment-table-as-html [environments rows]
   (html [:table
@@ -50,18 +61,11 @@
              (for [host row]
                (host-as-html host))])]]))
 
-(defn- index-of [list item]
-  (count (take-while (partial not= item) list)))
-
-(defn- prefer-order-of [ordered-references coll-to-sort]
-  (sort-by (comp (partial index-of ordered-references)
-                 str/lower-case)
-           coll-to-sort))
-
 
 (defn render [host-list-with-status page-template environment-names]
   (let [environments (prefer-order-of environment-names
-                                      (distinct (map :environment host-list-with-status)))
+                                      (distinct (map :environment host-list-with-status))
+                                      str/lower-case)
         rows (environment-table environments host-list-with-status)]
     (str/replace page-template
                  #"<!-- BODY -->"

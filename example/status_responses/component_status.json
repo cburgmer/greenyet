@@ -10,7 +10,16 @@
         "status": "yellow",
         "description": "No up-to-date information"
     }, {
-        "name": "Red system",
+        "name": "Another red system",
         "status": "red"
+    }, {
+        "name": "More red",
+        "status": "red"
+    }, {
+        "name": "Green system",
+        "status": "green"
+    }, {
+        "name": "Yet another green system",
+        "status": "green"
     }]
 }
