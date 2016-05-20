@@ -115,6 +115,15 @@
     </head>
     <body>
         <a class="project-link" href="https://github.com/cburgmer/greenyet">Green yet?</a>
+        <script>
+            (function () {
+                var tick = function () {
+                    var elem = document.querySelector('.project-link');
+                    elem.innerText = elem.innerText + '.';
+                };
+                setInterval(tick, 1000);
+            }())
+        </script>
         <!-- BODY -->
     </body>
 </html>
