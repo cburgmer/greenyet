@@ -7,6 +7,7 @@
              [status :as status]
              [view :as view]]
             [ring.middleware.not-modified :as not-modified]
+            [ring.middleware.resource :as resource]
             [ring.util
              [response :refer [charset content-type header response]]
              [time :refer [format-date]]]))
@@ -84,4 +85,5 @@
 
 (def handler
   (-> render
+      (resource/wrap-resource "public")
       not-modified/wrap-not-modified))
