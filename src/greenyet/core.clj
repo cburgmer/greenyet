@@ -60,7 +60,9 @@
         (println (.getMessage e)))
       (System/exit 1))))
 
+(def page-template (-> "index.template.html" io/resource io/file slurp))
+
 (defn handler [x]
-  (-> (response (view/render (vals @hosts-with-status)))
+  (-> (response (view/render (vals @hosts-with-status) page-template))
       (content-type "text/html")
       (charset "UTF-8")))
