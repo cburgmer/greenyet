@@ -28,9 +28,9 @@
    (when (:message host)
      [:span.message (escape-html (:message host))])
    (when (:components host)
-     [:div.components
+     [:ol.components
       (for [comp (:components host)]
-       [:div {:class (str/join " " ["component" (some-> comp
+       [:li {:class (str/join " " ["component" (some-> comp
                                                         :color
                                                         name)])
               :title (:message comp)}
@@ -46,13 +46,14 @@
                                  ".components { background: white; margin: 10px; }"
                                  ".component.green::before { background-color: green; }"
                                  ".component.yellow::before { background-color: yellow; }"
-                                 ".component::before { content: ''; display: inline-block; background-color: red; width: 20px; height: 20px; vertical-align: middle; margin-right: 5px; }"
-                                 ".component { display: inline-block; height: 20px; line-height: 20px; margin: 10px; }"
+                                 ".component::before { content: ''; display: inline-block; background-color: red; width: 1.2rem; height: 1.2rem; vertical-align: middle; margin-right: 5px; }"
+                                 ".component { display: inline-block; height: 1.2rem; line-height: 1.2rem; margin: 6px; }"
                                  ".message { display: block; padding-top: 4px; font-style: italic; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; width: 400px; max-height: 8em; margin: auto; }"
                                  "body { font-family: sans-serif; }"
-                                 "table { border-collapse: separate; border-spacing: 0; width: 100%; }"
+                                 "table { border-collapse: separate; border-spacing: 0; width: 100%; table-layout: fixed; }"
                                  "td { text-align: center; padding: 5px; border: solid white 0; border-width: 2px 4px 2px 0; }"
-                                 "td:first-child { text-align: left; padding: 5px 5px 5px 0; width: 200px; }"
+                                 "td:first-child { text-align: left; padding: 5px 5px 5px 0; width: 200px; word-wrap: break-word; }"
+                                 "ol { padding: 0; list-style: none; }"
                                  ".project-link { font-size: 0.8rem; text-decoration: none; color: gray; letter-spacing: 0.2rem; }"])]]
         [:body
          [:a.project-link {:href "https://github.com/cburgmer/greenyet"} "Green yet?"]
