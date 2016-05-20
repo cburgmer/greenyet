@@ -14,13 +14,14 @@
 
 (import java.io.FileNotFoundException)
 
-(def ^:private hosts-with-status (atom [{} (tc/now)]))
+(def ^:private statuses (atom [{} (tc/now)]))
 
-(defn- update-status [[status-map last-changed] key new-status]
-  (let [old-status (get status-map key)]
-    (if (= new-status old-status)
-      [status-map last-changed]
-      [(assoc status-map key new-status) (tc/now)])))
+(defn- update-status [[host-with-statuses last-changed] key new-status]
+  (let [old-status (get host-with-statuses key)]
+    [(assoc host-with-statuses key new-status)
+     (if (= new-status old-status)
+       last-changed
+       (tc/now))]))
 
 (def ^:private config-dir (System/getenv "CONFIG_DIR"))
 
@@ -37,7 +38,7 @@
 (defn- poll-status [host status-url-config]
   (go-loop []
     (let [status (status/with-status host status-url-config)]
-      (swap! hosts-with-status update-status host status)
+      (swap! statuses update-status host status)
       (<! (timeout timeout-in-ms))
       (recur))))
 
@@ -62,7 +63,7 @@
 (def ^:private environment-names (-> "environment_names.yaml" io/resource io/file slurp yaml/parse-string))
 
 (defn- render [_]
-  (let [[host-with-statuses last-changed] @hosts-with-status]
+  (let [[host-with-statuses last-changed] @statuses]
     (-> (response (view/render (vals host-with-statuses) page-template environment-names))
         (content-type "text/html")
         (header "Last-Modified" (format-date (.toDate last-changed)))
