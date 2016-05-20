@@ -62,7 +62,9 @@
 
 (def page-template (-> "index.template.html" io/resource io/file slurp))
 
+(def environment-names (-> "environment_names.yaml" io/resource io/file slurp yaml/parse-string))
+
 (defn handler [x]
-  (-> (response (view/render (vals @hosts-with-status) page-template))
+  (-> (response (view/render (vals @hosts-with-status) page-template environment-names))
       (content-type "text/html")
       (charset "UTF-8")))

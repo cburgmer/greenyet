@@ -50,9 +50,18 @@
              (for [host row]
                (host-as-html host))])]]))
 
+(defn- index-of [list item]
+  (count (take-while (partial not= item) list)))
 
-(defn render [host-list-with-status page-template]
-  (let [environments (sort (distinct (map :environment host-list-with-status)))
+(defn- prefer-order-of [ordered-references coll-to-sort]
+  (sort-by (comp (partial index-of ordered-references)
+                 str/lower-case)
+           coll-to-sort))
+
+
+(defn render [host-list-with-status page-template environment-names]
+  (let [environments (prefer-order-of environment-names
+                                      (distinct (map :environment host-list-with-status)))
         rows (environment-table environments host-list-with-status)]
     (str/replace page-template
                  #"<!-- BODY -->"
