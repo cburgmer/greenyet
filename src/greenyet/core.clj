@@ -1,15 +1,25 @@
 (ns greenyet.core
-  (:require [clj-yaml.core :as yaml]
+  (:require [clj-time.core :as tc]
+            [clj-yaml.core :as yaml]
             [clojure.core.async :refer [<! go-loop timeout]]
-            [ring.util.response :refer [response charset content-type]]
             [clojure.java.io :as io]
             [greenyet
              [status :as status]
-             [view :as view]]))
+             [view :as view]]
+            [ring.middleware.not-modified :as not-modified]
+            [ring.util
+             [response :refer [charset content-type header response]]
+             [time :refer [format-date]]]))
 
 (import java.io.FileNotFoundException)
 
-(def ^:private hosts-with-status (atom {}))
+(def ^:private hosts-with-status (atom [{} (tc/now)]))
+
+(defn- update-status [[status-map last-changed] key new-status]
+  (let [old-status (get status-map key)]
+    (if (= new-status old-status)
+      [status-map last-changed]
+      [(assoc status-map key new-status) (tc/now)])))
 
 (def ^:private config-dir (System/getenv "CONFIG_DIR"))
 
@@ -26,7 +36,7 @@
 (defn- poll-status [host status-url-config]
   (go-loop []
     (let [status (status/with-status host status-url-config)]
-      (swap! hosts-with-status assoc host status)
+      (swap! hosts-with-status update-status host status)
       (<! (timeout timeout-in-ms))
       (recur))))
 
@@ -46,6 +56,18 @@
              (poll-status host status-url-config)))))
 
 
+(def ^:private page-template (-> "index.template.html" io/resource io/file slurp))
+
+(def ^:private environment-names (-> "environment_names.yaml" io/resource io/file slurp yaml/parse-string))
+
+(defn- render [_]
+  (let [[host-with-statuses last-changed] @hosts-with-status]
+    (-> (response (view/render (vals host-with-statuses) page-template environment-names))
+        (content-type "text/html")
+        (header "Last-Modified" (format-date (.toDate last-changed)))
+        (charset "UTF-8"))))
+
+
 (defn init []
   (println "Starting greenyet with config")
   (->> config-params
@@ -60,11 +82,6 @@
         (println (.getMessage e)))
       (System/exit 1))))
 
-(def page-template (-> "index.template.html" io/resource io/file slurp))
-
-(def environment-names (-> "environment_names.yaml" io/resource io/file slurp yaml/parse-string))
-
-(defn handler [x]
-  (-> (response (view/render (vals @hosts-with-status) page-template environment-names))
-      (content-type "text/html")
-      (charset "UTF-8")))
+(def handler
+  (-> render
+      not-modified/wrap-not-modified))

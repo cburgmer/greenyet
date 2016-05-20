@@ -9,6 +9,7 @@
                  [ring/ring-jetty-adapter "1.4.0"]
                  [org.clojure/core.async "0.2.374"]
                  [clj-http "3.1.0"]
+                 [clj-time "0.9.0"]
                  [hiccup "1.0.5"]
                  [clj-yaml "0.4.0"]
                  [cheshire "5.4.0"]
