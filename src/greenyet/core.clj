@@ -1,29 +1,18 @@
 (ns greenyet.core
-  (:require [clj-time.core :as tc]
-            [clj-yaml.core :as yaml]
-            [clojure.core.async :refer [<! go-loop timeout]]
+  (:require [clj-yaml.core :as yaml]
             [clojure.java.io :as io]
+            [clojure.string :as str]
             [greenyet
-             [status :as status]
+             [poll :as poll]
              [view :as view]]
-            [ring.middleware.not-modified :as not-modified]
-            [ring.middleware.resource :as resource]
-            [ring.middleware.params :as params]
+            [ring.middleware
+             [not-modified :as not-modified]
+             [params :as params]
+             [resource :as resource]]
             [ring.util
              [response :refer [charset content-type header response]]
-             [time :refer [format-date]]]
-            [clojure.string :as str]))
-
-(import java.io.FileNotFoundException)
-
-(def ^:private statuses (atom [{} (tc/now)]))
-
-(defn- update-status [[host-with-statuses last-changed] key new-status]
-  (let [old-status (get host-with-statuses key)]
-    [(assoc host-with-statuses key new-status)
-     (if (= new-status old-status)
-       last-changed
-       (tc/now))]))
+             [time :refer [format-date]]])
+  (:import java.io.FileNotFoundException))
 
 (def ^:private config-dir (System/getenv "CONFIG_DIR"))
 
@@ -36,28 +25,6 @@
                               ["TIMEOUT" timeout-in-ms]
                               ["PORT" (or (System/getenv "PORT")
                                           3000)]])
-
-(defn- poll-status [host status-url-config]
-  (go-loop []
-    (let [status (status/with-status host status-url-config)]
-      (swap! statuses update-status host status)
-      (<! (timeout timeout-in-ms))
-      (recur))))
-
-
-(defn- read-host-list [config-dir]
-  (let [host-list-file (io/file config-dir "hosts.yaml")]
-    (yaml/parse-string (slurp host-list-file))))
-
-(defn- read-status-url-config [config-dir]
-  (let [config-file (io/file config-dir "status_url.yaml")]
-    (yaml/parse-string (slurp config-file))))
-
-(defn- start-polling []
-  (let [host-list (read-host-list config-dir)
-        status-url-config (read-status-url-config config-dir)]
-    (doall (for [host host-list]
-             (poll-status host status-url-config)))))
 
 
 (defn- page-template []
@@ -74,7 +41,7 @@
     (seq (mapcat #(str/split % #",") value-vector))))
 
 (defn- render [{params :params}]
-  (let [[host-with-statuses last-changed] @statuses]
+  (let [[host-with-statuses last-changed] @poll/statuses]
     (-> (response (view/render (vals host-with-statuses)
                                (query-param-as-vec params "systems")
                                (page-template)
@@ -92,7 +59,7 @@
        (map println)
        doall)
   (try
-    (start-polling)
+    (poll/start-polling config-dir timeout-in-ms)
     (catch FileNotFoundException e
       (binding [*out* *err*]
         (println (.getMessage e)))
