@@ -66,13 +66,17 @@
 (defn- environment-names []
   (-> "environment_names.yaml" io/resource io/file slurp yaml/parse-string))
 
+(defn- query-param-as-vec [params key]
+  (let [value (get params key)
+        value-vector (if (string? value)
+                     (vector value)
+                     value)]
+    (seq (mapcat #(str/split % #",") value-vector))))
+
 (defn- render [{params :params}]
-  (let [[host-with-statuses last-changed] @statuses
-        selected-systems (some-> (get params "systems")
-                                 (str/split #",")
-                                 set)]
+  (let [[host-with-statuses last-changed] @statuses]
     (-> (response (view/render (vals host-with-statuses)
-                               selected-systems
+                               (query-param-as-vec params "systems")
                                (page-template)
                                (environment-names)))
         (content-type "text/html")

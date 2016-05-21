@@ -67,13 +67,18 @@
                (host-as-html host))])]]))
 
 
+(defn- filter-systems [host-list-with-status selected-systems]
+  (if selected-systems
+    (filter (fn [{system :system}]
+              (contains? (set selected-systems) system))
+            host-list-with-status)
+    host-list-with-status))
+
 (defn render [host-list-with-status selected-systems page-template environment-names]
   (let [environments (prefer-order-of environment-names
                                       (distinct (map :environment host-list-with-status))
                                       str/lower-case)
-        selected-hosts (cond->> host-list-with-status
-                         selected-systems (filter (fn [{system :system}]
-                                                    (contains? selected-systems system))))
+        selected-hosts (filter-systems host-list-with-status selected-systems)
         rows (environment-table environments selected-hosts)]
     (str/replace page-template
                  #"<!-- BODY -->"
