@@ -59,16 +59,22 @@
          [:tbody
           (for [row rows]
             [:tr
-             [:td (escape-html (some :system row))]
+             [:td
+              (let [system-name (escape-html (some :system row))]
+                [:a {:href (str/join ["?systems=" system-name])}
+                 system-name])]
              (for [host row]
                (host-as-html host))])]]))
 
 
-(defn render [host-list-with-status page-template environment-names]
+(defn render [host-list-with-status selected-systems page-template environment-names]
   (let [environments (prefer-order-of environment-names
                                       (distinct (map :environment host-list-with-status))
                                       str/lower-case)
-        rows (environment-table environments host-list-with-status)]
+        selected-hosts (cond->> host-list-with-status
+                         selected-systems (filter (fn [{system :system}]
+                                                    (contains? selected-systems system))))
+        rows (environment-table environments selected-hosts)]
     (str/replace page-template
                  #"<!-- BODY -->"
                  (environment-table-as-html environments rows))))

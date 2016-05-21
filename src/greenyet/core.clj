@@ -8,9 +8,11 @@
              [view :as view]]
             [ring.middleware.not-modified :as not-modified]
             [ring.middleware.resource :as resource]
+            [ring.middleware.params :as params]
             [ring.util
              [response :refer [charset content-type header response]]
-             [time :refer [format-date]]]))
+             [time :refer [format-date]]]
+            [clojure.string :as str]))
 
 (import java.io.FileNotFoundException)
 
@@ -64,9 +66,15 @@
 (defn- environment-names []
   (-> "environment_names.yaml" io/resource io/file slurp yaml/parse-string))
 
-(defn- render [_]
-  (let [[host-with-statuses last-changed] @statuses]
-    (-> (response (view/render (vals host-with-statuses) (page-template) (environment-names)))
+(defn- render [{params :params}]
+  (let [[host-with-statuses last-changed] @statuses
+        selected-systems (some-> (get params "systems")
+                                 (str/split #",")
+                                 set)]
+    (-> (response (view/render (vals host-with-statuses)
+                               selected-systems
+                               (page-template)
+                               (environment-names)))
         (content-type "text/html")
         (header "Last-Modified" (format-date (.toDate last-changed)))
         (charset "UTF-8"))))
@@ -88,5 +96,6 @@
 
 (def handler
   (-> render
+      params/wrap-params
       (resource/wrap-resource "public")
       not-modified/wrap-not-modified))
