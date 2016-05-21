@@ -50,6 +50,8 @@
 
 (defn- environment-table-as-html [environments rows]
   (html [:table
+         [:colgroup {:span 1}]
+         [:colgroup.environments {:span (count environments)}]
          [:thead
           [:tr
            [:td]

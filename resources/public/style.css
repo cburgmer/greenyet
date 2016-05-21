@@ -75,7 +75,7 @@ a:hover {
     line-height: 1.2rem;
     padding: 4px;
 
-    width: 50%;
+    width: 100%;
     box-sizing: border-box;
 
     white-space: nowrap;
@@ -84,9 +84,22 @@ a:hover {
 
     vertical-align: top;
 }
-@media (max-width: 70em) {
-    .component {
-        width: 100%;
+.environments[span="1"] ~ tbody .component {
+    width: 50%;
+}
+@media (min-width: 55em) {
+    .environments[span="2"] ~ tbody .component {
+        width: 50%;
+    }
+}
+@media (min-width: 70em) {
+    .environments[span="3"] ~ tbody .component {
+        width: 50%;
+    }
+}
+@media (min-width: 85em) {
+    .environments[span="4"] ~ tbody .component {
+        width: 50%;
     }
 }
 /* Show full string on hover */
