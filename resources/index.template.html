@@ -89,12 +89,35 @@
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+
+                vertical-align: top;
             }
             @media (max-width: 70em) {
                 .component {
                     width: 100%;
                 }
             }
+            /* Show full string on hover */
+            .component:hover {
+                overflow: visible;
+                z-index: 1;
+                position: relative;
+            }
+            .component:hover::after {
+                background: white;
+                outline: 1px solid #eee;
+                z-index: -1;
+
+                /* Play a little bit dirty, replicate the component text itself to assume same size */
+                content: attr(data-name);
+                padding: 4px 4px 4px calc(1.2rem + 9px);
+                height: 1.2rem;
+                color: transparent;
+
+                position: absolute;
+                left: 0; top: 0;
+            }
+            /* Component colors */
             .component.green::before {
                 background-color: green;
             }

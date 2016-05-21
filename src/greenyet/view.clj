@@ -43,9 +43,8 @@
         [:li {:class (str/join " " ["component" (some-> comp
                                                         :color
                                                         name)])
-              :title (if (:message comp)
-                       (str/join [(:name comp) ": " (:message comp)])
-                       (:name comp))}
+              :title (:message comp)
+              :data-name (:name comp)}
          (:name comp)])
       [:li.more]])])
 
