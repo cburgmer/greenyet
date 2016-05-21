@@ -1,0 +1,11 @@
+language: clojure
+before_deploy:
+- lein ring uberjar
+deploy:
+  provider: releases
+  api_key:
+    secure: qcdj5WtRbQ6UGEwfxvahtJjbgtvIqrAGRo2hTJZY/0zhpV2ZinCeHgdDSbyy/LcdCe329aXFW+/Caf8MBVA9NZQ76RNDGWTXUvBU03ggmqTOYxNtmxfqLpd+6o5+t30+aLg0QfGflmnyYxhAZgFWKpgkCna55MIbWcNyP+6SESPEOd4DGH+d9WZoGmHS64sbQSS4hUHagetHAPV40V44iLY2PZUOGlsQaQ4Mumz/09XoCfyynztruIaVtN0LSrGsNBFJfIiMqUpWS9WvDL8o2g6TuYBS20F49V1wiNFOlzdn/mNmDPQQLsU/rY9FW4XVycPuGTVf4kTX6hweU84DHmE2WScIxTMv/u8hdoI/vXZP9+33visP3A5T1LbP3mCs4823Ob+NJ9fPq4m51a/1AuCQGL4dPLxmrrJ1UWPNHFmpNuFjGXIRunMlrFFgHSq1Fyvw1JJzjeZk5xj+tC1fc96Xlma1qlDYjOCipxD8cwGAHt5ECV8szx6+7ytmCqwll0+vX3AeRXrb1aM+SBmC+vGE7ihm1UwrW7wMU56Q3NtrbGcHkx2objk+GfLOur02RCENKkH3tgjQx+B/QNqgzXNQ2gEVVBdP7WOf5XZZ84kS8N02TLFAS9Fq+moo5e31ZdNvNYnX4ty+1Q/8NHHCz2v7Cs/7VMjtMwIinCTBVYc=
+  file: target/greenyet-*-standalone.jar
+  skip_cleanup: true
+  on:
+    tags: true
