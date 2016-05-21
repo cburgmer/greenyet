@@ -11,10 +11,12 @@
         "description": "No up-to-date information"
     }, {
         "name": "Another red system",
-        "status": "red"
+        "status": "red",
+        "description": "Broken"
     }, {
         "name": "More red",
-        "status": "red"
+        "status": "red",
+        "description": "Connection timeout"
     }, {
         "name": "Green system",
         "status": "green"

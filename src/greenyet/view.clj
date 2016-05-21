@@ -28,7 +28,7 @@
        (map (fn [[_ system-host-list]]
               (system-row environments system-host-list)))))
 
-(def *color-by-importance* [:red :yellow :green])
+(def color-by-importance [:red :yellow :green])
 
 (defn- host-as-html [host]
   [:td {:class (str/join " " ["host" (some-> host
@@ -39,11 +39,13 @@
      [:span.message (escape-html (:message host))])
    (when (:components host)
      [:ol.components
-      (for [comp (prefer-order-of *color-by-importance* (:components host) :color)]
+      (for [comp (prefer-order-of color-by-importance (:components host) :color)]
         [:li {:class (str/join " " ["component" (some-> comp
                                                         :color
                                                         name)])
-              :title (:message comp)}
+              :title (if (:message comp)
+                       (str/join [(:name comp) ": " (:message comp)])
+                       (:name comp))}
          (:name comp)])
       [:li.more]])])
 

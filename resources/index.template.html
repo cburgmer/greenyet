@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="refresh" content="5">
+        <link rel="shortcut icon" href="/favicon.ico">
         <title>greenyet</title>
         <style>
             body {
@@ -23,7 +24,7 @@
             td:first-child {
                 text-align: left;
                 padding: 5px 5px 5px 0;
-                width: 200px;
+                width: 10rem;
                 word-wrap: break-word;
             }
             ol {
@@ -66,6 +67,26 @@
             .components {
                 background: white;
                 margin: 10px;
+                padding: 2px;
+                text-align: left;
+                position: relative;
+            }
+            .component {
+                display: inline-block;
+                line-height: 1.2rem;
+                padding: 4px;
+
+                width: 50%;
+                box-sizing: border-box;
+
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            @media (max-width: 70em) {
+                .component {
+                    width: 100%;
+                }
             }
             .component.green::before {
                 background-color: green;
@@ -82,25 +103,22 @@
                 vertical-align: middle;
                 margin-right: 5px;
             }
-            .component {
-                display: inline-block;
-                height: 1.2rem;
-                line-height: 1.2rem;
-                margin: 6px;
-            }
 
             /* Hide too many green components */
-            .component.green:nth-child(n+6) {
+            .component.green:nth-child(n+5) {
                 display: none;
             }
             .more {
                 display: none;
+                position: absolute;
+                right: 0;
+                bottom: 0;
             }
             .more::before {
                 content: '...';
-                margin-left: 2rem;
+                padding: 4px;
             }
-            .component.green:nth-child(n+6) ~ .more {
+            .component.green:nth-child(n+5) ~ .more {
                 display: inline-block;
             }
             /* Show on hover */
