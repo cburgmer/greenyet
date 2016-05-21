@@ -58,13 +58,15 @@
              (poll-status host status-url-config)))))
 
 
-(def ^:private page-template (-> "index.template.html" io/resource io/file slurp))
+(defn- page-template []
+  (-> "index.template.html" io/resource io/file slurp))
 
-(def ^:private environment-names (-> "environment_names.yaml" io/resource io/file slurp yaml/parse-string))
+(defn- environment-names []
+  (-> "environment_names.yaml" io/resource io/file slurp yaml/parse-string))
 
 (defn- render [_]
   (let [[host-with-statuses last-changed] @statuses]
-    (-> (response (view/render (vals host-with-statuses) page-template environment-names))
+    (-> (response (view/render (vals host-with-statuses) (page-template) (environment-names)))
         (content-type "text/html")
         (header "Last-Modified" (format-date (.toDate last-changed)))
         (charset "UTF-8"))))
