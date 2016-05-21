@@ -28,10 +28,10 @@
 
 
 (defn- page-template []
-  (-> "index.template.html" io/resource io/file slurp))
+  (-> "index.template.html" io/resource slurp))
 
 (defn- environment-names []
-  (-> "environment_names.yaml" io/resource io/file slurp yaml/parse-string))
+  (-> "environment_names.yaml" io/resource slurp yaml/parse-string))
 
 (defn- query-param-as-vec [params key]
   (let [value (get params key)
