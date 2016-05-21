@@ -1,7 +1,6 @@
 (ns greenyet.view
   (:require [clojure.string :as str]
-            [hiccup.util :refer [escape-html]]
-            [hiccup.core :refer [html]]))
+            [hiccup.core :refer [h html]]))
 
 (defn- index-of [list item]
   (count (take-while (partial not= item) list)))
@@ -33,19 +32,21 @@
 (defn- host-as-html [host]
   [:td {:class (str/join " " ["host" (some-> host
                                              :color
-                                             name)])}
-   (escape-html (:hostname host))
+                                             name
+                                             h)])}
+   (h (:hostname host))
    (when (:message host)
-     [:span.message (escape-html (:message host))])
+     [:span.message (h (:message host))])
    (when (:components host)
      [:ol.components
       (for [comp (prefer-order-of color-by-importance (:components host) :color)]
         [:li {:class (str/join " " ["component" (some-> comp
                                                         :color
-                                                        name)])
-              :title (:message comp)
-              :data-name (:name comp)}
-         (:name comp)])
+                                                        name
+                                                        h)])
+              :title (h (:message comp))
+              :data-name (h (:name comp))}
+         (h (:name comp))])
       [:li.more]])])
 
 (defn- environment-table-as-html [environments rows]
@@ -56,14 +57,14 @@
           [:tr
            [:td]
            (for [env environments]
-             [:td (escape-html env)])]]
+             [:td (h env)])]]
          [:tbody
           (for [row rows]
             [:tr
              [:td
-              (let [system-name (escape-html (some :system row))]
-                [:a {:href (str/join ["?systems=" system-name])}
-                 system-name])]
+              (let [system-name (h (some :system row))]
+                [:a {:href (str/join ["?systems=" (h system-name)])}
+                 (h system-name)])]
              (for [host row]
                (host-as-html host))])]]))
 
