@@ -1,0 +1,152 @@
+body {
+    font-family: sans-serif;
+}
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    table-layout: fixed;
+}
+td {
+    text-align: center;
+    padding: 5px;
+    border: solid white 0;
+    border-width: 2px 4px 2px 0;
+}
+td:first-child {
+    text-align: left;
+    padding: 5px 5px 5px 0;
+    width: 10rem;
+    word-wrap: break-word;
+}
+ol {
+    padding: 0;
+    list-style: none;
+}
+a {
+    color: inherit;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+.project-link {
+    font-size: 0.8rem;
+    text-decoration: none;
+    color: gray;
+    letter-spacing: 0.2rem;
+}
+
+.host.green {
+    background-color: green;
+}
+.host.yellow {
+    background-color: yellow;
+}
+.host {
+    background-color: red;
+    height: 50px;
+}
+.host:empty {
+    background: lightgray;
+}
+
+.message {
+    display: block;
+    padding-top: 4px;
+    font-style: italic;
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 8em;
+    margin: auto;
+}
+
+.components {
+    background: white;
+    margin: 10px;
+    padding: 2px;
+    text-align: left;
+    position: relative;
+}
+.component {
+    display: inline-block;
+    line-height: 1.2rem;
+    padding: 4px;
+
+    width: 50%;
+    box-sizing: border-box;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    vertical-align: top;
+}
+@media (max-width: 70em) {
+    .component {
+        width: 100%;
+    }
+}
+/* Show full string on hover */
+.component:hover {
+    overflow: visible;
+    z-index: 1;
+    position: relative;
+}
+.component:hover::after {
+    background: white;
+    outline: 1px solid #eee;
+    z-index: -1;
+
+    /* Play a little bit dirty, replicate the component text itself to assume same size */
+    content: attr(data-name);
+    padding: 4px 4px 4px calc(1.2rem + 9px);
+    height: 1.2rem;
+    color: transparent;
+
+    position: absolute;
+    left: 0; top: 0;
+}
+/* Component colors */
+.component.green::before {
+    background-color: green;
+}
+.component.yellow::before {
+    background-color: yellow;
+}
+.component::before {
+    content: '';
+    display: inline-block;
+    background-color: red;
+    width: 1.2rem;
+    height: 1.2rem;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+/* Hide too many green components */
+.component.green:nth-child(n+5) {
+    display: none;
+}
+.more {
+    display: none;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+.more::before {
+    content: '...';
+    padding: 4px;
+}
+.component.green:nth-child(n+5) ~ .more {
+    display: inline-block;
+}
+/* Show on hover */
+.components:hover .component {
+    display: inline-block;
+}
+.components:hover .component ~ .more {
+    display: none;
+}
