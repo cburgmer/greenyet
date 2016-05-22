@@ -39,13 +39,13 @@ a:hover {
 }
 
 .host.green {
-    background-color: green;
+    background-color: #009900;
 }
 .host.yellow {
-    background-color: yellow;
+    background-color: #FFF108;
 }
 .host {
-    background-color: red;
+    background-color: #D30000;
     height: 50px;
 }
 .host:empty {
@@ -124,15 +124,15 @@ a:hover {
 }
 /* Component colors */
 .component.green::before {
-    background-color: green;
+    background-color: #009900;
 }
 .component.yellow::before {
-    background-color: yellow;
+    background-color: #FFF108;
 }
 .component::before {
     content: '';
     display: inline-block;
-    background-color: red;
+    background-color: #D30000;
     width: 1.2rem;
     height: 1.2rem;
     vertical-align: middle;
