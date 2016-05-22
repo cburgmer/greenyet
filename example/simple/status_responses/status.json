@@ -1,0 +1,17 @@
+{
+    "color": "yellow",
+    "message": "Connection timeout",
+    "components": [{
+        "name": "Data provisioning",
+        "color": "red",
+        "message": "Connection timeout"
+    }, {
+        "name": "Cache refresh",
+        "color": "green",
+        "message": "100% completed"
+    }, {
+        "name": "Database",
+        "color": "green",
+        "message": "Last request 0.42s ago"
+    }]
+}

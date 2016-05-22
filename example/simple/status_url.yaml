@@ -1,0 +1,10 @@
+---
+- url: http://%host%:8000/status.json
+  system: Article search
+  color: color
+  message: message
+  components:
+    json-path: $.components
+    name: name
+    color: color
+    message: message

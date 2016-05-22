@@ -1,0 +1,4 @@
+---
+- hostname: localhost
+  system: Article search
+  environment: Production

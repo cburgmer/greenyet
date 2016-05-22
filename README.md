@@ -14,8 +14,8 @@ Greenyet polls all your services for status information and gives a traffic ligh
 
 ## Usage
 
-    $ CONFIG_DIR=example lein ring server
-    $ ./example/run_mock_service.sh
+    $ CONFIG_DIR=example/simple lein ring server
+    $ ./example/simple/run_mock_service.sh
 
 But seriously, for production use the [released standalone JAR](https://github.com/cburgmer/greenyet/releases).
 
