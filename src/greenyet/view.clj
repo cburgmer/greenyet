@@ -83,5 +83,5 @@
         selected-hosts (filter-systems host-list-with-status selected-systems)
         rows (environment-table environments selected-hosts)]
     (str/replace page-template
-                 #"<!-- BODY -->"
+                 "<!-- BODY -->"
                  (environment-table-as-html environments rows))))
