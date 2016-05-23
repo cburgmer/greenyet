@@ -14,10 +14,12 @@ Greenyet polls all your services for status information and gives a traffic ligh
 
 ## Usage
 
+You'll need [Leiningen](http://leiningen.org/), Clojure's favorite build tool. Don't know much about Clojure yet? It's actually quite fun!
+
     $ CONFIG_DIR=example/simple lein ring server
     $ ./example/simple/run_mock_service.sh
 
-But seriously, for production use the [released standalone JAR](https://github.com/cburgmer/greenyet/releases).
+Don't want to go that far? We got you covered! Try the production release [standalone JAR](https://github.com/cburgmer/greenyet/releases) (run via `java -jar greenyet-*-standalone.jar`).
 
 ### Configuration
 
