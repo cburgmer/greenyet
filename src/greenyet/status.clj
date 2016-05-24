@@ -54,7 +54,7 @@
 
 (defn- fetch-status [url host-config]
   (try
-    (let [response (client/get url)]
+    (let [response (client/get url {:accept "application/json"})]
       (if (= 200 (:status response))
         (application-status response host-config)
         {:color :red
