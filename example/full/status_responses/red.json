@@ -1,4 +1,5 @@
 {
     "status": "red",
+    "package-version": "system-status-red-1.2.0.rc1",
     "message": "Database connection timeout"
 }

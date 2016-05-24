@@ -36,11 +36,15 @@
                  :name (get-simple-key component name-conf)
                  :message (get-simple-key component message-conf)})))))
 
-(defn- application-status [response {color-conf :color message-conf :message components-conf :components}]
+(defn- application-status [response {color-conf :color
+                                     message-conf :message
+                                     package-version-conf :package-version
+                                     components-conf :components :as m}]
   (if color-conf
     (let [json (j/parse-string (:body response) true)]
       {:color (status-color json color-conf)
        :message (get-simple-key json message-conf)
+       :package-version (get-simple-key json package-version-conf)
        :components (component-statuses json components-conf)})
     {:color :green
      :message "OK"}))

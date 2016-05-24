@@ -1,6 +1,7 @@
 {
     "color": "yellow",
     "message": "Job unhappy",
+    "package-version": "component-statuses-0.1.0",
     "subSystems": [{
         "name": "Some child system",
         "status": "green",

@@ -22,6 +22,12 @@
     :color color-key
     :message message-key}])
 
+(defn- a-url-config-with-package-version [url package-version]
+  [{:service "the_service"
+    :url url
+    :color "color"
+    :package-version package-version}])
+
 (defn- a-url-config-with-components [url component-config]
   [{:service "the_service"
     :url url
@@ -121,6 +127,21 @@
                (:message (sut/with-status a-host (a-url-config-with-status-and-message "http://%host%/status.json"
                                                                                        "status"
                                                                                        "message"))))))))
+
+  (testing "package-version"
+    (testing "should extract value"
+      (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:color "green"
+                                                                                         :version "the-package-1.0.0"
+                                                                                         :body ""})}
+        (is (= "the-package-1.0.0"
+               (:package-version (sut/with-status a-host (a-url-config-with-package-version "http://%host%/status.json"
+                                                                                            "version")))))))
+
+    (testing "should handle missing value"
+      (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:color "green"
+                                                                                         :body ""})}
+        (is (nil? (:package-version (sut/with-status a-host (a-url-config-with-package-version "http://%host%/status.json"
+                                                                                               "package-version"))))))))
 
   (testing "components"
     (testing "return all statuses"

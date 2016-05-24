@@ -38,15 +38,17 @@ a:hover {
     letter-spacing: 0.2rem;
 }
 
+.host {
+    background-color: #D30000;
+    height: 50px;
+    text-align: left;
+    padding: 8px;
+}
 .host.green {
     background-color: #009900;
 }
 .host.yellow {
     background-color: #FFF108;
-}
-.host {
-    background-color: #D30000;
-    height: 50px;
 }
 .host:empty {
     background: lightgray;
@@ -65,7 +67,7 @@ a:hover {
 
 .components {
     background: white;
-    margin: 10px;
+    margin: 10px 0 5px;
     padding: 2px;
     text-align: left;
     position: relative;

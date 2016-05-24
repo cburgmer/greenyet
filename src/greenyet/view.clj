@@ -34,7 +34,9 @@
                                              :color
                                              name
                                              h)])}
-   (h (:hostname host))
+   (h (if (:package-version host)
+        (:package-version host)
+        (:system host)))
    (when (:message host)
      [:span.message (h (:message host))])
    (when (:components host)

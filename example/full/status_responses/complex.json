@@ -1,4 +1,5 @@
 {
+    "package-version": "complex-1.2.0.rc1",
     "status": {
         "main": ["healthy"]
     }
