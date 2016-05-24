@@ -32,19 +32,19 @@ Config as YAML (remember JSON is a subset):
     - system: SimpleSystem
       url: http://%host%:8080/
     - system: SystemWithStatusJson
-      url: http://%host%:8080/status.json
+      url: http://%hostname%:8080/status.json
       color: "status"
       message: "readableStatus"
       package-version: "packageWithVersion"
     - system: EvenMoreComplexSystem
-      url: http://%host%:8080/complex.json
+      url: http://%hostname%:8080/complex.json
       package-version: "packageWithVersion"
       color:
         json-path: $.complex[1].color # query as implemented by https://github.com/gga/json-path
         green-value: "healthy"
         yellow-value: "warning"
     - system: SystemWithComponents
-      url: http://%host%:8080/with_components.json
+      url: http://%hostname%:8080/with_components.json
       color: "color"
       package-version: "version"
       components:

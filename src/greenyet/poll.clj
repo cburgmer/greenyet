@@ -23,7 +23,7 @@
       (recur))))
 
 (defn- status-url [host {url-template :url}]
-  (str/replace url-template #"%host%" (:hostname host)))
+  (str/replace url-template #"%hostname%" (:hostname host)))
 
 (defn with-config [host status-url-config]
   (let [host-config (first (filter #(= (:system %) (:system host)) status-url-config))

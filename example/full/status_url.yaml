@@ -1,25 +1,25 @@
 ---
 - system: SystemWithSimpleStatusCheck
-  url: http://%host%:8000/found
+  url: http://%hostname%:8000/found
 - system: SystemWith404
-  url: http://%host%:8000/not_found
+  url: http://%hostname%:8000/not_found
 - system: SystemStatusRed
-  url: http://%host%:8000/red.json
+  url: http://%hostname%:8000/red.json
   color: color
   message: message
   package-version: package-version
 - system: SystemStatusYellow
-  url: http://%host%:8000/yellow.json
+  url: http://%hostname%:8000/yellow.json
   color: status
 - system: ComplexSystemStatus
-  url: http://%host%:8000/complex.json
+  url: http://%hostname%:8000/complex.json
   package-version: package-version
   color:
     json-path: $.status.main[0]
     green-value: healthy
     yellow-value: warning
 - system: ComponentStatuses
-  url: http://%host%:8000/component_status.json
+  url: http://%hostname%:8000/component_status.json
   color: color
   message: message
   package-version: package-version

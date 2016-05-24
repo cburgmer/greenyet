@@ -1,5 +1,5 @@
 ---
-- url: http://%host%:8000/status.json
+- url: http://%hostname%:8000/status.json
   system: Article search
   color: color
   message: message
