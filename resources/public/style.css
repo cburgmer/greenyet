@@ -9,6 +9,7 @@ table {
 }
 td {
     text-align: center;
+    vertical-align: top;
     padding: 5px;
     border: solid white 0;
     border-width: 2px 4px 2px 0;
