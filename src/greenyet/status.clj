@@ -65,11 +65,7 @@
                   (message-for-http-response response)
                   (.getMessage e))})))
 
-(defn- status-url [host {url-template :url}]
-  (str/replace url-template #"%host%" (:hostname host)))
 
-(defn with-status [host status-url-config]
-  (let [host-config (first (filter #(= (:system %) (:system host)) status-url-config))
-        url (status-url host host-config)
-        status (fetch-status url host-config)]
-    (merge host status {:status-url url})))
+(defn with-status [{:keys [status-url config] :as host}]
+  (let [status (fetch-status status-url config)]
+    (merge host status)))
