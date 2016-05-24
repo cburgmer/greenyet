@@ -39,7 +39,7 @@
 (defn- application-status [response {color-conf :color
                                      message-conf :message
                                      package-version-conf :package-version
-                                     components-conf :components :as m}]
+                                     components-conf :components}]
   (if color-conf
     (let [json (j/parse-string (:body response) true)]
       {:color (status-color json color-conf)

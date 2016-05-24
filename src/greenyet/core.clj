@@ -3,6 +3,7 @@
             [clojure.java.io :as io]
             [clojure.string :as str]
             [greenyet
+             [config :as config]
              [poll :as poll]
              [view :as view]]
             [ring.middleware
@@ -59,7 +60,7 @@
        (map println)
        doall)
   (try
-    (poll/start-polling config-dir timeout-in-ms)
+    (poll/start-polling (config/hosts-with-config config-dir) timeout-in-ms)
     (catch FileNotFoundException e
       (binding [*out* *err*]
         (println (.getMessage e)))
