@@ -72,4 +72,4 @@
   (let [host-config (first (filter #(= (:system %) (:system host)) status-url-config))
         url (status-url host host-config)
         status (fetch-status url host-config)]
-    (merge host status)))
+    (merge host status {:status-url url})))

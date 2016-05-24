@@ -188,4 +188,9 @@
                                                                                   {:json-path "$.components[*]"
                                                                                    :color "status"
                                                                                    :name "description"
-                                                                                   :message "textualStatus"})))))))))
+                                                                                   :message "textualStatus"}))))))))
+
+  (testing "should return status url"
+    (fake/with-fake-routes-in-isolation {"http://the_host/status.json" (json-response {:color "red"})}
+      (is (= "http://the_host/status.json"
+             (:status-url (sut/with-status a-host (a-url-config-with-color "http://%host%/status.json" "color"))))))))
