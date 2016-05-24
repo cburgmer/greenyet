@@ -146,12 +146,17 @@ a:hover {
 .more {
     display: none;
     position: absolute;
-    right: 0;
-    bottom: 0;
+    bottom: -10px;
+    left: 0; right: 0;
+    background: linear-gradient(to bottom, white, #FFF108);
+    height: 10px;
 }
 .more::before {
-    content: '...';
-    padding: 4px;
+    text-align: center;
+    content: '⨠';
+    display: block;
+    font-size: 9px;
+    transform: rotate(90deg);
 }
 .component.green:nth-child(n+5) ~ .more {
     display: inline-block;
