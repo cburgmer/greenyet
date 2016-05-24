@@ -12,7 +12,9 @@
 
 
 (defn- host-for-environment [host-list environment]
-  (first (filter #(= environment (:environment %)) host-list)))
+  (first (filter (fn [[{host-environment :environment} _]]
+                   (= environment host-environment))
+                 host-list)))
 
 (defn- system-row [environments host-list]
   (map (fn [environment]
@@ -21,7 +23,7 @@
 
 (defn- environment-table [environments host-list]
   (->> host-list
-       (group-by :system)
+       (group-by (fn [[{system :system} _]] system))
        (sort (fn [[system1 _] [system2 _]]
                (compare system1 system2)))
        (map (fn [[_ system-host-list]]
@@ -29,21 +31,21 @@
 
 (def color-by-importance [:red :yellow :green])
 
-(defn- host-as-html [host]
-  [:td {:class (str/join " " ["host" (some-> host
+(defn- host-as-html [host status]
+  [:td {:class (str/join " " ["host" (some-> status
                                              :color
                                              name
                                              h)])}
-   (when (:color host)
+   (when (:color status)
      [:a {:href (h (:status-url host))}
-      (h (if (:package-version host)
-           (:package-version host)
+      (h (if (:package-version status)
+           (:package-version status)
            (:system host)))])
-   (when (:message host)
-     [:span.message (h (:message host))])
-   (when (:components host)
+   (when (:message status)
+     [:span.message (h (:message status))])
+   (when (:components status)
      [:ol.components
-      (for [comp (prefer-order-of color-by-importance (:components host) :color)]
+      (for [comp (prefer-order-of color-by-importance (:components status) :color)]
         [:li {:class (str/join " " ["component" (some-> comp
                                                         :color
                                                         name
@@ -66,26 +68,29 @@
           (for [row rows]
             [:tr
              [:td
-              (let [system-name (h (some :system row))]
+              (let [system-name (h (some :system (map first row)))]
                 [:a {:href (str/join ["?systems=" (h system-name)])}
                  (h system-name)])]
-             (for [host row]
-               (host-as-html host))])]]))
+             (for [[host status] row]
+               (host-as-html host status))])]]))
 
 
-(defn- filter-systems [host-list-with-status selected-systems]
+(defn- filter-systems [host-status-pairs selected-systems]
   (if selected-systems
-    (filter (fn [{system :system}]
+    (filter (fn [[{system :system} _]]
               (contains? (set selected-systems) system))
-            host-list-with-status)
-    host-list-with-status))
+            host-status-pairs)
+    host-status-pairs))
 
-(defn render [host-list-with-status selected-systems page-template environment-names]
+(defn render [host-status-pairs selected-systems page-template environment-names]
   (let [environments (prefer-order-of environment-names
-                                      (distinct (map :environment host-list-with-status))
+                                      (->> host-status-pairs
+                                           (map first)
+                                           (map :environment)
+                                           distinct)
                                       str/lower-case)
-        selected-hosts (filter-systems host-list-with-status selected-systems)
-        rows (environment-table environments selected-hosts)]
+        selected-entries (filter-systems host-status-pairs selected-systems)
+        rows (environment-table environments selected-entries)]
     (str/replace page-template
                  "<!-- BODY -->"
                  (environment-table-as-html environments rows))))

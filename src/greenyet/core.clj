@@ -42,7 +42,7 @@
 
 (defn- render [{params :params}]
   (let [[host-with-statuses last-changed] @poll/statuses]
-    (-> (response (view/render (vals host-with-statuses)
+    (-> (response (view/render host-with-statuses
                                (query-param-as-vec params "systems")
                                (page-template)
                                (environment-names)))

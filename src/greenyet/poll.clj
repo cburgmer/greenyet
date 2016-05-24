@@ -15,13 +15,9 @@
        last-changed
        (tc/now))]))
 
-(defn- with-status [host]
-  (let [status (status/fetch-status host)]
-    (merge host status)))
-
 (defn- poll-status [timeout-in-ms host]
   (go-loop []
-    (let [status (with-status host)]
+    (let [status (status/fetch-status host)]
       (swap! statuses update-status host status)
       (<! (timeout timeout-in-ms))
       (recur))))
