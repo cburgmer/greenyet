@@ -52,11 +52,12 @@
 (defn- message-for-http-response [response]
   (format "Status %s: %s" (:status response) (:body response)))
 
-(defn- fetch-status [url host-config]
+
+(defn fetch-status [{:keys [status-url config]}]
   (try
-    (let [response (client/get url {:accept "application/json"})]
+    (let [response (client/get status-url {:accept "application/json"})]
       (if (= 200 (:status response))
-        (application-status response host-config)
+        (application-status response config)
         {:color :red
          :message (message-for-http-response response)}))
     (catch Exception e
@@ -64,8 +65,3 @@
        :message (if-let [response (ex-data e)]
                   (message-for-http-response response)
                   (.getMessage e))})))
-
-
-(defn with-status [{:keys [status-url config] :as host}]
-  (let [status (fetch-status status-url config)]
-    (merge host status)))

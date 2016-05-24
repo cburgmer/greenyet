@@ -51,55 +51,55 @@
     (with-fake-resource "http://the_host/not_found" (fn [_] {:status 500
                                                              :body ""})
       (is (= :red
-             (:color (sut/with-status (host-without-color-config "http://the_host/not_found")))))))
+             (:color (sut/fetch-status (host-without-color-config "http://the_host/not_found")))))))
 
   (testing "should return green for 200"
     (with-fake-resource "http://the_host/found" (fn [_] {:status 200
                                                          :body ""})
       (is (= :green
-             (:color (sut/with-status (host-without-color-config "http://the_host/found")))))))
+             (:color (sut/fetch-status (host-without-color-config "http://the_host/found")))))))
 
   (testing "should return red for color red"
     (with-fake-resource "http://the_host/status.json" (json-response {:color "red"})
       (is (= :red
-             (:color (sut/with-status (host-with-color-config "http://the_host/status.json" "color")))))))
+             (:color (sut/fetch-status (host-with-color-config "http://the_host/status.json" "color")))))))
 
   (testing "should return yellow for color yellow"
     (with-fake-resource "http://the_host/status.json" (json-response {:color "yellow"})
       (is (= :yellow
-             (:color (sut/with-status (host-with-color-config "http://the_host/status.json" "color")))))))
+             (:color (sut/fetch-status (host-with-color-config "http://the_host/status.json" "color")))))))
 
   (testing "should return green for color green"
     (with-fake-resource "http://the_host/status.json" (json-response {:status "green"})
       (is (= :green
-             (:color (sut/with-status (host-with-color-config "http://the_host/status.json" "status")))))))
+             (:color (sut/fetch-status (host-with-color-config "http://the_host/status.json" "status")))))))
 
   (testing "should fail if status key is configured but no JSON is provided"
     (with-fake-resource "http://the_host/status.json" (fn [_] {:status 200
                                                                :body "some body"})
       (is (= :red
-             (:color (sut/with-status (host-with-color-config "http://the_host/status.json" "status")))))))
+             (:color (sut/fetch-status (host-with-color-config "http://the_host/status.json" "status")))))))
 
   (testing "should only evaluate JSON if configured"
     (with-fake-resource "http://the_host/status.json" (json-response {:color "red"})
       (is (= :green
-             (:color (sut/with-status (host-without-color-config "http://the_host/status.json")))))))
+             (:color (sut/fetch-status (host-without-color-config "http://the_host/status.json")))))))
 
   (testing "should return status from json-path config"
     (with-fake-resource "http://the_host/status.json" (json-response {:complex ["some garbage" {:color "yellow"}]})
       (is (= :yellow
-             (:color (sut/with-status (host-with-color-config "http://the_host/status.json" {:json-path "$.complex[1].color"})))))))
+             (:color (sut/fetch-status (host-with-color-config "http://the_host/status.json" {:json-path "$.complex[1].color"})))))))
 
   (testing "should return status with specific color for green status"
     (with-fake-resource "http://the_host/status.json" (json-response {:happy true})
       (is (= :green
-             (:color (sut/with-status (host-with-color-config "http://the_host/status.json" {:json-path "$.happy"
+             (:color (sut/fetch-status (host-with-color-config "http://the_host/status.json" {:json-path "$.happy"
                                                                                              :green-value true})))))))
 
   (testing "should return status with specific color for yellow status"
     (with-fake-resource "http://the_host/status.json" (json-response {:status "pending"})
       (is (= :yellow
-             (:color (sut/with-status (host-with-color-config "http://the_host/status.json" {:json-path "$.status"
+             (:color (sut/fetch-status (host-with-color-config "http://the_host/status.json" {:json-path "$.status"
                                                                                              :yellow-value "pending"})))))))
 
   (testing "messages"
@@ -107,30 +107,30 @@
       (with-fake-resource "http://the_host/found" (fn [_] {:status 200
                                                            :body ""})
         (is (= "OK"
-               (:message (sut/with-status (host-without-color-config "http://the_host/found")))))))
+               (:message (sut/fetch-status (host-without-color-config "http://the_host/found")))))))
 
     (testing "for 500"
       (with-fake-resource "http://the_host/error" (fn [_] {:status 500
                                                            :body "Internal Error"})
         (is (= "Status 500: Internal Error"
-               (:message (sut/with-status (host-without-color-config "http://the_host/error")))))))
+               (:message (sut/fetch-status (host-without-color-config "http://the_host/error")))))))
 
     (testing "for 302"
       (with-fake-resource "http://the_host/redirect" (fn [_] {:status 302
                                                               :body "Found"})
         (is (= "Status 302: Found"
-               (:message (sut/with-status (host-without-color-config "http://the_host/redirect")))))))
+               (:message (sut/fetch-status (host-without-color-config "http://the_host/redirect")))))))
 
     (testing "for internal exception"
       (with-fake-resource "http://the_host/status.json" (fn [_] {:status 200
                                                                  :body "some body"})
-        (is (some? (:message (sut/with-status (host-with-color-config "http://the_host/status.json" "status")))))))
+        (is (some? (:message (sut/fetch-status (host-with-color-config "http://the_host/status.json" "status")))))))
 
     (testing "should return message if configured"
       (with-fake-resource "http://the_host/status.json" (json-response {:status "green"
                                                                         :message "up and running"})
         (is (= "up and running"
-               (:message (sut/with-status (host-with-status-message-config "http://the_host/status.json"
+               (:message (sut/fetch-status (host-with-status-message-config "http://the_host/status.json"
                                                                            "status"
                                                                            "message"))))))))
 
@@ -140,13 +140,13 @@
                                                                         :version "the-package-1.0.0"
                                                                         :body ""})
         (is (= "the-package-1.0.0"
-               (:package-version (sut/with-status (host-with-version-config "http://the_host/status.json"
+               (:package-version (sut/fetch-status (host-with-version-config "http://the_host/status.json"
                                                                             "version")))))))
 
     (testing "should handle missing value"
       (with-fake-resource "http://the_host/status.json" (json-response {:color "green"
                                                                         :body ""})
-        (is (nil? (:package-version (sut/with-status (host-with-version-config "http://the_host/status.json"
+        (is (nil? (:package-version (sut/fetch-status (host-with-version-config "http://the_host/status.json"
                                                                                "package-version"))))))))
 
   (testing "components"
@@ -156,7 +156,7 @@
                                                                                               {:status "red"}
                                                                                               {:status "yellow"}]})
         (is (= [:green :red :yellow]
-               (->> (sut/with-status (host-with-component-config "http://the_host/with_components.json"
+               (->> (sut/fetch-status (host-with-component-config "http://the_host/with_components.json"
                                                                  {:json-path "$.components[*]"
                                                                   :color "status"}))
                     :components
@@ -167,7 +167,7 @@
                                                                                               {:status "whatever"}
                                                                                               {:status "warning"}]})
         (is (= [:green :red :yellow]
-               (->> (sut/with-status (host-with-component-config "http://the_host/with_components.json"
+               (->> (sut/fetch-status (host-with-component-config "http://the_host/with_components.json"
                                                                  {:json-path "$.components[*]"
                                                                   :color {:json-path "$.status"
                                                                           :green-value "healthy"
@@ -179,7 +179,7 @@
                                                                                  :components [{:status "green"
                                                                                                :description "child 1"}]})
         (is (= [{:color :green :name "child 1" :message nil}]
-               (:components (sut/with-status (host-with-component-config "http://the_host/with_components.json"
+               (:components (sut/fetch-status (host-with-component-config "http://the_host/with_components.json"
                                                                          {:json-path "$.components[*]"
                                                                           :color "status"
                                                                           :name "description"})))))))
@@ -189,13 +189,8 @@
                                                                                                :description "child 1"
                                                                                                :textualStatus "swell"}]})
         (is (= [{:color :green :name "child 1" :message "swell"}]
-               (:components (sut/with-status (host-with-component-config "http://the_host/with_components.json"
+               (:components (sut/fetch-status (host-with-component-config "http://the_host/with_components.json"
                                                                          {:json-path "$.components[*]"
                                                                           :color "status"
                                                                           :name "description"
-                                                                          :message "textualStatus"}))))))))
-
-  (testing "should return status url"
-    (with-fake-resource "http://the_host/status.json" (json-response {:color "red"})
-      (is (= "http://the_host/status.json"
-             (:status-url (sut/with-status (host-with-color-config "http://the_host/status.json" "color"))))))))
+                                                                          :message "textualStatus"})))))))))
