@@ -165,12 +165,14 @@ a:hover {
 .component.green:nth-child(n+5) ~ .more {
     display: block;
 }
-/* Show on hover */
+/* Show on hover, tap, clicked */
 .show-components:active .component:nth-child(n+5),
+.components:target .component:nth-child(n+5),
 .components:hover .component:nth-child(n+5) {
     display: inline-block;
 }
 .show-components:active .component ~ .more,
+.components:target .component ~ .more,
 .components:hover .component ~ .more {
     display: none;
 }
