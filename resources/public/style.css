@@ -152,7 +152,7 @@ a:hover {
     display: none;
     position: absolute;
     bottom: -8px;
-    left: 0; right: 0;
+    right: 50%;
     height: 10px;
 }
 .more::before {
