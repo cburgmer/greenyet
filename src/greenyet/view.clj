@@ -44,16 +44,18 @@
    (when (:message status)
      [:span.message (h (:message status))])
    (when (:components status)
-     [:ol.components
-      (for [comp (prefer-order-of color-by-importance (:components status) :color)]
-        [:li {:class (str/join " " ["component" (some-> comp
-                                                        :color
-                                                        name
-                                                        h)])
-              :title (h (:message comp))
-              :data-name (h (:name comp))}
-         (h (:name comp))])
-      [:li.more]])])
+     (let [components-id (h (str/join ["components-" (:system host) "-" (:environment host)]))]
+       [:a.show-components {:href (str/join ["#" components-id]) }
+        [:ol.components {:id components-id}
+         (for [comp (prefer-order-of color-by-importance (:components status) :color)]
+           [:li {:class (str/join " " ["component" (some-> comp
+                                                           :color
+                                                           name
+                                                           h)])
+                 :title (h (:message comp))
+                 :data-name (h (:name comp))}
+            (h (:name comp))])
+         [:li.more]]]))])
 
 (defn- environment-table-as-html [environments rows]
   (html [:table

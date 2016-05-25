@@ -166,9 +166,11 @@ a:hover {
     display: block;
 }
 /* Show on hover */
-.components:hover .component {
+.show-components:active .component:nth-child(n+5),
+.components:hover .component:nth-child(n+5) {
     display: inline-block;
 }
+.show-components:active .component ~ .more,
 .components:hover .component ~ .more {
     display: none;
 }
