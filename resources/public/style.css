@@ -1,5 +1,6 @@
 body {
     font-family: sans-serif;
+    color: #333;
 }
 table {
     border-collapse: separate;
@@ -11,8 +12,8 @@ td {
     text-align: center;
     vertical-align: top;
     padding: 5px;
-    border: solid white 0;
-    border-width: 2px 4px 2px 0;
+    border: 2px solid transparent;
+    background-clip: padding-box;
 }
 td:first-child {
     text-align: left;
@@ -52,7 +53,7 @@ a:hover {
     background-color: #FFF108;
 }
 .host:empty {
-    background: lightgray;
+    background-color: lightgray;
 }
 
 .message {
@@ -67,11 +68,12 @@ a:hover {
 }
 
 .components {
-    background: white;
-    margin: 10px 0 5px;
+    background-color: rgba(255, 255, 255, 0.7);
+    margin: 10px 0 0;
     padding: 2px;
     text-align: left;
     position: relative;
+    font-size: 0.9rem;
 }
 .component {
     display: inline-block;
@@ -149,9 +151,8 @@ a:hover {
 .more {
     display: none;
     position: absolute;
-    bottom: -10px;
+    bottom: -8px;
     left: 0; right: 0;
-    background: linear-gradient(to bottom, white, #FFF108);
     height: 10px;
 }
 .more::before {
@@ -162,7 +163,7 @@ a:hover {
     transform: rotate(90deg);
 }
 .component.green:nth-child(n+5) ~ .more {
-    display: inline-block;
+    display: block;
 }
 /* Show on hover */
 .components:hover .component {
