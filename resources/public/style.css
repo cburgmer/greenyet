@@ -148,6 +148,11 @@ a:hover {
 .component.green:nth-child(n+5) {
     display: none;
 }
+/* But show it anyway if it's the right side to a red/yellow */
+.component.red  + .component.green:nth-child(2n),
+.component.yellow  + .component.green:nth-child(2n) {
+    display: inline-block;
+}
 .more {
     display: none;
     position: absolute;
@@ -162,7 +167,8 @@ a:hover {
     font-size: 9px;
     transform: rotate(90deg);
 }
-.component.green:nth-child(n+5) ~ .more {
+/* Show if there's > 4 components, and a green component, which is shown on the left side (i.e. hidden) */
+.component.green:nth-child(2n+1):nth-child(n+5) ~ .more {
     display: block;
 }
 /* Show on hover, tap, clicked */

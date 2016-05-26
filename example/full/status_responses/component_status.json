@@ -7,22 +7,25 @@
         "status": "green",
         "description": "Operational"
     }, {
+        "name": "Another green system",
+        "status": "green"
+    }, {
         "name": "Another system ᶘᵒᴥᵒᶅ",
         "status": "yellow",
         "description": "No up-to-date information"
     }, {
         "name": "Another red system",
         "status": "red",
-        "description": "Broken"
+        "description": ["Broken", "Error"]
     }, {
         "name": "More red",
         "status": "red",
         "description": "Connection timeout"
     }, {
-        "name": "Green system",
-        "status": "green"
+        "name": "Yellow system",
+        "status": "yellow"
     }, {
         "name": "Yet another green system",
-        "status": "green"
+        "status": "red"
     }]
 }
