@@ -29,7 +29,13 @@
        (map (fn [[_ system-host-list]]
               (system-row environments system-host-list)))))
 
-(def color-by-importance [:red :yellow :green])
+
+(defn- message [{message :message}]
+  (if (vector? message)
+    (str/join ", " message)
+    message))
+
+(def ^:private color-by-importance [:red :yellow :green])
 
 (defn- host-as-html [host status]
   [:td {:class (str/join " " ["host" (some-> status
@@ -42,7 +48,7 @@
            (:package-version status)
            (:system host)))])
    (when (:message status)
-     [:span.message (h (:message status))])
+     [:span.message (h (message status))])
    (when (:components status)
      (let [components-id (h (str/join ["components-" (:system host) "-" (:environment host)]))]
        [:a.show-components {:href (str/join ["#" components-id]) }
@@ -52,7 +58,7 @@
                                                            :color
                                                            name
                                                            h)])
-                 :title (h (:message comp))
+                 :title (h (message comp))
                  :data-name (h (:name comp))}
             (h (:name comp))])
          [:li.more]]]))])

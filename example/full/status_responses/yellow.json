@@ -1,3 +1,7 @@
 {
-    "status": "yellow"
+    "status": "yellow",
+    "message": [
+        "Last sync >10 seconds ago",
+        "Last order placement failed"
+    ]
 }

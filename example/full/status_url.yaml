@@ -11,6 +11,7 @@
 - system: SystemStatusYellow
   url: http://%hostname%:8000/yellow.json
   color: status
+  message: message
 - system: ComplexSystemStatus
   url: http://%hostname%:8000/complex.json
   package-version: package-version
