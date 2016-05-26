@@ -10,6 +10,7 @@
              [not-modified :as not-modified]
              [params :as params]
              [resource :as resource]]
+            [clojure.walk :refer [keywordize-keys]]
             [ring.util
              [response :refer [charset content-type header response]]
              [time :refer [format-date]]])
@@ -27,9 +28,13 @@
                               ["PORT" (or (System/getenv "PORT")
                                           3000)]])
 
+(def development? (= "development" (System/getProperty "greenyet.environment")))
 
 (defn- page-template []
   (-> "index.template.html" io/resource slurp))
+
+(defn- styleguide-template []
+  (-> "styleguide.template.html" io/resource slurp))
 
 (defn- environment-names []
   (-> "environment_names.yaml" io/resource slurp yaml/parse-string))
@@ -41,15 +46,22 @@
                      value)]
     (seq (mapcat #(str/split % #",") value-vector))))
 
-(defn- render [{params :params}]
-  (let [[host-with-statuses last-changed] @poll/statuses]
-    (-> (response (view/render host-with-statuses
-                               (query-param-as-vec params "systems")
-                               (page-template)
-                               (environment-names)))
-        (content-type "text/html")
-        (header "Last-Modified" (format-date (.toDate last-changed)))
-        (charset "UTF-8"))))
+(defn- html-response [body]
+  (-> (response body)
+      (content-type "text/html")
+      (charset "UTF-8")))
+
+
+(defn- render [{params :params uri :uri}]
+  (if (and development?
+           (= "/styleguide" uri))
+    (html-response (view/styleguide (keywordize-keys params) (styleguide-template)))
+    (let [[host-with-statuses last-changed] @poll/statuses]
+      (-> (html-response (view/render host-with-statuses
+                                 (query-param-as-vec params "systems")
+                                 (page-template)
+                                 (environment-names)))
+          (header "Last-Modified" (format-date (.toDate last-changed)))))))
 
 
 (defn init []

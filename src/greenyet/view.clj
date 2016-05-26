@@ -82,6 +82,22 @@
              (for [[host status] row]
                (host-as-html host status))])]]))
 
+(defn- in-template [html template]
+  (str/replace template
+               "<!-- BODY -->"
+               html))
+
+
+(defn styleguide [{:keys [color message]} template]
+  (in-template (html [:table
+                      [:tbody
+                       [:tr
+                        (host-as-html {:status-url "/internal/status"}
+                                      {:color color
+                                       :package-version "system-1.3.0.rc1"
+                                       :message message})]]])
+               template))
+
 
 (defn- filter-systems [host-status-pairs selected-systems]
   (if selected-systems
@@ -99,6 +115,5 @@
                                       str/lower-case)
         selected-entries (filter-systems host-status-pairs selected-systems)
         rows (environment-table environments selected-entries)]
-    (str/replace page-template
-                 "<!-- BODY -->"
-                 (environment-table-as-html environments rows))))
+    (in-template (environment-table-as-html environments rows)
+                 page-template)))
