@@ -172,7 +172,7 @@ a:hover {
     transform: rotate(90deg);
 }
 /* Show if there's > 4 components, and a green component, which is shown on the left side (i.e. hidden) */
-.component.green:nth-child(2n+1):nth-child(n+5) ~ .more {
+.component.green:nth-child(2n+5) ~ .more {
     display: block;
 }
 /* Show on hover, tap, clicked */
