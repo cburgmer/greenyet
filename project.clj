@@ -15,6 +15,7 @@
                  [cheshire "5.4.0"]
                  [json-path "0.2.0"]]
   :profiles {:dev {:dependencies [[clj-http-fake "1.0.2"]]
+                   :resource-paths ["resources" "test/resources"]
                    :jvm-opts ["-Dgreenyet.environment=development"]}}
   :ring {:handler greenyet.core/handler
          :init greenyet.core/init})

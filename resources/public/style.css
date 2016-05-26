@@ -1,3 +1,7 @@
+/*
+The styleguide is hosted under http://localhost:3000/styleguide.html
+*/
+
 body {
     font-family: sans-serif;
     color: #333;
@@ -15,7 +19,7 @@ td {
     border: 2px solid transparent;
     background-clip: padding-box;
 }
-td:first-child {
+td.system-name {
     text-align: left;
     padding: 5px 5px 5px 0;
     width: 10rem;

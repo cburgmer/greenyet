@@ -69,13 +69,13 @@
          [:colgroup.environments {:span (count environments)}]
          [:thead
           [:tr
-           [:td]
+           [:td.system-name]
            (for [env environments]
              [:td (h env)])]]
          [:tbody
           (for [row rows]
             [:tr
-             [:td
+             [:td.system-name
               (let [system-name (h (some :system (map first row)))]
                 [:a {:href (str/join ["?systems=" (h system-name)])}
                  (h system-name)])]
@@ -87,16 +87,37 @@
                "<!-- BODY -->"
                html))
 
+(defn- a-component-status [color name]
+  {:color color
+   :name (or name "a component")})
 
-(defn styleguide [{:keys [color message]} template]
-  (in-template (html [:table
-                      [:tbody
-                       [:tr
-                        (host-as-html {:status-url "/internal/status"}
-                                      {:color color
-                                       :package-version "system-1.3.0.rc1"
-                                       :message message})]]])
-               template))
+(defn- optional-number-param [number]
+  (if number
+    (Integer/parseInt number)
+    0))
+
+(defn styleguide [{:keys [color message system package-version no-hosts no-green-components no-yellow-components no-red-components component-name]} template]
+  (let [entry-count (if no-hosts
+                (Integer/parseInt no-hosts)
+                1)]
+    (in-template (html [:table
+                        [:colgroup.environments {:span entry-count}]
+                        [:tbody
+                         [:tr
+                          (take entry-count
+                                (repeat (host-as-html {:status-url "/internal/status"
+                                                       :system system}
+                                                      {:color color
+                                                       :package-version package-version
+                                                       :message message
+                                                       :components (seq (concat
+                                                                         (take (optional-number-param no-green-components)
+                                                                               (repeat (a-component-status :green component-name)))
+                                                                         (take (optional-number-param no-yellow-components)
+                                                                               (repeat (a-component-status :yellow component-name)))
+                                                                         (take (optional-number-param no-red-components)
+                                                                               (repeat (a-component-status :red component-name)))))})))]]])
+                 template)))
 
 
 (defn- filter-systems [host-status-pairs selected-systems]
