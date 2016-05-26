@@ -1,16 +1,18 @@
 (ns greenyet.core
   (:require [clj-yaml.core :as yaml]
+            [clojure
+             [string :as str]
+             [walk :refer [keywordize-keys]]]
             [clojure.java.io :as io]
-            [clojure.string :as str]
             [greenyet
              [config :as config]
              [poll :as poll]
-             [view :as view]]
+             [view :as view]
+             [styleguide :as styleguide]]
             [ring.middleware
              [not-modified :as not-modified]
              [params :as params]
              [resource :as resource]]
-            [clojure.walk :refer [keywordize-keys]]
             [ring.util
              [response :refer [charset content-type header response]]
              [time :refer [format-date]]])
@@ -55,7 +57,7 @@
 (defn- render [{params :params uri :uri}]
   (if (and development?
            (= "/styleguide" uri))
-    (html-response (view/styleguide (keywordize-keys params) (styleguide-template)))
+    (html-response (styleguide/render (keywordize-keys params) (styleguide-template)))
     (let [[host-with-statuses last-changed] @poll/statuses]
       (-> (html-response (view/render host-with-statuses
                                  (query-param-as-vec params "systems")

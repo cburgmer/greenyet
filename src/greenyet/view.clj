@@ -37,7 +37,7 @@
 
 (def ^:private color-by-importance [:red :yellow :green])
 
-(defn- host-as-html [host status]
+(defn host-as-html [host status]
   [:td {:class (str/join " " ["host" (some-> status
                                              :color
                                              name
@@ -86,39 +86,6 @@
   (str/replace template
                "<!-- BODY -->"
                html))
-
-(defn- a-component-status [color name]
-  {:color color
-   :name (or name "a component")})
-
-(defn- optional-number-param [number]
-  (if number
-    (Integer/parseInt number)
-    0))
-
-(defn styleguide [{:keys [color message system package-version no-hosts no-green-components no-yellow-components no-red-components component-name]} template]
-  (let [entry-count (if no-hosts
-                (Integer/parseInt no-hosts)
-                1)]
-    (in-template (html [:table
-                        [:colgroup.environments {:span entry-count}]
-                        [:tbody
-                         [:tr
-                          (take entry-count
-                                (repeat (host-as-html {:status-url "/internal/status"
-                                                       :system system}
-                                                      {:color color
-                                                       :package-version package-version
-                                                       :message message
-                                                       :components (seq (concat
-                                                                         (take (optional-number-param no-green-components)
-                                                                               (repeat (a-component-status :green component-name)))
-                                                                         (take (optional-number-param no-yellow-components)
-                                                                               (repeat (a-component-status :yellow component-name)))
-                                                                         (take (optional-number-param no-red-components)
-                                                                               (repeat (a-component-status :red component-name)))))})))]]])
-                 template)))
-
 
 (defn- filter-systems [host-status-pairs selected-systems]
   (if selected-systems
