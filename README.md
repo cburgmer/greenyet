@@ -66,6 +66,13 @@ Config as YAML (remember JSON is a subset):
       system: SimpleSystem
     ```
 
+## Development
+
+    # Back-end unit tests
+    $ ./lein test
+    # UI unit tests, later `open http://localhost:3000/styleguide.html` 
+    $ CONFIG_DIR=example/simple lein ring server-headless 
+
 ## More
 
 Reach out to [@cburgmer](https://twitter.com/cburgmer) for feedback and ideas.
