@@ -66,19 +66,34 @@
           (header "Last-Modified" (format-date (.toDate last-changed)))))))
 
 
+(def config-help (str/join "\n"
+                           ["To kick off, why don't you create a file hosts.yaml with"
+                            ""
+                            "- hostname: localhost"
+                            "  system: greenyet"
+                            "  environment: Development"
+                            ""
+                            "and a status_url.yaml with"
+                            ""
+                            "- url: http://%hostname%:3000/"
+                            "  system: greenyet"
+                            ""]))
+
 (defn init []
+  (try
+    (poll/start-polling (config/hosts-with-config config-dir) timeout-in-ms)
+    (catch FileNotFoundException e
+      (binding [*out* *err*]
+        (println (.getMessage e))
+        (println)
+        (println config-help))
+      (System/exit 1)))
   (println "Starting greenyet with config")
   (->> config-params
        (map (fn [[env-var value]]
               (format "  %s: '%s'" env-var value)))
        (map println)
-       doall)
-  (try
-    (poll/start-polling (config/hosts-with-config config-dir) timeout-in-ms)
-    (catch FileNotFoundException e
-      (binding [*out* *err*]
-        (println (.getMessage e)))
-      (System/exit 1))))
+       doall))
 
 (def handler
   (-> render
