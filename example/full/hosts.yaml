@@ -5,6 +5,9 @@
 - hostname: localhost
   environment: PROD
   system: SystemWithSimpleStatusCheck
+- hostname: 127.0.0.1
+  environment: PROD
+  system: SystemWithSimpleStatusCheck
 - hostname: localhost
   environment: PROD
   system: SystemWith404

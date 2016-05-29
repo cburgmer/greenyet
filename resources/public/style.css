@@ -54,6 +54,9 @@ a:hover {
     text-align: left;
     padding: 8px;
 }
+.host:not(:first-child) {
+    margin-top: 1px;
+}
 .host.green {
     background-color: #009900;
 }

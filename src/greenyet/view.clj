@@ -11,14 +11,14 @@
            coll-to-sort))
 
 
-(defn- host-for-environment [host-list environment]
-  (first (filter (fn [[{host-environment :environment} _]]
-                   (= environment host-environment))
-                 host-list)))
+(defn- hosts-for-environment [host-list environment]
+  (filter (fn [[{host-environment :environment} _]]
+            (= environment host-environment))
+          host-list))
 
 (defn- system-row [environments host-list]
   (map (fn [environment]
-         (host-for-environment host-list environment))
+         (hosts-for-environment host-list environment))
        environments))
 
 (defn- environment-table [environments host-list]
@@ -76,13 +76,14 @@
           (for [row rows]
             [:tr
              [:td.system-name
-              (let [system-name (h (some :system (map first row)))]
+              (let [system-name (h (some :system (mapcat first row)))]
                 [:a {:href (str/join ["?systems=" (h system-name)])}
                  (h system-name)])]
-             (for [[host status] row]
+             (for [cell row]
                [:td.hosts
-                (when status
-                  (host-as-html host status))])])]]))
+                (for [[host status] cell]
+                  (when status
+                    (host-as-html host status)))])])]]))
 
 (defn- in-template [html template]
   (str/replace template
