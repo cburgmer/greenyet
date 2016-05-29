@@ -38,5 +38,6 @@
                         [:tbody
                          [:tr
                           (take entry-count
-                                (repeat (a-host-entry params)))]]])
+                                (map (fn [h] [:td h])
+                                     (repeat (a-host-entry params))))]]])
                  template)))

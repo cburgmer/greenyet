@@ -38,10 +38,10 @@
 (def ^:private color-by-importance [:red :yellow :green])
 
 (defn host-as-html [host status]
-  [:td {:class (str/join " " ["host" (some-> status
-                                             :color
-                                             name
-                                             h)])}
+  [:div {:class (str/join " " ["host" (some-> status
+                                              :color
+                                              name
+                                              h)])}
    (when (:color status)
      [:a {:href (h (:status-url host))}
       (h (if (:package-version status)
@@ -80,7 +80,9 @@
                 [:a {:href (str/join ["?systems=" (h system-name)])}
                  (h system-name)])]
              (for [[host status] row]
-               (host-as-html host status))])]]))
+               [:td.hosts
+                (when status
+                  (host-as-html host status))])])]]))
 
 (defn- in-template [html template]
   (str/replace template

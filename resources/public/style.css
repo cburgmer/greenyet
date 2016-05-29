@@ -15,15 +15,9 @@ table {
 td {
     text-align: center;
     vertical-align: top;
-    padding: 5px;
     border: 2px solid transparent;
     background-clip: padding-box;
-}
-td.system-name {
-    text-align: left;
-    padding: 5px 5px 5px 0;
-    width: 10rem;
-    word-wrap: break-word;
+    padding: 0;
 }
 ol {
     padding: 0;
@@ -44,9 +38,19 @@ a:hover {
     letter-spacing: 0.2rem;
 }
 
+.system-name {
+    text-align: left;
+    padding: 8px 0;
+    width: 10rem;
+    word-wrap: break-word;
+}
+.hosts {
+    background-color: lightgray;
+}
+
 .host {
+    min-height: 50px;
     background-color: #D30000;
-    height: 50px;
     text-align: left;
     padding: 8px;
 }
@@ -55,9 +59,6 @@ a:hover {
 }
 .host.yellow {
     background-color: #FFF108;
-}
-.host:empty {
-    background-color: lightgray;
 }
 
 .message {
