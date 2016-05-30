@@ -17,6 +17,9 @@
 - hostname: localhost
   environment: DEV
   system: SystemStatusYellow
+- hostname: 127.0.0.1
+  environment: DEV
+  system: SystemStatusYellow
 - hostname: localhost
   environment: DEV
   system: ComplexSystemStatus

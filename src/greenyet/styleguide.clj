@@ -29,6 +29,11 @@
                                                (n-component-statuses no-yellow-components :yellow component-name)
                                                (n-component-statuses no-red-components :red component-name)))}))
 
+(defn- a-cell [{:keys [color other-machine-color] :as params}]
+  (if other-machine-color
+    [(a-host-entry params) (a-host-entry (assoc params :color other-machine-color))]
+    [(a-host-entry params)]))
+
 (defn render [{:keys [no-hosts] :as params} template]
   (let [entry-count (if no-hosts
                       (Integer/parseInt no-hosts)
@@ -38,6 +43,6 @@
                         [:tbody
                          [:tr
                           (take entry-count
-                                (map (fn [h] [:td h])
-                                     (repeat (a-host-entry params))))]]])
+                                (map (fn [h] (into [:td] h))
+                                     (repeat (a-cell params))))]]])
                  template)))
