@@ -81,6 +81,7 @@ a:hover {
     text-align: left;
     position: relative;
     font-size: 0.9rem;
+    cursor: initial;
     background-color: rgb(241, 179, 179); /* Basically rgba(255, 255, 255, 0.7), using function (c) { return 0.7 * 255 + 0.3 * c; } */
 }
 .green .components {
