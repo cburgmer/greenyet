@@ -72,6 +72,13 @@ a:hover {
     display: block;
 }
 
+.host-name {
+    float: right;
+}
+.host:only-child .host-name {
+    display: none;
+}
+
 .message {
     display: block;
     padding-top: 4px;

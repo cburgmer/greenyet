@@ -21,6 +21,7 @@
 
 (defn- a-host-entry [{:keys [color message system package-version no-green-components no-yellow-components no-red-components component-name]}]
   (view/host-as-html {:status-url "/internal/status"
+                      :hostname "hostname"
                       :system system}
                      {:color color
                       :package-version package-version

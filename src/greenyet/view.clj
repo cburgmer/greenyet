@@ -42,11 +42,11 @@
                                               :color
                                               name
                                               h)])}
-   (when (:color status)
-     [:a {:href (h (:status-url host))}
-      (h (if (:package-version status)
-           (:package-version status)
-           (:system host)))])
+   [:span.host-name (h (:hostname host))]
+   [:a {:href (h (:status-url host))}
+    (h (if (:package-version status)
+         (:package-version status)
+         (:system host)))]
    (when (:message status)
      [:span.message (h (message status))])
    (when (:components status)
