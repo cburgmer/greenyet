@@ -8,7 +8,7 @@ Show the applications statuses across the IT floor, to
 
 1. Encourage good status pages,
 2. Share application health with all stakeholders,
-3. Provide a handy view on environment uptime.
+3. Don't make humans check a list of machines manually.
 
 Greenyet polls all your services for status information and gives a traffic light overview on the application health.
 
@@ -65,6 +65,20 @@ Config as YAML (remember JSON is a subset):
       environment: PROD
       system: SimpleSystem
     ```
+
+## Master greenyet
+
+### Monitor your whole lot together
+
+Put in your reverse-proxy and all the hosts. If all machines are green only the first entry of the config is going to be shown for each environment (e.g. the reverse proxy, your call). The list unfolds once one machine changes color.
+
+### Visualise the flow to production
+
+Get your environments sorted in the order from dev to prod. Make use of the [environment names](resources/environment_names.yaml) that greenyet knows about to get the right ordering.
+
+### Start from 0
+
+You can montior just based on a 200 response, in case your system isn't chatty.
 
 ## Development
 
