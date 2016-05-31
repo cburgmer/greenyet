@@ -36,6 +36,7 @@ a:hover {
     text-decoration: none;
     color: gray;
     letter-spacing: 0.2rem;
+    position: absolute;
 }
 
 .system-name {
