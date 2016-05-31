@@ -12,9 +12,10 @@
 
 
 (defn- hosts-for-environment [host-list environment]
-  (filter (fn [[{host-environment :environment} _]]
-            (= environment host-environment))
-          host-list))
+  (->> host-list
+       (filter (fn [[{host-environment :environment} _]]
+                      (= environment host-environment)))
+       (sort-by (fn [[{index :index} _]] index))))
 
 (defn- system-row [environments host-list]
   (map (fn [environment]

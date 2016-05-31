@@ -25,4 +25,7 @@
 (defn hosts-with-config [config-dir]
   (let [host-list (read-host-list config-dir)
         status-url-config (read-status-url-config config-dir)]
-    (map #(with-config % status-url-config) host-list)))
+    (->> host-list
+         (map #(with-config % status-url-config))
+         (map-indexed (fn [idx host]
+                    (assoc host :index idx))))))
