@@ -14,7 +14,7 @@
 (defn- hosts-for-environment [host-list environment]
   (->> host-list
        (filter (fn [[{host-environment :environment} _]]
-                      (= environment host-environment)))
+                 (= environment host-environment)))
        (sort-by (fn [[{index :index} _]] index))))
 
 (defn- system-row [environments host-list]
@@ -43,11 +43,10 @@
                                               :color
                                               name
                                               h)])}
-   [:span.host-name (h (:hostname host))]
-   [:a {:href (h (:status-url host))}
-    (h (if (:package-version status)
-         (:package-version status)
-         (:system host)))]
+   [:a.host-name {:href (h (:status-url host))}
+    (h (:hostname host))]
+   (when (:package-version status)
+     (h (:package-version status)))
    (when (:message status)
      [:span.message (h (message status))])
    (when (:components status)

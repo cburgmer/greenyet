@@ -75,11 +75,9 @@ a:hover {
 .host-name {
     float: right;
 }
-.host:only-child .host-name {
-    display: none;
-}
 
 .message {
+    clear: both;
     display: block;
     padding-top: 4px;
     font-style: italic;
