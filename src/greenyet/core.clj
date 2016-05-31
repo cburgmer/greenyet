@@ -20,13 +20,15 @@
 
 (def ^:private config-dir (System/getenv "CONFIG_DIR"))
 
-(def ^:private timeout-in-ms (or (some-> (System/getenv "TIMEOUT")
-                                         Integer/parseInt)
-                                 5000))
+(def ^:private polling-interval-in-ms (or (some-> (System/getenv "POLLING_INTERVAL")
+                                                  Integer/parseInt)
+                                          (some-> (System/getenv "TIMEOUT")
+                                                  Integer/parseInt)
+                                          5000))
 
 (def ^:private config-params [["CONFIG_DIR" (or config-dir
                                                 "")]
-                              ["TIMEOUT" timeout-in-ms]
+                              ["POLLING_INTERVAL" polling-interval-in-ms]
                               ["PORT" (or (System/getenv "PORT")
                                           3000)]])
 
@@ -44,8 +46,8 @@
 (defn- query-param-as-vec [params key]
   (let [value (get params key)
         value-vector (if (string? value)
-                     (vector value)
-                     value)]
+                       (vector value)
+                       value)]
     (seq (mapcat #(str/split % #",") value-vector))))
 
 (defn- html-response [body]
@@ -60,9 +62,9 @@
     (html-response (styleguide/render (keywordize-keys params) (styleguide-template)))
     (let [[host-with-statuses last-changed] @poll/statuses]
       (-> (html-response (view/render host-with-statuses
-                                 (query-param-as-vec params "systems")
-                                 (page-template)
-                                 (environment-names)))
+                                      (query-param-as-vec params "systems")
+                                      (page-template)
+                                      (environment-names)))
           (header "Last-Modified" (format-date (.toDate last-changed)))))))
 
 
@@ -81,7 +83,7 @@
 
 (defn init []
   (try
-    (poll/start-polling (config/hosts-with-config config-dir) timeout-in-ms)
+    (poll/start-polling (config/hosts-with-config config-dir) polling-interval-in-ms)
     (catch FileNotFoundException e
       (binding [*out* *err*]
         (println (.getMessage e))
