@@ -49,7 +49,7 @@ a:hover {
 }
 
 .host {
-    min-height: 50px;
+    min-height: 2.3rem;
     background-color: #D30000;
     text-align: left;
     padding: 8px;

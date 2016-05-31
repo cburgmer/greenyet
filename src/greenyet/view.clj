@@ -50,7 +50,7 @@
    (when (:message status)
      [:span.message (h (message status))])
    (when (:components status)
-     (let [components-id (h (str/join ["components-" (:system host) "-" (:environment host)]))]
+     (let [components-id (h (str/join ["components-" (:index host)]))]
        [:a.show-components {:href (str/join ["#" components-id]) }
         [:ol.components {:id components-id}
          (for [comp (prefer-order-of color-by-importance (:components status) :color)]
