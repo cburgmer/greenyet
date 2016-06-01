@@ -1,15 +1,9 @@
 (ns greenyet.view
   (:require [clojure.string :as str]
+            [greenyet
+             [host-component :as host-component]
+             [utils :as utils]]
             [hiccup.core :refer [h html]]))
-
-(defn- index-of [list item]
-  (count (take-while (partial not= item) list)))
-
-(defn- prefer-order-of [ordered-references coll-to-sort key-func]
-  (sort-by (comp (partial index-of ordered-references)
-                 key-func)
-           coll-to-sort))
-
 
 (defn- hosts-for-environment [host-list environment]
   (->> host-list
@@ -31,38 +25,6 @@
               (system-row environments system-host-list)))))
 
 
-(defn- message [{message :message}]
-  (if (vector? message)
-    (str/join ", " message)
-    message))
-
-(def ^:private color-by-importance [:red :yellow :green])
-
-(defn host-as-html [host status]
-  [:div {:class (str/join " " ["host" (some-> status
-                                              :color
-                                              name
-                                              h)])}
-   [:a.host-name {:href (h (:status-url host))}
-    (h (:hostname host))]
-   (when (:package-version status)
-     (h (:package-version status)))
-   (when (:message status)
-     [:span.message (h (message status))])
-   (when (:components status)
-     (let [components-id (h (str/join ["components-" (:index host)]))]
-       [:a.show-components {:href (str/join ["#" components-id]) }
-        [:ol.components {:id components-id}
-         (for [comp (prefer-order-of color-by-importance (:components status) :color)]
-           [:li {:class (str/join " " ["component" (some-> comp
-                                                           :color
-                                                           name
-                                                           h)])
-                 :title (h (message comp))
-                 :data-name (h (:name comp))}
-            (h (:name comp))])
-         [:li.more]]]))])
-
 (defn- environment-table-as-html [environments rows]
   (html [:table
          [:colgroup {:span 1}]
@@ -83,7 +45,7 @@
                [:td.hosts
                 (for [[host status] cell]
                   (when status
-                    (host-as-html host status)))])])]]))
+                    (host-component/render host status)))])])]]))
 
 (defn- in-template [html template]
   (str/replace template
@@ -98,7 +60,7 @@
     host-status-pairs))
 
 (defn render [host-status-pairs selected-systems page-template environment-names]
-  (let [environments (prefer-order-of environment-names
+  (let [environments (utils/prefer-order-of environment-names
                                       (->> host-status-pairs
                                            (map first)
                                            (map :environment)

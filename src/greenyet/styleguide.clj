@@ -1,6 +1,6 @@
 (ns greenyet.styleguide
   (:require [clojure.string :as str]
-            [greenyet.view :as view]
+            [greenyet.host-component :as host-component]
             [hiccup.core :refer [html]]))
 
 (defn- in-template [html template]
@@ -20,7 +20,7 @@
           (repeat (a-component-status color component-name)))))
 
 (defn- a-host-entry [{:keys [color message system package-version no-green-components no-yellow-components no-red-components component-name]}]
-  (view/host-as-html {:status-url "/internal/status"
+  (host-component/render {:status-url "/internal/status"
                       :hostname "hostname"
                       :system system}
                      {:color color
