@@ -43,8 +43,7 @@
              (for [cell row]
                [:td.hosts
                 (for [[host status] cell]
-                  (when status
-                    (host-component/render host status)))])])]]))
+                  (host-component/render host status))])])]]))
 
 (defn- in-template [html template]
   (str/replace template
@@ -60,11 +59,11 @@
 
 (defn render [host-status-pairs selected-systems page-template environment-names]
   (let [environments (utils/prefer-order-of environment-names
-                                      (->> host-status-pairs
-                                           (map first)
-                                           (map :environment)
-                                           distinct)
-                                      str/lower-case)
+                                            (->> host-status-pairs
+                                                 (map first)
+                                                 (map :environment)
+                                                 distinct)
+                                            str/lower-case)
         selected-entries (filter-systems host-status-pairs selected-systems)
         rows (environment-table environments selected-entries)]
     (in-template (environment-table-as-html environments rows)
