@@ -4,11 +4,17 @@
             [greenyet.view.host-component :as host-component]
             [hiccup.core :refer [h html]]))
 
+(defn- collapse-all-green-hosts [host-entries]
+  (if (every? (fn [[_ {color :color}]] (= :green color)) host-entries)
+    (take 1 host-entries)
+    host-entries))
+
 (defn- hosts-for-environment [host-list environment]
   (->> host-list
        (filter (fn [[{host-environment :environment} _]]
                  (= environment host-environment)))
-       (sort-by (fn [[{index :index} _]] index))))
+       (sort-by (fn [[{index :index} _]] index))
+       collapse-all-green-hosts))
 
 (defn- system-row [environments host-list]
   (map (fn [environment]

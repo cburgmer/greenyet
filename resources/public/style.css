@@ -64,14 +64,6 @@ a:hover {
 .host.yellow {
     background-color: #FFF108;
 }
-/* Hide other nodes if all are green */
-.host.green ~ .host.green {
-    display: none;
-}
-/* Not so though if there are other colors involved (no negative sibling selector, so this rule overrides the preceding)*/
-.host:not(.green) ~ .host.green {
-    display: block;
-}
 
 .host-name {
     float: right;
