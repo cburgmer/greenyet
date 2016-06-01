@@ -7,9 +7,10 @@
             [greenyet
              [config :as config]
              [poll :as poll]
+             [utils :as utils]]
+            [greenyet.view
              [styleguide :as styleguide]
-             [utils :as utils]
-             [view :as view]]
+             [table :as view]]
             [ring.middleware
              [not-modified :as not-modified]
              [params :as params]

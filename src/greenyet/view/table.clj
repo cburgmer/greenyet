@@ -1,8 +1,7 @@
-(ns greenyet.view
+(ns greenyet.view.table
   (:require [clojure.string :as str]
-            [greenyet
-             [host-component :as host-component]
-             [utils :as utils]]
+            [greenyet.utils :as utils]
+            [greenyet.view.host-component :as host-component]
             [hiccup.core :refer [h html]]))
 
 (defn- hosts-for-environment [host-list environment]

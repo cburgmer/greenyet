@@ -1,6 +1,6 @@
-(ns greenyet.styleguide
+(ns greenyet.view.styleguide
   (:require [clojure.string :as str]
-            [greenyet.host-component :as host-component]
+            [greenyet.view.host-component :as host-component]
             [hiccup.core :refer [html]]))
 
 (defn- in-template [html template]

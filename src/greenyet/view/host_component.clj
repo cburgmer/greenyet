@@ -1,4 +1,4 @@
-(ns greenyet.host-component
+(ns greenyet.view.host-component
   (:require [clojure.string :as str]
             [greenyet.utils :as utils]
             [hiccup.core :refer [h]]))
