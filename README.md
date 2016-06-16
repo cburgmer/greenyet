@@ -34,24 +34,22 @@ Config as YAML (remember JSON is a subset):
     - system: SystemWithStatusJson
       url: http://%hostname%:8080/status.json
       color: "status"
+    - system: SystemWithComplexStatusJson
+      url: http://%hostname%:8080/complex_status.json
+      package-version: "packageNameWithVersion"
       message: "readableStatus"
-      package-version: "packageWithVersion"
-    - system: EvenMoreComplexSystem
-      url: http://%hostname%:8080/complex.json
-      package-version: "packageWithVersion"
       color:
-        json-path: $.complex[1].color # query as implemented by https://github.com/gga/json-path
+        json-path: $.statuses[0].color # query as implemented by https://github.com/gga/json-path
         green-value: "healthy"
         yellow-value: "warning"
     - system: SystemWithComponents
-      url: http://%hostname%:8080/with_components.json
-      color: "color"
-      package-version: "version"
+      url: http://%hostname%:8080/status_with_components.json
+      color: "status"
       components:
         json-path: $.subSystems
         color: "status"
-        message: "description"
         name: "name"
+        message: "description"
     ```
 
 2. Host list `hosts.yaml`
