@@ -9,16 +9,10 @@
         <title>greenyet</title>
     </head>
     <body>
+        <div class="loading-animation">
+            Might need a gentle refresh<span class="dot1">.</span><span class="dot2">.</span><span class="dot3">.</span>
+        </div>
         <a class="project-link" href="https://github.com/cburgmer/greenyet">Green yet?</a>
-        <script>
-            (function () {
-                var tick = function () {
-                    var elem = document.querySelector('.project-link');
-                    elem.innerText = elem.innerText + '.';
-                };
-                setInterval(tick, 1000);
-            }())
-        </script>
         <!-- BODY -->
     </body>
 </html>
