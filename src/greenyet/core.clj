@@ -60,7 +60,7 @@
                                       "- url: http://%hostname%:3000/"
                                       "  system: greenyet"
                                       ""]))
-
+ 
 (defn init []
   (try
     (poll/start-polling (config/hosts-with-config) config/polling-interval-in-ms)

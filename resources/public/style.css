@@ -143,11 +143,13 @@ body {
   margin:1px;
 }
 
-.status-patch .system {
+.status-patch .system a {
   font-size: 26px;
   margin-top: 1px;
-  display:block;  
   word-wrap:break-word;
+  text-decoration: none;
+  color:white;
+  text-transform: none;
 }
 
 .status-patch .environment {

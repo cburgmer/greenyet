@@ -15,7 +15,8 @@
                                               :color
                                               name
                                               h)])}
-   [:span.system (h (:system host))]
+   [:span.system [:a {:href (str/join ["?systems=" (h (:system host))])}
+                  (h (:system host))]]
    [:span.environment (h (:environment host))]
    [:span.state [:span {:class (h (case
                                     (some-> status
