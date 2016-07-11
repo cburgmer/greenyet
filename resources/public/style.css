@@ -219,11 +219,7 @@ body {
   list-style: none;
   margin:0;
   padding:0;
-  margin: 0px 0px 10px 0px;
-}
-
-.joblist-message {
-  margin-top: 20px;
+  margin: 20px 0px 10px 0px;
 }
 
 .job {

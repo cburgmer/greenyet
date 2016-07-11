@@ -32,7 +32,7 @@
        (when (:components status)
          (let [components-id (h (str/join ["components-" (:index host)]))]
            
-            [:ol.joblist {:id components-id :class (when (:message status) "joblist-message") }
+            [:ol.joblist {:id components-id }
              (for [comp (utils/prefer-order-of color-by-importance (:components status) :color)]
                [:li.job {:class (str/join " " [(some-> comp
                                                        :color
