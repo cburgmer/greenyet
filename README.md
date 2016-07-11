@@ -34,24 +34,22 @@ Config as YAML (remember JSON is a subset):
     - system: SystemWithStatusJson
       url: http://%hostname%:8080/status.json
       color: "status"
+    - system: SystemWithComplexStatusJson
+      url: http://%hostname%:8080/complex_status.json
+      package-version: "packageNameWithVersion"
       message: "readableStatus"
-      package-version: "packageWithVersion"
-    - system: EvenMoreComplexSystem
-      url: http://%hostname%:8080/complex.json
-      package-version: "packageWithVersion"
       color:
-        json-path: $.complex[1].color # query as implemented by https://github.com/gga/json-path
+        json-path: $.statuses[0].color # query as implemented by https://github.com/gga/json-path
         green-value: "healthy"
         yellow-value: "warning"
     - system: SystemWithComponents
-      url: http://%hostname%:8080/with_components.json
-      color: "color"
-      package-version: "version"
+      url: http://%hostname%:8080/status_with_components.json
+      color: "status"
       components:
         json-path: $.subSystems
         color: "status"
-        message: "description"
         name: "name"
+        message: "description"
     ```
 
 2. Host list `hosts.yaml`
@@ -70,19 +68,19 @@ Config as YAML (remember JSON is a subset):
 
 ### Monitor your whole lot together
 
-Put in your reverse-proxy and all the hosts. If all machines are green only the first entry of the config is going to be shown for each environment (e.g. the reverse proxy, your call). The list unfolds once one machine changes color.
+Put in your reverse proxy/load balancer together with your nodes. Most of the times your machines will be green, so only the first entry of the config will be shown per environment (e.g. the reverse proxy, your call). The list unfolds once one machine changes color.
 
 ### Green is green
 
-Whether a red component warants a red or yellow host state, greenyet does not care, as long as you don't flag your host as green. In the latter case your status would be collapsed out of sight.
+Make sure that the main machine changes color when a component gets unhealthy. Greenyet does not interpret component colors, but only looks at the overall one.
 
 ### Visualise the flow to production
 
 Get your environments sorted in the order from dev to prod. Make use of the [environment names](resources/environment_names.yaml) that greenyet knows about to get the right ordering.
 
-### Start from 0
+### Start with little
 
-You can montior just based on a HTTP 200 response, in case your system isn't chatty.
+You can monitor just based on a HTTP 200 response, if you don't have an elaborate JSON available yet.
 
 ## Development
 

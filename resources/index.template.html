@@ -2,7 +2,10 @@
 <html>
     <head>
         <meta charset="utf-8">
+
           <meta http-equiv="refresh" content="10">
+
+        <meta name="referrer" content="no-referrer"> <!-- Work around referrer being blocked by some CSRF protection for JSON responses -->
 
         <link rel="shortcut icon" href="/favicon.ico">
                 <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:400,300' rel='stylesheet' type='text/css'>
@@ -14,12 +17,11 @@
     </head>
     <body>
 
+
     <div class="overlay"> 
       <a class="greenyet" href="https://github.com/cburgmer/greenyet">green yet?</a>
     </div>
   
-
-
          <div class="reload">
             <span class="fa fa-circle-o-notch  fa-spin" aria-hidden="true"></span>
          </div>
