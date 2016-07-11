@@ -2,64 +2,53 @@
 <html>
     <head>
         <meta charset="utf-8">
-
-          <meta http-equiv="refresh" content="10">
-
+        <meta http-equiv="refresh" content="10">
         <meta name="referrer" content="no-referrer"> <!-- Work around referrer being blocked by some CSRF protection for JSON responses -->
 
         <link rel="shortcut icon" href="/favicon.ico">
-                <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:400,300' rel='stylesheet' type='text/css'>
-
-        <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
         
+        <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:400,300' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
         <link rel="stylesheet" href="/style.css" type="text/css">
         <title>greenyet</title>
     </head>
+
     <body>
-
-
-    <div class="overlay"> 
-      <a class="greenyet" href="https://github.com/cburgmer/greenyet">green yet?</a>
-    </div>
-  
-         <div class="reload">
-            <span class="fa fa-circle-o-notch  fa-spin" aria-hidden="true"></span>
-         </div>
+      <div class="overlay"> 
+        <a class="greenyet" href="https://github.com/cburgmer/greenyet">green yet?</a>
+      </div>
+      
+      <div class="reload">
+        <span class="fa fa-circle-o-notch  fa-spin" aria-hidden="true"></span>
+      </div>
         
-        <div class="main">
-            <!-- BODY -->
-        </div>
-
+      <div class="main">
+          <!-- BODY -->
+      </div>
 
       <script>
-      (function () {
-        var spinnerOpacity = 0;
+        (function () {
+          var reloadOpacity = 0;
           var tickCount = 0;
 
-          var spinner = document.querySelector('.reload');
-          spinner.style.display = "none";
+          var reload = document.querySelector('.reload');
+          reload.style.display = "none";
           
-
-          var reload = function() {
-            spinnerOpacity += (1/20);
-            spinner.style.opacity = spinnerOpacity;
-
+          var displayReload = function() {
+            reloadOpacity += (1/20);
+            reload.style.opacity = reloadOpacity;
           };
+          
           var tick = function () {
-              var elem = document.querySelector('.greenyet');
-
-              
-              tickCount +=1;
-              if (tickCount == 7) {
-                spinner.style.display = "block";
-                setInterval(reload, 100);
-              }
+            tickCount +=1;
+            if (tickCount == 7) {
+              reload.style.display = "block";
+              setInterval(displayReload, 100);
+            }
           };
+          
           setInterval(tick, 1000);
-
-
-
-      } ())
-  </script>
+        } ())
+    </script>
     </body>
 </html>
