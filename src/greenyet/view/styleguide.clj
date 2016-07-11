@@ -39,11 +39,9 @@
   (let [entry-count (if no-hosts
                       (Integer/parseInt no-hosts)
                       1)]
-    (in-template (html [:table
-                        [:colgroup.environments {:span entry-count}]
-                        [:tbody
-                         [:tr
+    (in-template (html [:div.environment-wrapper
+                        [:ol.patchwork
                           (take entry-count
                                 (map (fn [h] (into [:td] h))
-                                     (repeat (a-cell params))))]]])
+                                     (repeat (a-cell params))))]])
                  template)))

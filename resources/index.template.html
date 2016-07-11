@@ -2,22 +2,62 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="refresh" content="5">
+          <meta http-equiv="refresh" content="10">
+
         <link rel="shortcut icon" href="/favicon.ico">
-        <link rel="stylesheet" href="/style.css">
+                <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:400,300' rel='stylesheet' type='text/css'>
+
+        <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
+        
+        <link rel="stylesheet" href="/style.css" type="text/css">
         <title>greenyet</title>
     </head>
     <body>
-        <a class="project-link" href="https://github.com/cburgmer/greenyet">Green yet?</a>
-        <script>
-            (function () {
-                var tick = function () {
-                    var elem = document.querySelector('.project-link');
-                    elem.innerText = elem.innerText + '.';
-                };
-                setInterval(tick, 1000);
-            }())
-        </script>
-        <!-- BODY -->
+
+    <div class="overlay"> 
+      <a class="greenyet" href="https://github.com/cburgmer/greenyet">green yet?</a>
+    </div>
+  
+
+
+         <div class="reload">
+            <span class="fa fa-circle-o-notch  fa-spin" aria-hidden="true"></span>
+         </div>
+        
+        <div class="main">
+            <!-- BODY -->
+        </div>
+
+
+      <script>
+      (function () {
+        var spinnerOpacity = 0;
+          var tickCount = 0;
+
+          var spinner = document.querySelector('.reload');
+          spinner.style.display = "none";
+          
+
+          var reload = function() {
+            spinnerOpacity += (1/20);
+            spinner.style.opacity = spinnerOpacity;
+
+          };
+          var tick = function () {
+              var elem = document.querySelector('.greenyet');
+
+              
+              tickCount +=1;
+              if (tickCount == 7) {
+                spinner.style.display = "block";
+                setInterval(reload, 100);
+              }
+          };
+          setInterval(tick, 1000);
+
+
+
+      } ())
+  </script>
     </body>
 </html>

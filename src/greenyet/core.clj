@@ -10,7 +10,7 @@
              [utils :as utils]]
             [greenyet.view
              [styleguide :as styleguide]
-             [table :as view]]
+             [patchwork :as view]]
             [ring.middleware
              [not-modified :as not-modified]
              [params :as params]
