@@ -1,17 +1,17 @@
 ---
-- dev
-- development
-- ci
-- continuous integration
-- test
-- testing
-- uat
-- acceptance testing
-- user acceptance testing
-- performance
-- performance testing
-- staging
-- pre-live
-- live
-- prod
 - production
+- prod
+- live
+- pre-live
+- staging
+- performance testing
+- performance
+- user acceptance testing
+- acceptance testing
+- uat
+- testing
+- test
+- continuous integration
+- ci
+- development
+- dev

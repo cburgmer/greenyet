@@ -175,7 +175,8 @@ body {
 }
 
 .status-patch:hover .detail {
-  overflow: scroll;
+  overflow-y: auto;
+  overflow-x: hidden;
   margin:8px 0px 10px 0px;
   padding:0;
   flex-grow: 1;
@@ -185,6 +186,18 @@ body {
   display:block;
  }
 
+ .detail::-webkit-scrollbar-track {
+    background-color: rgba(0,0,0,0);
+ }
+
+.detail::-webkit-scrollbar-track {
+  width:5px;
+    background-color: rgba(0,0,0,0);
+ }
+
+ .detail::-webkit-scrollbar-track {
+    background-color: rgba(255,255,255,0.75);
+ }
 
  .status-patch .meta-data {
   line-height: 14px;
