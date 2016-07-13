@@ -1,268 +1,319 @@
 /*
 The styleguide is hosted under http://localhost:3000/styleguide.html
 */
-
 body {
-    font-family: sans-serif;
-    color: #333;
-}
-table {
-    border-collapse: separate;
-    border-spacing: 0;
-    width: 100%;
-    table-layout: fixed;
-}
-td {
-    text-align: center;
-    vertical-align: top;
-    border: 2px solid transparent;
-    background-clip: padding-box;
-    padding: 0;
-}
-ol {
-    padding: 0;
-    list-style: none;
-}
-a {
-    color: inherit;
-    text-decoration: none;
-}
-a:hover {
-    text-decoration: underline;
+  margin:0;
+  padding:1px;
+  background: #888888;
 }
 
-.project-link {
-    font-size: 0.8rem;
-    text-decoration: none;
-    color: gray;
-    letter-spacing: 0.2rem;
-    position: absolute;
+.environment-wrapper {
+  margin: 1px 1px 25px 1px;
+  padding:0px;  
+  background: #888888;
 }
 
-.system-name {
-    text-align: left;
-    padding: 8px 0;
-    width: 10rem;
-    word-wrap: break-word;
-}
-.hosts {
-    background-color: lightgray;
-}
-
-.host {
-    min-height: 2.3rem;
-    background-color: #D30000;
-    text-align: left;
-    padding: 8px;
-}
-.host:not(:first-child) {
-    margin-top: 1px;
-}
-.host.green {
-    background-color: #009900;
-}
-.host.yellow {
-    background-color: #FFF108;
+.patchwork {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: left;
+  align-items: left;
+  -webkit-justify-content: left;
+  justify-content: left;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-align-content: flex-end;
+  align-content: flex-end;
+  margin:1px;
+  padding:0;
+  position: relative;
+  perspective: 0px;
 }
 
-.host-name {
-    float: right;
+.column-patchwork {
+  -webkit-flex-direction: column;
+  flex-direction: column;
 }
 
-.message {
-    clear: both;
-    display: block;
-    padding-top: 4px;
-    font-style: italic;
-    font-size: 0.9rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-height: 8em;
-    margin: auto;
+.mini-patch {
+  border: 1px solid #C8C8C8;
+  display: table-cell;
+  vertical-align: middle;
+  width: 100px;
+  height:100px;
+  font-family: 'Roboto Mono';    
+  line-height: 18px;
+  font-size: 14px;
+  letter-spacing: 0.1px;
+  font-weight: 300;
 }
 
-.components {
-    margin: 10px 0 0;
-    padding: 2px;
-    text-align: left;
-    position: relative;
-    font-size: 0.9rem;
-    cursor: initial;
-    background-color: rgb(241, 179, 179); /* Basically rgba(255, 255, 255, 0.7), using function (c) { return 0.7 * 255 + 0.3 * c; } */
-}
-.green .components {
-    background-color: rgb(179, 224, 179);
-}
-.yellow .components {
-    background-color: rgb(255, 251, 180);
-}
-.component {
-    display: inline-block;
-    line-height: 1.2rem;
-    padding: 4px;
-
-    width: 100%;
-    box-sizing: border-box;
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    vertical-align: top;
-}
-.environments[span="1"] ~ tbody .component {
-    width: 50%;
-}
-@media (min-width: 55em) {
-    .environments[span="2"] ~ tbody .component {
-        width: 50%;
-    }
-}
-@media (min-width: 70em) {
-    .environments[span="3"] ~ tbody .component {
-        width: 50%;
-    }
-}
-@media (min-width: 85em) {
-    .environments[span="4"] ~ tbody .component {
-        width: 50%;
-    }
-}
-/* Show full string on hover */
-.component:hover {
-    overflow: visible;
-    z-index: 1;
-    position: relative;
-}
-.component:hover::after {
-    outline: 1px solid #eee;
-    z-index: -1;
-
-    /* Play a little bit dirty, replicate the component text itself to assume same size */
-    content: attr(data-name);
-    padding: 4px 4px 4px calc(1.2rem + 9px);
-    height: 1.2rem;
-    color: transparent;
-
-    position: absolute;
-    left: 0; top: 0;
-
-    background-color: rgb(241, 179, 179);
-}
-.green .component:hover::after {
-    background-color: rgb(179, 224, 179);
-}
-.yellow .component:hover::after {
-    background-color: rgb(255, 251, 180);
+.patch {
+  border: 1px solid #C8C8C8;
+  display: table-cell;
+  vertical-align: middle;
+  width: 200px;
+  height: 200px;
+  font-family: 'Roboto Mono';
+  line-height: 24px;
+  font-size: 18px;
+  letter-spacing: 0.1px;
+  font-weight: 300;
+  -webkit-transition: -webkit-transform 1s;
+  -moz-transition: -moz-transform 1s;
+  -o-transition: -o-transform 1s;
+  transition: transform 1s;
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -o-transform-style: preserve-3d;
+  transform-style: preserve-3d;
 }
 
-/* Component colors */
-.component.green::before {
-    background-color: #009900;
-}
-.component.yellow::before {
-    background-color: #FFF108;
-}
-.component::before {
-    content: '';
-    display: inline-block;
-    background-color: #D30000;
-    width: 1.2rem;
-    height: 1.2rem;
-    vertical-align: middle;
-    margin-right: 5px;
+.patch:hover {
+  height: auto;
+  max-height: 400px;
+  min-height: 200px;
 }
 
-/* Hide too many green components */
-.component.green:nth-child(n+5) {
-    display: none;
-}
-/* But show it anyway if it's the right side to a red/yellow */
-.component.red  + .component.green:nth-child(2n),
-.component.yellow  + .component.green:nth-child(2n) {
-    display: inline-block;
-}
-.more {
-    display: none;
-    position: absolute;
-    bottom: -8px;
-    right: 50%;
-    height: 10px;
-}
-.more::before {
-    text-align: center;
-    content: '⨠';
-    display: block;
-    font-size: 9px;
-    transform: rotate(90deg);
-}
-/* Show if there's > 4 components, and a green component, which is shown on the left side (i.e. hidden) */
-.component.green:nth-child(2n+5) ~ .more {
-    display: block;
-}
-/* Show on hover, tap, clicked */
-.show-components:active .component:nth-child(n+5),
-.components:target .component:nth-child(n+5),
-.components:hover .component:nth-child(n+5) {
-    display: inline-block;
-}
-.show-components:active .component ~ .more,
-.components:target .component ~ .more,
-.components:hover .component ~ .more {
-    display: none;
+.green {
+  /*border-color: #00B213;*/
+  background-color: #00B213;
+  background-color: #22A954;
+  color:white;
 }
 
-/* Loading animation */
-
-.loading-animation {
-    animation-name: foreground;
-    animation-fill-mode: forwards;
-    animation-delay: 6s;
-
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    color: transparent;
-
-    line-height: 100vh;
-    text-align: center;
+.green.flipped {
+  background-color: #00B213;
 }
 
-.loading-animation ~ * {
-    position: relative;
+.red {
+  /*border-color: #B20038;*/
+  background-color: #B20038;
+  background-color: #EA4F2F;
+  color:white;
 }
 
-@keyframes foreground {
-    from { z-index: -1; background-color: transparent; color: transparent; }
-    to { z-index: 1; background-color: rgba(255, 255, 255, 0.5); color: #333; }
+.red.flipped {
+  background-color: #B20038;
 }
 
-.loading-animation .dot1,
-.loading-animation .dot2,
-.loading-animation .dot3 {
-    animation-iteration-count: infinite;
-    animation-duration: 5s;
-    animation-delay: 6s;
-    animation-timing-function: steps(1, start);
-}
-.loading-animation .dot1 {
-    animation-name: reveal1;
-}
-.loading-animation .dot2 {
-    animation-name: reveal2;
-}
-.loading-animation .dot3 {
-    animation-name: reveal3;
+.blue {
+  /*background-color: #00B2AD;*/
+  background-color: #227493;
+  color:white;
 }
 
-@keyframes reveal1 {
-    0%, 25% { color: transparent; }
-    100% { color: #333; }
+.blue.flipped {
+  background-color: #00B2AD;
 }
-@keyframes reveal2 {
-    0%, 50% { color: transparent; }
-    100% { color: #333; }
+
+.black {
+  background-color: black;
+  color:white;
 }
-@keyframes reveal3 {
-    0%, 75% { color: transparent; }
-    100% { color: #333; }
+
+.brown {
+  /*border-color: #B2521E;*/
+  background-color: #B2521E;
+  background-color: #22A954;
+  color:white;
+}
+
+.brown.flipped {
+  background-color: #B2521E;
+}
+
+.yellow {
+  /*border-color: #FFC52D;*/
+  background-color: #FFC52D;
+  background-color: #EA902F;
+  color:white;
+}
+
+.yellow.flipped {
+  background-color: #EA902F;
+}
+
+.status-patch {
+  padding:3px;
+  display: flex;
+  flex-direction: column;
+  margin:1px;
+}
+
+.status-patch .system a {
+  font-size: 26px;
+  margin-top: 1px;
+  word-wrap:break-word;
+  text-decoration: none;
+  color:white;
+  text-transform: none;
+}
+
+.status-patch .environment {
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.status-patch .state {
+  flex-grow: 1;
+  text-align: center;
+  overflow: hidden;
+  font-size: 18px;
+}
+
+.status-patch:hover .state {
+  display:none;
+  overflow: hidden;
+}
+
+.status-patch .detail {
+  display:none;
+  overflow: hidden;
+}
+
+.status-patch:hover .detail {
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin:8px 0px 10px 0px;
+  padding:0;
+  flex-grow: 1;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: left;
+  display:block;
+ }
+
+ .detail::-webkit-scrollbar-track {
+    background-color: rgba(0,0,0,0);
+ }
+
+.detail::-webkit-scrollbar-track {
+  width:5px;
+    background-color: rgba(0,0,0,0);
+ }
+
+ .detail::-webkit-scrollbar-track {
+    background-color: rgba(255,255,255,0.75);
+ }
+
+ .status-patch .meta-data {
+  line-height: 14px;
+  font-size: 12px;
+ }
+
+.overlay {
+  position:fixed;
+  opacity: 0.25;
+  bottom: 1%;
+  right: 1%;
+  z-index: 10;
+  padding:10px;
+  text-align: center;
+  font-size: 20px;
+  text-transform: uppercase;
+    
+  letter-spacing: 4px;
+  font-weight: 900;
+}
+
+.overlay:hover {
+  opacity: 1;
+}
+
+.overlay a {
+  color: white; 
+  text-decoration: none;
+}
+
+.joblist {
+  list-style: none;
+  margin:0;
+  padding:0;
+  margin: 20px 0px 10px 0px;
+}
+
+.job {
+  background-color: inherit;
+  border-bottom: 1px solid rgba(255, 255, 255, .5);
+  padding: 2px 2px 4px 2px;
+}
+
+.job:last-child {
+  border-bottom: none;
+}
+
+.job.green .jobstatus {
+  background-color: #22A954;
+}
+
+.job.red .jobstatus {
+  background-color: #EA4F2F;
+}
+
+.job.yellow .jobstatus {
+  background-color: #EA902F;
+}
+
+.jobstatus {
+  text-align: center;
+  width: 12px;
+  height: 12px;
+  border:1px solid white;
+  margin: 0 5px 0 0;
+}
+
+.url a {
+  font-size: 12px;
+  color:#3E34C8;
+}
+
+.url {
+  padding: 1px;
+  margin: 0;
+  line-height: 14px;
+  word-wrap: none;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.patch:hover .url {
+  padding:1px;
+  margin:0;
+  line-height: 14px;
+  word-break: break-all;
+  word-wrap: none;
+  overflow: visible;
+  white-space: normal;
+}
+
+.refresh {
+  position:fixed;
+  opacity: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  padding:0;
+  margin: 0;
+  text-align: center;
+  padding-top: 15%;
+  background: white;
+}
+
+.reload {
+  width: 500px;
+  height: 500px;
+  font-size: 500px;
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  margin: auto;
+  text-align: center;
+  color:#454545;
+  opacity: 0;
 }

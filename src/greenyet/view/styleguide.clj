@@ -10,7 +10,7 @@
 
 (defn- a-component-status [color name]
   {:color color
-   :name (or name "a component")})
+   :name (or name "Component")})
 
 (defn- n-component-statuses [count-param color component-name]
   (let [count (if count-param
@@ -19,10 +19,11 @@
     (take count
           (repeat (a-component-status color component-name)))))
 
-(defn- a-host-entry [{:keys [color message system package-version no-green-components no-yellow-components no-red-components component-name]}]
+(defn- a-host-entry [{:keys [environment color message system package-version no-green-components no-yellow-components no-red-components component-name]}]
   (host-component/render {:status-url "/internal/status"
-                      :hostname "hostname"
-                      :system system}
+                      :hostname "greenyet-prod.net:8080"
+                      :system system
+                      :environment environment}
                      {:color color
                       :package-version package-version
                       :message message
@@ -39,11 +40,9 @@
   (let [entry-count (if no-hosts
                       (Integer/parseInt no-hosts)
                       1)]
-    (in-template (html [:table
-                        [:colgroup.environments {:span entry-count}]
-                        [:tbody
-                         [:tr
+    (in-template (html [:div.environment-wrapper
+                        [:ol.patchwork
                           (take entry-count
                                 (map (fn [h] (into [:td] h))
-                                     (repeat (a-cell params))))]]])
+                                     (repeat (a-cell params))))]])
                  template)))

@@ -10,7 +10,7 @@
              [utils :as utils]]
             [greenyet.view
              [styleguide :as styleguide]
-             [table :as view]]
+             [patchwork :as view]]
             [ring.middleware
              [not-modified :as not-modified]
              [params :as params]
@@ -60,7 +60,7 @@
                                       "- url: http://%hostname%:3000/"
                                       "  system: greenyet"
                                       ""]))
-
+ 
 (defn init []
   (try
     (poll/start-polling (config/hosts-with-config) config/polling-interval-in-ms)
