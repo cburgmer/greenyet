@@ -289,31 +289,62 @@ body {
   white-space: normal;
 }
 
-.refresh {
-  position:fixed;
-  opacity: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 10;
-  padding:0;
-  margin: 0;
-  text-align: center;
-  padding-top: 15%;
-  background: white;
+/* Loading animation */
+
+.loading-animation {
+    animation-name: foreground;
+    animation-fill-mode: forwards;
+    animation-delay: 6s;
+
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    color: transparent;
+
+    line-height: 100vh;
+    text-align: center;
+
+    font-size: 30px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-weight: 900;
 }
 
-.reload {
-  width: 500px;
-  height: 500px;
-  font-size: 500px;
-  position: absolute;
-  top:0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  margin: auto;
-  text-align: center;
-  color:#454545;
-  opacity: 0;
+.loading-animation ~ * {
+    position: relative;
+}
+
+@keyframes foreground {
+    from { z-index: -1; background-color: transparent; color: transparent; }
+    to { z-index: 1; background-color: rgba(255, 255, 255, 0.5); color: #333; }
+}
+
+.loading-animation .dot1,
+.loading-animation .dot2,
+.loading-animation .dot3 {
+    animation-iteration-count: infinite;
+    animation-duration: 5s;
+    animation-delay: 6s;
+    animation-timing-function: steps(1, start);
+}
+.loading-animation .dot1 {
+    animation-name: reveal1;
+}
+.loading-animation .dot2 {
+    animation-name: reveal2;
+}
+.loading-animation .dot3 {
+    animation-name: reveal3;
+}
+
+@keyframes reveal1 {
+    0%, 25% { color: transparent; }
+    100% { color: #333; }
+}
+@keyframes reveal2 {
+    0%, 50% { color: transparent; }
+    100% { color: #333; }
+}
+@keyframes reveal3 {
+    0%, 75% { color: transparent; }
+    100% { color: #333; }
 }
