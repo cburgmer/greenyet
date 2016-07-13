@@ -36,14 +36,15 @@
                                 "<!-- BODY -->"
                                 []))))
 
-  (testing "shows only first host if all are green for the given environment and system"
-    (let [html (sut/render {(a-host-entry "last_host" 42) (a-status)
-                            (a-host-entry "first_host" 0) (a-status)
-                            (a-host-entry "second_host" 10) (a-status)}
-                           nil
-                           "<!-- BODY -->"
-                           [])]
-      (is (= 1
-             (count (re-seq #"class=\"host " html))))
-      (is (re-matches #".*first_host.*"
-                      html)))))
+  ; (testing "shows only first host if all are green for the given environment and system"
+  ;   (let [html (sut/render {(a-host-entry "last_host" 42) (a-status)
+  ;                           (a-host-entry "first_host" 0) (a-status)
+  ;                           (a-host-entry "second_host" 10) (a-status)}
+  ;                          nil
+  ;                          "<!-- BODY -->"
+  ;                          [])]
+  ;     (is (= 1
+  ;            (count (re-seq #"class=\"host " html))))
+  ;     (is (re-matches #".*first_host.*"
+  ;                     html))))
+)
