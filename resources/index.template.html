@@ -8,47 +8,23 @@
         <link rel="shortcut icon" href="/favicon.ico">
         
         <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:400,300' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
+
+        <link rel="stylesheet" href="https://opensource.keycdn.com/fontawesome/4.6.3/font-awesome.min.css" integrity="sha384-Wrgq82RsEean5tP3NK3zWAemiNEXofJsTwTyHmNb/iL3dP/sZJ4+7sOld1uqYJtE" crossorigin="anonymous">
+
         <link rel="stylesheet" href="/style.css" type="text/css">
         <title>greenyet</title>
     </head>
 
     <body>
       <div class="overlay"> 
-        <a class="greenyet" href="https://github.com/cburgmer/greenyet">green yet?</a>
+        <a href="https://github.com/cburgmer/greenyet">green yet?</a>
       </div>
-      
-      <div class="reload">
-        <span class="fa fa-circle-o-notch  fa-spin" aria-hidden="true"></span>
+      <div class="loading-animation">
+          Might need a gentle refresh<span class="dot1">.</span><span class="dot2">.</span><span class="dot3">.</span>
       </div>
-        
+
       <div class="main">
           <!-- BODY -->
       </div>
-
-      <script>
-        (function () {
-          var reloadOpacity = 0;
-          var tickCount = 0;
-
-          var reload = document.querySelector('.reload');
-          reload.style.display = "none";
-          
-          var displayReload = function() {
-            reloadOpacity += (1/20);
-            reload.style.opacity = reloadOpacity;
-          };
-          
-          var tick = function () {
-            tickCount +=1;
-            if (tickCount == 6) {
-              reload.style.display = "block";
-              setInterval(displayReload, 100);
-            }
-          };
-          
-          setInterval(tick, 1000);
-        } ())
-    </script>
     </body>
 </html>

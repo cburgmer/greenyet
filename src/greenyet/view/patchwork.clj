@@ -73,9 +73,10 @@
 
 (defn- filter-systems [host-status-pairs selected-systems]
   (if selected-systems
-    (filter (fn [[{system :system} _]]
-              (contains? (set selected-systems) system))
-            host-status-pairs)
+    (let [selected-systems (map str/lower-case selected-systems)]
+      (filter (fn [[{system :system} _]]
+                (contains? (set selected-systems) (str/lower-case system)))
+              host-status-pairs))
     host-status-pairs))
 
 (defn render [host-status-pairs selected-systems page-template environment-names]

@@ -25,7 +25,30 @@
         "name": "Yellow system",
         "status": "yellow"
     }, {
-        "name": "Yet another green system",
+        "name": "Yet another red system",
+        "status": "red"
+    },{
+        "name": "I am a red system",
+        "status": "red"
+    },
+    {
+        "name": "I am a green system",
+        "status": "green"
+    },
+    {
+        "name": "I am a yellow system",
+        "status": "yellow"
+    },
+    {
+        "name": "I am yet another green system",
+        "status": "green"
+    },
+    {
+        "name": "I am yet another yellow system",
+        "status": "yellow"
+    },
+    {
+        "name": "I am yet another red system",
         "status": "red"
     }]
 }
