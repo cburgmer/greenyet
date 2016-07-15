@@ -290,7 +290,7 @@ body {
 .loading-animation {
     animation-name: foreground;
     animation-fill-mode: forwards;
-    animation-delay: 6000000s;
+    animation-delay: 10s;
 
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -319,7 +319,7 @@ body {
 .loading-animation .dot3 {
     animation-iteration-count: infinite;
     animation-duration: 5s;
-    animation-delay: 10000000s;
+    animation-delay: 10s;
     animation-timing-function: steps(1, start);
 }
 .loading-animation .dot1 {
