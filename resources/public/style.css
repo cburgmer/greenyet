@@ -9,7 +9,7 @@ body {
 
 .environment-wrapper {
   margin: 1px 1px 25px 1px;
-  padding:0px;  
+  padding:0px;
   background: #888888;
 }
 
@@ -65,62 +65,43 @@ body {
 }
 
 .green {
-  /*border-color: #00B213;*/
-  background-color: #00B213;
   background-color: #22A954;
   color:white;
 }
 
-.green.flipped {
-  background-color: #00B213;
-}
-
 .red {
-  /*border-color: #B20038;*/
-  background-color: #B20038;
   background-color: #EA4F2F;
   color:white;
 }
 
-.red.flipped {
-  background-color: #B20038;
-}
-
-.blue {
-  /*background-color: #00B2AD;*/
-  background-color: #227493;
-  color:white;
-}
-
-.blue.flipped {
-  background-color: #00B2AD;
-}
-
-.black {
-  background-color: black;
-  color:white;
-}
-
-.brown {
-  /*border-color: #B2521E;*/
-  background-color: #B2521E;
-  background-color: #22A954;
-  color:white;
-}
-
-.brown.flipped {
-  background-color: #B2521E;
-}
-
 .yellow {
-  /*border-color: #FFC52D;*/
-  background-color: #FFC52D;
   background-color: #EA902F;
   color:white;
 }
 
-.yellow.flipped {
-  background-color: #EA902F;
+.fa-check,
+.fa-minus,
+.fa-times {
+    background-size: 100%;
+    display: inline-block;
+    width: 88px;
+    height: 88px;
+    vertical-align: top;
+}
+
+.fa-check {
+    /* Font-Awesome check */
+    background-image: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMTc5MiIgaGVpZ2h0PSIxNzkyIiB2aWV3Qm94PSIwIDAgMTc5MiAxNzkyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xNjcxIDU2NnEwIDQwLTI4IDY4bC03MjQgNzI0LTEzNiAxMzZxLTI4IDI4LTY4IDI4dC02OC0yOGwtMTM2LTEzNi0zNjItMzYycS0yOC0yOC0yOC02OHQyOC02OGwxMzYtMTM2cTI4LTI4IDY4LTI4dDY4IDI4bDI5NCAyOTUgNjU2LTY1N3EyOC0yOCA2OC0yOHQ2OCAyOGwxMzYgMTM2cTI4IDI4IDI4IDY4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==);
+}
+
+.fa-minus {
+    /* Font-Awesome minus */
+    background-image: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMTc5MiIgaGVpZ2h0PSIxNzkyIiB2aWV3Qm94PSIwIDAgMTc5MiAxNzkyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xNjAwIDczNnYxOTJxMCA0MC0yOCA2OHQtNjggMjhoLTEyMTZxLTQwIDAtNjgtMjh0LTI4LTY4di0xOTJxMC00MCAyOC02OHQ2OC0yOGgxMjE2cTQwIDAgNjggMjh0MjggNjh6IiBmaWxsPSIjZmZmIi8+PC9zdmc+);
+}
+
+.fa-times {
+    /* Font-Awesome times */
+    background-image: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMTc5MiIgaGVpZ2h0PSIxNzkyIiB2aWV3Qm94PSIwIDAgMTc5MiAxNzkyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xNDkwIDEzMjJxMCA0MC0yOCA2OGwtMTM2IDEzNnEtMjggMjgtNjggMjh0LTY4LTI4bC0yOTQtMjk0LTI5NCAyOTRxLTI4IDI4LTY4IDI4dC02OC0yOGwtMTM2LTEzNnEtMjgtMjgtMjgtNjh0MjgtNjhsMjk0LTI5NC0yOTQtMjk0cS0yOC0yOC0yOC02OHQyOC02OGwxMzYtMTM2cTI4LTI4IDY4LTI4dDY4IDI4bDI5NCAyOTQgMjk0LTI5NHEyOC0yOCA2OC0yOHQ2OCAyOGwxMzYgMTM2cTI4IDI4IDI4IDY4dC0yOCA2OGwtMjk0IDI5NCAyOTQgMjk0cTI4IDI4IDI4IDY4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==);
 }
 
 .status-patch {
@@ -203,7 +184,7 @@ body {
   text-align: center;
   font-size: 20px;
   text-transform: uppercase;
-    
+
   letter-spacing: 4px;
   
 }
@@ -213,7 +194,7 @@ body {
 }
 
 .overlay a {
-  color: white; 
+  color: white;
   text-decoration: none;
 }
 
