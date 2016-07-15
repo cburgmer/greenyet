@@ -37,30 +37,17 @@ body {
   flex-direction: column;
 }
 
-.mini-patch {
-  border: 1px solid #C8C8C8;
-  display: table-cell;
-  vertical-align: middle;
-  width: 100px;
-  height:100px;
-  font-family: 'Roboto Mono';    
-  line-height: 18px;
-  font-size: 14px;
-  letter-spacing: 0.1px;
-  font-weight: 300;
-}
-
 .patch {
+  font-weight: 300;
   border: 1px solid #C8C8C8;
   display: table-cell;
   vertical-align: middle;
   width: 200px;
   height: 200px;
-  font-family: 'Roboto Mono';
-  line-height: 24px;
+  font-family: Helvetica,Century Gothic,CenturyGothic,AppleGothic,sans-serif; 
+  line-height: 26px;
   font-size: 18px;
-  letter-spacing: 0.1px;
-  font-weight: 300;
+  letter-spacing: 1px;
   -webkit-transition: -webkit-transform 1s;
   -moz-transition: -moz-transform 1s;
   -o-transition: -o-transform 1s;
@@ -180,28 +167,30 @@ body {
   margin:8px 0px 10px 0px;
   padding:0;
   flex-grow: 1;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 11px;
+  line-height: 14px;
   text-align: left;
   display:block;
+  letter-spacing: 0.5px;
  }
 
  .detail::-webkit-scrollbar-track {
     background-color: rgba(0,0,0,0);
  }
 
-.detail::-webkit-scrollbar-track {
+.detail::-webkit-scrollbar {
   width:5px;
     background-color: rgba(0,0,0,0);
  }
 
- .detail::-webkit-scrollbar-track {
+ .detail::-webkit-scrollbar-thumb {
     background-color: rgba(255,255,255,0.75);
  }
 
  .status-patch .meta-data {
-  line-height: 14px;
-  font-size: 12px;
+  line-height: 5px;
+  font-size: 11px;
+  font-weight: 300;
  }
 
 .overlay {
@@ -216,7 +205,7 @@ body {
   text-transform: uppercase;
     
   letter-spacing: 4px;
-  font-weight: 900;
+  
 }
 
 .overlay:hover {
@@ -233,12 +222,14 @@ body {
   margin:0;
   padding:0;
   margin: 20px 0px 10px 0px;
+  letter-spacing: 0.5px;
+  font-size: 11px;
 }
 
 .job {
   background-color: inherit;
   border-bottom: 1px solid rgba(255, 255, 255, .5);
-  padding: 2px 2px 4px 2px;
+  padding: 2px 2px 2px 2px;
 }
 
 .job:last-child {
@@ -259,14 +250,19 @@ body {
 
 .jobstatus {
   text-align: center;
+  vertical-align: middle;
   width: 12px;
   height: 12px;
   border:1px solid white;
   margin: 0 5px 0 0;
+  padding: 1px;
+  font-size: 10px;
 }
 
 .url a {
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.5px;
   color:#3E34C8;
 }
 
@@ -294,7 +290,7 @@ body {
 .loading-animation {
     animation-name: foreground;
     animation-fill-mode: forwards;
-    animation-delay: 6s;
+    animation-delay: 6000000s;
 
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -306,7 +302,7 @@ body {
     font-size: 30px;
     text-transform: uppercase;
     letter-spacing: 4px;
-    font-weight: 900;
+    
 }
 
 .loading-animation ~ * {
@@ -323,7 +319,7 @@ body {
 .loading-animation .dot3 {
     animation-iteration-count: infinite;
     animation-duration: 5s;
-    animation-delay: 6s;
+    animation-delay: 10000000s;
     animation-timing-function: steps(1, start);
 }
 .loading-animation .dot1 {
