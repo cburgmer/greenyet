@@ -214,19 +214,7 @@ body {
   border-bottom: none;
 }
 
-.job.green .jobstatus {
-  background-color: #22A954;
-}
-
-.job.red .jobstatus {
-  background-color: #EA4F2F;
-}
-
-.job.yellow .jobstatus {
-  background-color: #EA902F;
-}
-
-.jobstatus {
+.job .symbol {
   text-align: center;
   vertical-align: middle;
   width: 12px;
