@@ -29,12 +29,8 @@
        (map (fn [[_ system-host-list]]
               (system-row environments system-host-list)))))
 
-(defn- environment-table-to-patchwork
-  [environments table]
-  (let [e-map      (map (partial zipmap environments) table)
-        e-map      (apply merge-with concat e-map)
-        _ (println e-map)]
-    e-map))
+(defn- environment-table-to-patchwork [environments table]
+  (apply merge-with concat (map (partial zipmap environments) table)))
 
 (defn- table-as-html [environments rows]
   (html [:table
