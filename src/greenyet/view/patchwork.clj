@@ -34,7 +34,7 @@
   (let [e-map      (map (partial zipmap environments) table)
         e-map      (apply merge-with concat e-map)
         _ (println e-map)]
-        e-map))
+    e-map))
 
 (defn- table-as-html [environments rows]
   (html [:table
@@ -60,10 +60,10 @@
 
 (defn- patchwork-as-html [patchwork]
   (html (for [[environment host-status] patchwork]
-    [:div.environment-wrapper
-      [:ol.patchwork {:class environment}
-        (for [[host status] host-status]
-          (host-component/render host status))]])))
+          [:div.environment-wrapper
+           [:ol.patchwork {:class environment}
+            (for [[host status] host-status]
+              (host-component/render host status))]])))
 
 
 (defn- in-template [html template]
@@ -81,11 +81,11 @@
 
 (defn render [host-status-pairs selected-systems page-template environment-names]
   (let [environments      (utils/prefer-order-of environment-names
-                                            (->> host-status-pairs
-                                                 (map first)
-                                                 (map :environment)
-                                                 distinct)
-                                            str/lower-case)
+                                                 (->> host-status-pairs
+                                                      (map first)
+                                                      (map :environment)
+                                                      distinct)
+                                                 str/lower-case)
         selected-entries  (filter-systems host-status-pairs selected-systems)
         rows              (environment-table environments selected-entries)
 

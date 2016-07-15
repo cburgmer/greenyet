@@ -21,15 +21,15 @@
 
 (defn- a-host-entry [{:keys [environment color message system package-version no-green-components no-yellow-components no-red-components component-name]}]
   (host-component/render {:status-url "/internal/status"
-                      :hostname "greenyet-prod.net:8080"
-                      :system system
-                      :environment environment}
-                     {:color color
-                      :package-version package-version
-                      :message message
-                      :components (seq (concat (n-component-statuses no-green-components :green component-name)
-                                               (n-component-statuses no-yellow-components :yellow component-name)
-                                               (n-component-statuses no-red-components :red component-name)))}))
+                          :hostname "greenyet-prod.net:8080"
+                          :system system
+                          :environment environment}
+                         {:color color
+                          :package-version package-version
+                          :message message
+                          :components (seq (concat (n-component-statuses no-green-components :green component-name)
+                                                   (n-component-statuses no-yellow-components :yellow component-name)
+                                                   (n-component-statuses no-red-components :red component-name)))}))
 
 (defn- a-cell [{:keys [color other-machine-color] :as params}]
   (if other-machine-color
@@ -42,7 +42,7 @@
                       1)]
     (in-template (html [:div.environment-wrapper
                         [:ol.patchwork
-                          (take entry-count
-                                (map (fn [h] (into [:td] h))
-                                     (repeat (a-cell params))))]])
+                         (take entry-count
+                               (map (fn [h] (into [:td] h))
+                                    (repeat (a-cell params))))]])
                  template)))
