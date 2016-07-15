@@ -24,7 +24,7 @@
                           :hostname "greenyet-prod.net:8080"
                           :system system
                           :environment environment}
-                         {:color color
+                         {:color (keyword color)
                           :package-version package-version
                           :message message
                           :components (seq (concat (n-component-statuses no-green-components :green component-name)

@@ -18,15 +18,10 @@
    [:span.system [:a {:href (str/join ["?systems=" (h (:system host))])}
                   (h (:system host))]]
    [:span.environment (h (:environment host))]
-   [:span.state [:span {:class (h (case
-                                      (some-> status
+   [:span.state [:span.symbol {:class (some-> status
                                               :color
                                               name
-                                              h)
-                                    "green" "fa fa-check fa-5x"
-                                    "red"   "fa fa-times fa-5x"
-                                    "fa fa-minus fa-5x"
-                                    ))}]]
+                                              h)}]]
 
    [:span.detail (h (or (message status) "No details to report"))
     (when (:components status)
@@ -41,12 +36,10 @@
                      :title (h (message comp))
                      :data-name (h (:name comp))}
 
-            [:span.jobstatus {:class (case
-                                         (some-> comp :color name h)
-                                       "green" "fa fa-check"
-                                       "red"   "fa fa-times"
-                                       "fa fa-minus"
-                                       )}]
+            [:span.jobstatus.symbol {:class (some-> comp
+                                                    :color
+                                                    name
+                                                    h)}]
             (h (:name comp))])
          ]))
     ]

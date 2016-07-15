@@ -44,7 +44,7 @@ body {
   vertical-align: middle;
   width: 200px;
   height: 200px;
-  font-family: Helvetica,Century Gothic,CenturyGothic,AppleGothic,sans-serif; 
+  font-family: Helvetica,Century Gothic,CenturyGothic,AppleGothic,sans-serif;
   line-height: 26px;
   font-size: 18px;
   letter-spacing: 1px;
@@ -79,9 +79,7 @@ body {
   color:white;
 }
 
-.fa-check,
-.fa-minus,
-.fa-times {
+.symbol {
     background-size: 100%;
     display: inline-block;
     width: 88px;
@@ -89,17 +87,17 @@ body {
     vertical-align: top;
 }
 
-.fa-check {
+.green.symbol {
     /* Font-Awesome check */
     background-image: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMTc5MiIgaGVpZ2h0PSIxNzkyIiB2aWV3Qm94PSIwIDAgMTc5MiAxNzkyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xNjcxIDU2NnEwIDQwLTI4IDY4bC03MjQgNzI0LTEzNiAxMzZxLTI4IDI4LTY4IDI4dC02OC0yOGwtMTM2LTEzNi0zNjItMzYycS0yOC0yOC0yOC02OHQyOC02OGwxMzYtMTM2cTI4LTI4IDY4LTI4dDY4IDI4bDI5NCAyOTUgNjU2LTY1N3EyOC0yOCA2OC0yOHQ2OCAyOGwxMzYgMTM2cTI4IDI4IDI4IDY4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==);
 }
 
-.fa-minus {
+.yellow.symbol {
     /* Font-Awesome minus */
     background-image: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMTc5MiIgaGVpZ2h0PSIxNzkyIiB2aWV3Qm94PSIwIDAgMTc5MiAxNzkyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xNjAwIDczNnYxOTJxMCA0MC0yOCA2OHQtNjggMjhoLTEyMTZxLTQwIDAtNjgtMjh0LTI4LTY4di0xOTJxMC00MCAyOC02OHQ2OC0yOGgxMjE2cTQwIDAgNjggMjh0MjggNjh6IiBmaWxsPSIjZmZmIi8+PC9zdmc+);
 }
 
-.fa-times {
+.red.symbol {
     /* Font-Awesome times */
     background-image: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMTc5MiIgaGVpZ2h0PSIxNzkyIiB2aWV3Qm94PSIwIDAgMTc5MiAxNzkyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xNDkwIDEzMjJxMCA0MC0yOCA2OGwtMTM2IDEzNnEtMjggMjgtNjggMjh0LTY4LTI4bC0yOTQtMjk0LTI5NCAyOTRxLTI4IDI4LTY4IDI4dC02OC0yOGwtMTM2LTEzNnEtMjgtMjgtMjgtNjh0MjgtNjhsMjk0LTI5NC0yOTQtMjk0cS0yOC0yOC0yOC02OHQyOC02OGwxMzYtMTM2cTI4LTI4IDY4LTI4dDY4IDI4bDI5NCAyOTQgMjk0LTI5NHEyOC0yOCA2OC0yOHQ2OCAyOGwxMzYgMTM2cTI4IDI4IDI4IDY4dC0yOCA2OGwtMjk0IDI5NCAyOTQgMjk0cTI4IDI4IDI4IDY4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==);
 }
@@ -186,7 +184,6 @@ body {
   text-transform: uppercase;
 
   letter-spacing: 4px;
-  
 }
 
 .overlay:hover {
@@ -283,7 +280,6 @@ body {
     font-size: 30px;
     text-transform: uppercase;
     letter-spacing: 4px;
-    
 }
 
 .loading-animation ~ * {
