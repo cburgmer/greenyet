@@ -36,7 +36,8 @@
                                           (utils/query-param-as-vec params "systems")
                                           (page-template)
                                           (environment-names)))
-        (header "Last-Modified" (format-date (.toDate last-changed))))))
+        (header "Last-Modified" (format-date (.toDate last-changed)))
+        (header "Cache-Control" "max-age=0,must-revalidate"))))
 
 (defn- render-styleguide-entry [params]
   (utils/html-response (styleguide/render (keywordize-keys params) (styleguide-template))))
@@ -60,7 +61,7 @@
                                       "- url: http://%hostname%:3000/"
                                       "  system: greenyet"
                                       ""]))
- 
+
 (defn init []
   (try
     (poll/start-polling (config/hosts-with-config) config/polling-interval-in-ms)
