@@ -56,9 +56,7 @@
 (defn- http-get [status-url]
   (client/get status-url {:accept "application/json"
                           :follow-redirects false
-                          :client-params {"http.useragent" "greenyet"}
-                          :conn-timeout 1000
-                          :socket-timeout 4000}))
+                          :client-params {"http.useragent" "greenyet"}}))
 
 (defn fetch-status [{:keys [status-url config]}]
   (try

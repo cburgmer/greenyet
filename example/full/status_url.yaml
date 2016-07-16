@@ -29,8 +29,6 @@
     color: status
     name: name
     message: description
-- system: 3SecTimeout
-  url: http://%hostname%:8000/connectTimeout3s
 - system: 4SecTimeout
   url: http://%hostname%:8000/connectTimeout4s
 - system: 5SecTimeout

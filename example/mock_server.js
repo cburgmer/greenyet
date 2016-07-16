@@ -13,9 +13,6 @@ var port = 8000;
 
 express()
     .use(express.static(dir))
-    .get('/connectTimeout3s', function(req, res, next) {
-        simulateLatency(res, 3);
-    })
     .get('/connectTimeout4s', function(req, res, next) {
         simulateLatency(res, 4);
     })
