@@ -82,12 +82,16 @@ Get your environments sorted in the order from dev to prod. Make use of the [env
 
 You can monitor just based on a HTTP 200 response, if you don't have an elaborate JSON available yet.
 
+### Understand the *time to failure*
+
+The polling interval duration configured in `POLLING_INTERVAL` matches the status page request timeout. Worst case duration for a failure to be reported on the dashboard is the sum of the request timeout/polling time (default 5 seconds) and the dashboard refresh (5 seconds).
+
 ## Development
 
     # Back-end unit tests
     $ ./lein test
-    # UI unit tests, later `open http://localhost:3000/styleguide.html` 
-    $ CONFIG_DIR=example/simple lein ring server-headless 
+    # UI unit tests, later `open http://localhost:3000/styleguide.html`
+    $ CONFIG_DIR=example/simple lein ring server-headless
 
 ## More
 
