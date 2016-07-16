@@ -53,9 +53,15 @@
   (format "Status %s: %s" (:status response) (:body response)))
 
 
+(defn- http-get [status-url]
+  (client/get status-url {:accept "application/json"
+                          :client-params {"http.useragent" "greenyet"}
+                          :conn-timeout 1000
+                          :socket-timeout 4000}))
+
 (defn fetch-status [{:keys [status-url config]}]
   (try
-    (let [response (client/get status-url {:accept "application/json"})]
+    (let [response (http-get status-url)]
       (if (= 200 (:status response))
         (application-status response config)
         {:color :red

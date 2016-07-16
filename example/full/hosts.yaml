@@ -26,3 +26,12 @@
 - hostname: localhost
   environment: UAT
   system: ComponentStatuses
+- hostname: localhost
+  environment: UAT
+  system: 3SecTimeout
+- hostname: localhost
+  environment: UAT
+  system: 4SecTimeout
+- hostname: localhost
+  environment: UAT
+  system: 5SecTimeout
