@@ -22,6 +22,12 @@ express()
     .get('/connectTimeout5s', function(req, res, next) {
         simulateLatency(res, 5);
     })
+    .get('/found', function (req, res, next) {
+        res.send();
+    })
+    .get('/redirect', function(req, res, next) {
+        res.status(301).redirect('/found');
+    })
     .listen(port, function (err) {
         if (err) {
             console.error(err);

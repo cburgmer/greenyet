@@ -35,3 +35,6 @@
 - hostname: localhost
   environment: UAT
   system: 5SecTimeout
+- hostname: localhost
+  environment: UAT
+  system: redirect
