@@ -8,3 +8,4 @@ pom.xml.asc
 /.lein-*
 /.nrepl-port
 /example/node_modules/
+/log/

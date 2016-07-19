@@ -1,6 +1,7 @@
 (ns greenyet.poll
   (:require [clj-time.core :as tc]
-            [clojure.core.async :refer [<! >! go go-loop timeout chan alts!!]]
+            [clojure.core.async :refer [<! >! alts!! chan go go-loop timeout]]
+            [clojure.tools.logging :as log]
             [greenyet.status :as status]))
 
 (def statuses (atom [{} (tc/now)]))
@@ -15,13 +16,20 @@
 
 (defn- fetch-status-with-timeout [host timeout-in-ms]
   (let [channel (chan)]
+    (log/info (format "Fetching status from %s" (:status-url host)))
     (go
       (>! channel (status/fetch-status host)))
     (let [[status _] (alts!! [channel (timeout timeout-in-ms)])]
-      (or
-        status
-        {:color :red
-         :message (format "Request timed out after %s milliseconds" timeout-in-ms)}))))
+      (if status
+        (do
+          (log/info (format "Received status %s from %s"
+                            (:color status)
+                            (:status-url host)))
+          status)
+        (do
+          (log/info (format "Request timed out for %s" (:status-url host)))
+          {:color :red
+           :message (format "Request timed out after %s milliseconds" timeout-in-ms)})))))
 
 (defn- poll-status [host polling-interval-in-ms]
   (go-loop []

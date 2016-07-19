@@ -5,6 +5,11 @@
             :url "http://opensource.org/licenses/BSD-2-Clause"}
   :plugins [[lein-ring "0.9.7"]]
   :dependencies [[org.clojure/clojure "1.8.0"]
+                 [org.clojure/tools.logging "0.3.1"]
+                 [log4j/log4j "1.2.17" :exclusions [javax.mail/mail
+                                                    javax.jms/jms
+                                                    com.sun.jdmk/jmxtools
+                                                    com.sun.jmx/jmxri]]
                  [ring/ring-core "1.4.0"]
                  [ring/ring-jetty-adapter "1.4.0"]
                  [org.clojure/core.async "0.2.374"]
