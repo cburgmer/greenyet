@@ -17,19 +17,11 @@
 (defn- fetch-status-with-timeout [host timeout-in-ms]
   (let [channel (chan)]
     (log/info (format "Fetching status from %s" (:status-url host)))
-    (go
-      (>! channel (status/fetch-status host)))
-    (let [[status _] (alts!! [channel (timeout timeout-in-ms)])]
-      (if status
-        (do
-          (log/info (format "Received status %s from %s"
-                            (:color status)
-                            (:status-url host)))
-          status)
-        (do
-          (log/info (format "Request timed out for %s" (:status-url host)))
-          {:color :red
-           :message (format "Request timed out after %s milliseconds" timeout-in-ms)})))))
+    (let [status (status/fetch-status host timeout-in-ms)]
+      (log/info (format "Received status %s from %s"
+                        (:color status)
+                        (:status-url host)))
+      status)))
 
 (defn- poll-status [host polling-interval-in-ms]
   (go-loop []

@@ -53,18 +53,22 @@
   (format "Status %s: %s" (:status response) (:body response)))
 
 
-(defn- http-get [status-url]
+(defn- http-get [status-url timeout-in-ms]
   @(http/get status-url {:headers {"Accept" "application/json"}
                          :follow-redirects false
-                         :user-agent "greenyet"}))
+                         :user-agent "greenyet"
+                         :timeout timeout-in-ms}))
 
-(defn fetch-status [{:keys [status-url config]}]
+(defn fetch-status [{:keys [status-url config]} timeout-in-ms]
   (try
-    (let [response (http-get status-url)]
-      (if (= 200 (:status response))
-        (application-status response config)
+    (let [response (http-get status-url timeout-in-ms)]
+      (if (instance? org.httpkit.client.TimeoutException (:error response))
         {:color :red
-         :message (message-for-http-response response)}))
+         :message (format "Request timed out after %s milliseconds" timeout-in-ms)}
+        (if (= 200 (:status response))
+          (application-status response config)
+          {:color :red
+           :message (message-for-http-response response)})))
     (catch Exception e
       {:color :red
        :message (if-let [response (ex-data e)]
