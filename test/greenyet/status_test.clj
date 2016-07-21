@@ -1,6 +1,6 @@
 (ns greenyet.status-test
   (:require [cheshire.core :as j]
-            [clj-http.fake :as fake]
+            [org.httpkit.fake :as fake]
             [clojure.test :refer :all]
             [greenyet.status :as sut]))
 
@@ -38,7 +38,8 @@
             :components component-config}})
 
 (defmacro with-fake-resource [url resp-func & body]
-  `(fake/with-fake-routes-in-isolation {~url ~resp-func} ~@body))
+  `(fake/with-fake-http [{:url ~url}  (~resp-func nil)]
+     ~@body))
 
 (defn- json-response [body]
   (fn [_]

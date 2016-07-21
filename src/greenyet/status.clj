@@ -1,6 +1,6 @@
 (ns greenyet.status
   (:require [cheshire.core :as j]
-            [clj-http.client :as client]
+            [org.httpkit.client :as http]
             [json-path]
             [clojure.string :as str]))
 
@@ -54,9 +54,9 @@
 
 
 (defn- http-get [status-url]
-  (client/get status-url {:accept "application/json"
-                          :follow-redirects false
-                          :client-params {"http.useragent" "greenyet"}}))
+  @(http/get status-url {:headers {"Accept" "application/json"}
+                         :follow-redirects false
+                         :user-agent "greenyet"}))
 
 (defn fetch-status [{:keys [status-url config]}]
   (try
