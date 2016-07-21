@@ -1,8 +1,8 @@
 (ns greenyet.status-test
   (:require [cheshire.core :as j]
-            [org.httpkit.fake :as fake]
             [clojure.test :refer :all]
-            [greenyet.status :as sut]))
+            [greenyet.status :as sut]
+            [org.httpkit.fake :as fake]))
 
 (defn- host-without-color-config [url]
   {:hostname "the_host"

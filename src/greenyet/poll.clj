@@ -1,6 +1,6 @@
 (ns greenyet.poll
   (:require [clj-time.core :as tc]
-            [clojure.core.async :refer [<! go go-loop timeout]]
+            [clojure.core.async :refer [<! go-loop timeout]]
             [clojure.tools.logging :as log]
             [greenyet.status :as status]))
 
@@ -26,11 +26,10 @@
 
 (defn- poll-status [host polling-interval-in-ms]
   (go-loop []
-    (go
-      (fetch-status-with-timeout host
-                                 polling-interval-in-ms
-                                 (fn [status]
-                                   (swap! statuses update-status host status))))
+    (fetch-status-with-timeout host
+                               polling-interval-in-ms
+                               (fn [status]
+                                 (swap! statuses update-status host status)))
     (<! (timeout polling-interval-in-ms))
     (recur)))
 

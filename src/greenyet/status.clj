@@ -1,8 +1,7 @@
 (ns greenyet.status
   (:require [cheshire.core :as j]
-            [org.httpkit.client :as http]
-            [json-path]
-            [clojure.string :as str]))
+            json-path
+            [org.httpkit.client :as http]))
 
 (defn- get-simple-key [json key]
   (get json (keyword key)))
@@ -53,25 +52,31 @@
   (format "Status %s: %s" (:status response) (:body response)))
 
 
-(defn- http-get [status-url timeout-in-ms]
-  @(http/get status-url {:headers {"Accept" "application/json"}
-                         :follow-redirects false
-                         :user-agent "greenyet"
-                         :timeout timeout-in-ms}))
+(defn- http-get [status-url timeout-in-ms callback]
+  (http/get status-url
+            {:headers {"Accept" "application/json"}
+             :follow-redirects false
+             :user-agent "greenyet"
+             :timeout timeout-in-ms}
+            callback))
+
+(defn- identify-status [response timeout-in-ms config]
+  (try
+    (if (instance? org.httpkit.client.TimeoutException (:error response))
+      {:color :red
+       :message (format "Request timed out after %s milliseconds" timeout-in-ms)}
+      (if (= 200 (:status response))
+        (application-status response config)
+        {:color :red
+         :message (message-for-http-response response)}))
+    (catch Exception e
+      {:color :red
+       :message (if-let [response (ex-data e)]
+                  (message-for-http-response response)
+                  (.getMessage e))})))
 
 (defn fetch-status [{:keys [status-url config]} timeout-in-ms callback]
-  (let [status (try
-                 (let [response (http-get status-url timeout-in-ms)]
-                   (if (instance? org.httpkit.client.TimeoutException (:error response))
-                     {:color :red
-                      :message (format "Request timed out after %s milliseconds" timeout-in-ms)}
-                     (if (= 200 (:status response))
-                       (application-status response config)
-                       {:color :red
-                        :message (message-for-http-response response)})))
-                 (catch Exception e
-                   {:color :red
-                    :message (if-let [response (ex-data e)]
-                               (message-for-http-response response)
-                               (.getMessage e))}))]
-    (callback status)))
+  (http-get status-url
+            timeout-in-ms
+            (fn [response]
+              (callback (identify-status response timeout-in-ms config)))))
