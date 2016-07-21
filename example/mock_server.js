@@ -13,10 +13,10 @@ var port = 8000;
 
 express()
     .use(express.static(dir))
-    .get('/connectTimeout4s', function(req, res, next) {
+    .get('/requestTimeout4s', function(req, res, next) {
         simulateLatency(res, 4);
     })
-    .get('/connectTimeout5s', function(req, res, next) {
+    .get('/requestTimeout5s', function(req, res, next) {
         simulateLatency(res, 5);
     })
     .get('/found', function (req, res, next) {

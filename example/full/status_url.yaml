@@ -30,8 +30,8 @@
     name: name
     message: description
 - system: 4SecTimeout
-  url: http://%hostname%:8000/connectTimeout4s
+  url: http://%hostname%:8000/requestTimeout4s
 - system: 5SecTimeout
-  url: http://%hostname%:8000/connectTimeout5s
+  url: http://%hostname%:8000/requestTimeout5s
 - system: redirect
   url: http://%hostname%:8000/redirect
