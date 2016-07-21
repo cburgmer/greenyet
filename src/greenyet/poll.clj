@@ -14,22 +14,16 @@
        last-changed
        (tc/now))]))
 
-(defn- fetch-status-with-timeout [host timeout-in-ms callback]
-  (log/info (format "Fetching status from %s" (:status-url host)))
-  (status/fetch-status host
-                       timeout-in-ms
-                       (fn [status]
-                         (log/info (format "Received status %s from %s"
-                                           (:color status)
-                                           (:status-url host)))
-                         (callback status))))
-
 (defn- poll-status [host polling-interval-in-ms]
   (go-loop []
-    (fetch-status-with-timeout host
-                               polling-interval-in-ms
-                               (fn [status]
-                                 (swap! statuses update-status host status)))
+    (log/info (format "Fetching status from %s" (:status-url host)))
+    (status/fetch-status host
+                         polling-interval-in-ms
+                         (fn [status]
+                           (log/info (format "Received status %s from %s"
+                                             (:color status)
+                                             (:status-url host)))
+                           (swap! statuses update-status host status)))
     (<! (timeout polling-interval-in-ms))
     (recur)))
 
