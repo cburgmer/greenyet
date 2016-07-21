@@ -53,121 +53,156 @@
   (testing "should return red for 500"
     (with-fake-resource "http://the_host/not_found" (fn [_] {:status 500
                                                              :body ""})
-      (is (= :red
-             (:color (sut/fetch-status (host-without-color-config "http://the_host/not_found")
-                                       timeout))))))
+      (with-local-vars [status nil]
+        (sut/fetch-status (host-without-color-config "http://the_host/not_found")
+                          timeout
+                          (fn [status]
+                            (is (= :red
+                                   (:color status))))))))
 
   (testing "should return green for 200"
     (with-fake-resource "http://the_host/found" (fn [_] {:status 200
                                                          :body ""})
-      (is (= :green
-             (:color (sut/fetch-status (host-without-color-config "http://the_host/found")
-                                       timeout))))))
+      (sut/fetch-status (host-without-color-config "http://the_host/found")
+                        timeout
+                        (fn [status]
+                          (is (= :green
+                                 (:color status)))))))
 
   (testing "should return red for color red"
     (with-fake-resource "http://the_host/status.json" (json-response {:color "red"})
-      (is (= :red
-             (:color (sut/fetch-status (host-with-color-config "http://the_host/status.json" "color")
-                                       timeout))))))
+      (sut/fetch-status (host-with-color-config "http://the_host/status.json" "color")
+                        timeout
+                        (fn [status]
+                          (is (= :red
+                                 (:color status)))))))
 
   (testing "should return yellow for color yellow"
     (with-fake-resource "http://the_host/status.json" (json-response {:color "yellow"})
-      (is (= :yellow
-             (:color (sut/fetch-status (host-with-color-config "http://the_host/status.json" "color")
-                                       timeout))))))
+      (sut/fetch-status (host-with-color-config "http://the_host/status.json" "color")
+                        timeout
+                        (fn [status]
+                          (is (= :yellow
+                                 (:color status)))))))
 
   (testing "should return green for color green"
     (with-fake-resource "http://the_host/status.json" (json-response {:status "green"})
-      (is (= :green
-             (:color (sut/fetch-status (host-with-color-config "http://the_host/status.json" "status")
-                                       timeout))))))
+      (sut/fetch-status (host-with-color-config "http://the_host/status.json" "status")
+                        timeout
+                        (fn [status]
+                          (is (= :green
+                                 (:color status)))))))
 
   (testing "should fail if status key is configured but no JSON is provided"
     (with-fake-resource "http://the_host/status.json" (fn [_] {:status 200
                                                                :body "some body"})
-      (is (= :red
-             (:color (sut/fetch-status (host-with-color-config "http://the_host/status.json" "status")
-                                       timeout))))))
+      (sut/fetch-status (host-with-color-config "http://the_host/status.json" "status")
+                        timeout
+                        (fn [status]
+                          (is (= :red
+                                 (:color status)))))))
 
   (testing "should only evaluate JSON if configured"
     (with-fake-resource "http://the_host/status.json" (json-response {:color "red"})
-      (is (= :green
-             (:color (sut/fetch-status (host-without-color-config "http://the_host/status.json")
-                                       timeout))))))
+      (sut/fetch-status (host-without-color-config "http://the_host/status.json")
+                        timeout
+                        (fn [status]
+                          (is (= :green
+                                 (:color status)))))))
 
   (testing "should return status from json-path config"
     (with-fake-resource "http://the_host/status.json" (json-response {:complex ["some garbage" {:color "yellow"}]})
-      (is (= :yellow
-             (:color (sut/fetch-status (host-with-color-config "http://the_host/status.json" {:json-path "$.complex[1].color"})
-                                       timeout))))))
+      (sut/fetch-status (host-with-color-config "http://the_host/status.json" {:json-path "$.complex[1].color"})
+                        timeout
+                        (fn [status]
+                          (is (= :yellow
+                                 (:color status)))))))
 
   (testing "should return status with specific color for green status"
     (with-fake-resource "http://the_host/status.json" (json-response {:happy true})
-      (is (= :green
-             (:color (sut/fetch-status (host-with-color-config "http://the_host/status.json" {:json-path "$.happy"
-                                                                                              :green-value true})
-                                       timeout))))))
+      (sut/fetch-status (host-with-color-config "http://the_host/status.json" {:json-path "$.happy"
+                                                                               :green-value true})
+                        timeout
+                        (fn [status]
+                          (is (= :green
+                                 (:color status)))))))
 
   (testing "should return status with specific color for yellow status"
     (with-fake-resource "http://the_host/status.json" (json-response {:status "pending"})
-      (is (= :yellow
-             (:color (sut/fetch-status (host-with-color-config "http://the_host/status.json" {:json-path "$.status"
-                                                                                              :yellow-value "pending"})
-                                       timeout))))))
+      (sut/fetch-status (host-with-color-config "http://the_host/status.json" {:json-path "$.status"
+                                                                               :yellow-value "pending"})
+                        timeout
+                        (fn [status]
+                          (is (= :yellow
+                                 (:color status)))))))
 
   (testing "messages"
     (testing "simple 200 check"
       (with-fake-resource "http://the_host/found" (fn [_] {:status 200
                                                            :body ""})
-        (is (= "OK"
-               (:message (sut/fetch-status (host-without-color-config "http://the_host/found")
-                                           timeout))))))
+        (sut/fetch-status (host-without-color-config "http://the_host/found")
+                          timeout
+                          (fn [status]
+                            (is (= "OK"
+                                   (:message status)))))))
 
     (testing "for 500"
       (with-fake-resource "http://the_host/error" (fn [_] {:status 500
                                                            :body "Internal Error"})
-        (is (= "Status 500: Internal Error"
-               (:message (sut/fetch-status (host-without-color-config "http://the_host/error")
-                                           timeout))))))
+        (sut/fetch-status (host-without-color-config "http://the_host/error")
+                          timeout
+                          (fn [status]
+                            (is (= "Status 500: Internal Error"
+                                   (:message status)))))))
 
     (testing "for 302"
       (with-fake-resource "http://the_host/redirect" (fn [_] {:status 302
                                                               :body "Found"})
-        (is (= "Status 302: Found"
-               (:message (sut/fetch-status (host-without-color-config "http://the_host/redirect")
-                                           timeout))))))
+        (sut/fetch-status (host-without-color-config "http://the_host/redirect")
+                          timeout
+                          (fn [status]
+                            (is (= "Status 302: Found"
+                                   (:message status)))))))
 
     (testing "for internal exception"
       (with-fake-resource "http://the_host/status.json" (fn [_] {:status 200
                                                                  :body "some body"})
-        (is (some? (:message (sut/fetch-status (host-with-color-config "http://the_host/status.json" "status")
-                                               timeout))))))
+        (sut/fetch-status (host-with-color-config "http://the_host/status.json" "status")
+                          timeout
+                          (fn [status]
+                            (is (some? (:message status)))))))
 
     (testing "should return message if configured"
       (with-fake-resource "http://the_host/status.json" (json-response {:status "green"
                                                                         :message "up and running"})
-        (is (= "up and running"
-               (:message (sut/fetch-status (host-with-status-message-config "http://the_host/status.json"
-                                                                           "status"
-                                                                           "message")
-                                           timeout)))))))
+        (sut/fetch-status (host-with-status-message-config "http://the_host/status.json"
+                                                           "status"
+                                                           "message")
+                          timeout
+                          (fn [status]
+                            (is (= "up and running"
+                                   (:message status))))))))
 
   (testing "package-version"
     (testing "should extract value"
       (with-fake-resource "http://the_host/status.json" (json-response {:color "green"
                                                                         :version "the-package-1.0.0"
                                                                         :body ""})
-        (is (= "the-package-1.0.0"
-               (:package-version (sut/fetch-status (host-with-version-config "http://the_host/status.json"
-                                                                             "version")
-                                                   timeout))))))
+        (sut/fetch-status (host-with-version-config "http://the_host/status.json"
+                                                    "version")
+                          timeout
+                          (fn [status]
+                            (is (= "the-package-1.0.0"
+                                   (:package-version status)))))))
 
     (testing "should handle missing value"
       (with-fake-resource "http://the_host/status.json" (json-response {:color "green"
                                                                         :body ""})
-        (is (nil? (:package-version (sut/fetch-status (host-with-version-config "http://the_host/status.json"
-                                                                                "package-version")
-                                                      timeout)))))))
+        (sut/fetch-status (host-with-version-config "http://the_host/status.json"
+                                                    "package-version")
+                          timeout
+                          (fn [status]
+                            (is (nil? (:package-version status))))))))
 
   (testing "components"
     (testing "return all statuses"
@@ -175,46 +210,54 @@
                                                                                  :components [{:status "green"}
                                                                                               {:status "red"}
                                                                                               {:status "yellow"}]})
-        (is (= [:green :red :yellow]
-               (->> (sut/fetch-status (host-with-component-config "http://the_host/with_components.json"
-                                                                 {:json-path "$.components[*]"
-                                                                  :color "status"})
-                                      timeout)
-                    :components
-                    (map :color))))))
+        (sut/fetch-status (host-with-component-config "http://the_host/with_components.json"
+                                                      {:json-path "$.components[*]"
+                                                       :color "status"})
+                          timeout
+                          (fn [status]
+                            (is (= [:green :red :yellow]
+                                   (->> status
+                                        :components
+                                        (map :color))))))))
     (testing "handles complex color config"
       (with-fake-resource "http://the_host/with_components.json" (json-response {:color "yellow"
                                                                                  :components [{:status "healthy"}
                                                                                               {:status "whatever"}
                                                                                               {:status "warning"}]})
-        (is (= [:green :red :yellow]
-               (->> (sut/fetch-status (host-with-component-config "http://the_host/with_components.json"
-                                                                 {:json-path "$.components[*]"
-                                                                  :color {:json-path "$.status"
-                                                                          :green-value "healthy"
-                                                                          :yellow-value "warning"}})
-                                      timeout)
-                    :components
-                    (map :color))))))
+        (sut/fetch-status (host-with-component-config "http://the_host/with_components.json"
+                                                      {:json-path "$.components[*]"
+                                                       :color {:json-path "$.status"
+                                                               :green-value "healthy"
+                                                               :yellow-value "warning"}})
+                          timeout
+                          (fn [status]
+                            (is (= [:green :red :yellow]
+                                   (->> status
+                                        :components
+                                        (map :color))))))))
     (testing "handles name"
       (with-fake-resource "http://the_host/with_components.json" (json-response {:color "green"
                                                                                  :components [{:status "green"
                                                                                                :description "child 1"}]})
-        (is (= [{:color :green :name "child 1" :message nil}]
-               (:components (sut/fetch-status (host-with-component-config "http://the_host/with_components.json"
-                                                                         {:json-path "$.components[*]"
-                                                                          :color "status"
-                                                                          :name "description"})
-                                              timeout))))))
+        (sut/fetch-status (host-with-component-config "http://the_host/with_components.json"
+                                                      {:json-path "$.components[*]"
+                                                       :color "status"
+                                                       :name "description"})
+                          timeout
+                          (fn [status]
+                            (is (= [{:color :green :name "child 1" :message nil}]
+                                   (:components status)))))))
     (testing "handles message"
       (with-fake-resource "http://the_host/with_components.json" (json-response {:color "green"
                                                                                  :components [{:status "green"
                                                                                                :description "child 1"
                                                                                                :textualStatus "swell"}]})
-        (is (= [{:color :green :name "child 1" :message "swell"}]
-               (:components (sut/fetch-status (host-with-component-config "http://the_host/with_components.json"
-                                                                         {:json-path "$.components[*]"
-                                                                          :color "status"
-                                                                          :name "description"
-                                                                          :message "textualStatus"})
-                                              timeout))))))))
+        (sut/fetch-status (host-with-component-config "http://the_host/with_components.json"
+                                                      {:json-path "$.components[*]"
+                                                       :color "status"
+                                                       :name "description"
+                                                       :message "textualStatus"})
+                          timeout
+                          (fn [status]
+                            (is (= [{:color :green :name "child 1" :message "swell"}]
+                                   (:components status)))))))))
