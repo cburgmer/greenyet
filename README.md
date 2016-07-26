@@ -21,6 +21,8 @@ greenyet is written in Clojure. Give it a try if you haven't yet.
 
 Don't want to go that far? We got you covered! Try the production release [standalone JAR](https://github.com/cburgmer/greenyet/releases) (run via `java -jar greenyet-*-standalone.jar`).
 
+![Screenshot](https://github.com/cburgmer/greenyet/raw/master/example/screenshot.png)
+
 ### Configuration
 
 Config as YAML (remember JSON is a subset):
