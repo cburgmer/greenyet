@@ -49,19 +49,21 @@
     (status-color json color-conf)
     (status-color-from-components (component-statuses json components-conf))))
 
-(defn- status-from-json? [color-conf components-conf]
-  (or color-conf components-conf))
+(defn- status-from-json [json {color-conf :color
+                               message-conf :message
+                               package-version-conf :package-version
+                               components-conf :components}]
+  {:color (overall-status-color json color-conf components-conf)
+   :message (get-simple-key json message-conf)
+   :package-version (get-simple-key json package-version-conf)
+   :components (component-statuses json components-conf)})
 
 (defn- application-status [response {color-conf :color
-                                     message-conf :message
-                                     package-version-conf :package-version
-                                     components-conf :components}]
-  (if (status-from-json? color-conf components-conf)
+                                     components-conf :components
+                                     :as config}]
+  (if (or color-conf components-conf)
     (let [json (j/parse-string (:body response) true)]
-      {:color (overall-status-color json color-conf components-conf)
-       :message (get-simple-key json message-conf)
-       :package-version (get-simple-key json package-version-conf)
-       :components (component-statuses json components-conf)})
+      (status-from-json json config))
     {:color :green
      :message "OK"}))
 
