@@ -30,6 +30,12 @@
    :config {:color "color"
             :package-version package-version}})
 
+(defn- host-with-component-config-no-overall-status [url component-config]
+  {:hostname "the_host"
+   :service "the_service"
+   :status-url url
+   :config {:components component-config}})
+
 (defn- host-with-component-config [url component-config]
   {:hostname "the_host"
    :service "the_service"
@@ -205,6 +211,57 @@
                             (is (nil? (:package-version status))))))))
 
   (testing "components"
+    (testing "no overall status"
+      (testing "return red if component red"
+        (with-fake-resource "http://the_host/with_components.json" (json-response {:components [{:status "green"}
+                                                                                                {:status "red"}
+                                                                                                {:status "yellow"}]})
+          (sut/fetch-status (host-with-component-config-no-overall-status "http://the_host/with_components.json"
+                                                                          {:json-path "$.components[*]"
+                                                                           :color "status"})
+                            timeout
+                            (fn [status]
+                              (is (= :red
+                                     (:color status)))))))
+      (testing "return yellow if component yellow"
+        (with-fake-resource "http://the_host/with_components.json" (json-response {:components [{:status "green"}
+                                                                                                {:status "yellow"}]})
+          (sut/fetch-status (host-with-component-config-no-overall-status "http://the_host/with_components.json"
+                                                                          {:json-path "$.components[*]"
+                                                                           :color "status"})
+                            timeout
+                            (fn [status]
+                              (is (= :yellow
+                                     (:color status)))))))
+      (testing "return green if all components green"
+        (with-fake-resource "http://the_host/with_components.json" (json-response {:components [{:status "green"}
+                                                                                                {:status "green"}]})
+          (sut/fetch-status (host-with-component-config-no-overall-status "http://the_host/with_components.json"
+                                                                          {:json-path "$.components[*]"
+                                                                           :color "status"})
+                            timeout
+                            (fn [status]
+                              (is (= :green
+                                     (:color status)))))))
+      (testing "return red if no components given"
+        (with-fake-resource "http://the_host/with_components.json" (json-response {:components []})
+          (sut/fetch-status (host-with-component-config-no-overall-status "http://the_host/with_components.json"
+                                                                          {:json-path "$.components[*]"
+                                                                           :color "status"})
+                            timeout
+                            (fn [status]
+                              (is (= :red
+                                     (:color status)))))))
+      (testing "return red if unknown component color"
+        (with-fake-resource "http://the_host/with_components.json" (json-response {:components [{:status "unknown"}]})
+          (sut/fetch-status (host-with-component-config-no-overall-status "http://the_host/with_components.json"
+                                                                          {:json-path "$.components[*]"
+                                                                           :color "status"})
+                            timeout
+                            (fn [status]
+                              (is (= :red
+                                     (:color status))))))))
+
     (testing "return all statuses"
       (with-fake-resource "http://the_host/with_components.json" (json-response {:color "yellow"
                                                                                  :components [{:status "green"}

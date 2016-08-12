@@ -35,13 +35,30 @@
                  :name (get-simple-key component name-conf)
                  :message (get-simple-key component message-conf)})))))
 
+(defn- status-color-from-components [components]
+  (let [colors (map :color components)]
+    (if (or (empty? colors)
+            (some #(= % :red) colors))
+      :red
+      (if (some #(= % :yellow) colors)
+        :yellow
+        :green))))
+
+(defn- overall-status-color [json color-conf components-conf]
+  (if color-conf
+    (status-color json color-conf)
+    (status-color-from-components (component-statuses json components-conf))))
+
+(defn- status-from-json? [color-conf components-conf]
+  (or color-conf components-conf))
+
 (defn- application-status [response {color-conf :color
                                      message-conf :message
                                      package-version-conf :package-version
                                      components-conf :components}]
-  (if color-conf
+  (if (status-from-json? color-conf components-conf)
     (let [json (j/parse-string (:body response) true)]
-      {:color (status-color json color-conf)
+      {:color (overall-status-color json color-conf components-conf)
        :message (get-simple-key json message-conf)
        :package-version (get-simple-key json package-version-conf)
        :components (component-statuses json components-conf)})
