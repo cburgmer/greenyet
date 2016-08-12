@@ -1,0 +1,10 @@
+{
+    "color": "yellow",
+    "subSystems": [{
+        "name": "A green system",
+        "status": "green"
+    }, {
+        "name": "Yellow system",
+        "status": "yellow"
+    }]
+}
