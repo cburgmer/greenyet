@@ -74,7 +74,7 @@ Put in your reverse proxy/load balancer together with your nodes. Most of the ti
 
 ### Red is red is yellow
 
-A red component can indicate an overall red system, or just leave only the component affected (i.e. the overall system could just be yellow). Your service will probably have its own logic for when the overall status should change. Until you implement that, red will be red, and yellow will be yellow.
+A red component can indicate an overall red system, or just leave just the component affected (i.e. the overall system could just be yellow). Your service will probably have its own logic for when the overall status should change. Until you implement that, red will be red, and yellow will be yellow.
 
 ### Visualise the flow to production
 
