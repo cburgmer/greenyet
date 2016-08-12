@@ -72,9 +72,9 @@ Config as YAML (remember JSON is a subset):
 
 Put in your reverse proxy/load balancer together with your nodes. Most of the times your machines will be green, so only the first entry of the config will be shown per environment (e.g. the reverse proxy, your call). The list unfolds once one machine changes color.
 
-### Green is green
+### Red is red is yellow
 
-Make sure that the main machine changes color when a component gets unhealthy. Greenyet does not interpret component colors, but only looks at the overall one.
+A red component can indicate an overall red system, or just leave only the component affected (i.e. the overall system could just be yellow). Your service will probably have its own logic for when the overall status should change. Until you implement that, red will be red, and yellow will be yellow.
 
 ### Visualise the flow to production
 
