@@ -186,7 +186,29 @@
                           timeout
                           (fn [status]
                             (is (= "up and running"
-                                   (:message status))))))))
+                                   (:message status)))))))
+
+    (testing "should indicate JSON parse error"
+      (with-fake-resource "http://the_host/status.json" {:status 200
+                                                         :headers {"Content-Type" "application/json"}
+                                                         :body "not_json"}
+        (sut/fetch-status (host-with-color-config "http://the_host/status.json" "color")
+                          timeout
+                          (fn [status]
+                            (is (re-find #"token.+not_json"
+                                         (:message status)))))))
+
+    (testing "should indicate a JsonPath selection failure"
+      (with-fake-resource "http://the_host/status.json" {:status 200
+                                                         :headers {"Content-Type" "application/json"}
+                                                         :body "{}"}
+        (sut/fetch-status (assoc (host-without-color-config "http://the_host/status.json")
+                                 :config
+                                 {:color {:json-path "$.color"}})
+                          timeout
+                          (fn [status]
+                            (is (re-find #"read color.+\$\.color"
+                                         (:message status))))))))
 
   (testing "package-version"
     (testing "should extract value"
