@@ -13,7 +13,7 @@
   system: SystemWith404
 - hostname: localhost
   environment: DEV
-  system: SystemStatusRed
+  system: SystemMissingColor
 - hostname: localhost
   environment: DEV
   system: SystemStatusYellow

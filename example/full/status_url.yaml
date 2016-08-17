@@ -3,9 +3,9 @@
   url: http://%hostname%:8000/found
 - system: SystemWith404
   url: http://%hostname%:8000/not_found
-- system: SystemStatusRed
+- system: SystemMissingColor
   url: http://%hostname%:8000/red.json
-  color: status
+  color: color
   message: message
   package-version: package-version
 - system: SystemStatusYellow

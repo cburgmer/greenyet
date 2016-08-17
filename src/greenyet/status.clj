@@ -3,6 +3,9 @@
             json-path
             [org.httpkit.client :as http]))
 
+(defn- missing-item-warning [description config]
+  (format "greenyet: Cannot read %s for config '%s'" description config))
+
 (defn- get-simple-key [json key]
   (get json (keyword key)))
 
@@ -11,7 +14,7 @@
     (let [value (get-simple-key json key)]
       (if value
         [value nil]
-        [value (format "Cannot read %s for config '%s'" description key)]))))
+        [value (missing-item-warning description key)]))))
 
 (defn- get-complex-key [json key-conf]
   (if (string? key-conf)
@@ -35,7 +38,7 @@
                     (= yellow-value color) :yellow
                     :else :red)]
         [color nil])
-      [:red (format "Cannot read color for config '%s'" color-conf)])))
+      [:red (missing-item-warning "color" color-conf)])))
 
 (defn- component-statuses [json {path :json-path color-conf :color name-conf :name message-conf :message}]
   (when path
@@ -46,7 +49,7 @@
               :message (get-simple-key component message-conf)})
             components-json)
        nil]
-      [[] (format "Cannot read components for config '%s'" path)])))
+      [[] (missing-item-warning "components" path)])))
 
 (defn- status-color-from-components [components]
   (let [colors (map :color components)]
@@ -71,7 +74,10 @@
         [components components-message] (component-statuses json components-conf)
         [package-version package-version-message] (get-simple-key-with-warning json package-version-conf "package-version")]
     {:color color
-     :message (or color-message package-version-message components-message (get-simple-key json message-conf))
+     :message (vec (remove nil? [color-message
+                                 package-version-message
+                                 components-message
+                                 (get-simple-key json message-conf)]))
      :package-version package-version
      :components components}))
 
