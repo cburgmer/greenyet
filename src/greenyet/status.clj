@@ -40,15 +40,15 @@
         [color nil])
       [:red (missing-item-warning "color" color-conf)])))
 
-(defn- component-statuses [json {path :json-path color-conf :color name-conf :name message-conf :message}]
+(defn- component-status [json {color-conf :color name-conf :name message-conf :message}]
+  {:color (first (status-color json color-conf))
+   :name (get-simple-key json name-conf)
+   :message (get-simple-key json message-conf)})
+
+(defn- component-statuses [json {path :json-path color-conf :color name-conf :name message-conf :message :as component-conf}]
   (when path
     (if-let [components-json (json-path/at-path path json)]
-      [(map (fn [component]
-             {:color (first (status-color component color-conf))
-              :name (get-simple-key component name-conf)
-              :message (get-simple-key component message-conf)})
-            components-json)
-       nil]
+      [(map #(component-status % component-conf) components-json) nil]
       [[] (missing-item-warning "components" path)])))
 
 (defn- status-color-from-components [components]
