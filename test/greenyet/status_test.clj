@@ -188,6 +188,17 @@
                             (is (= "up and running"
                                    (first (:message status))))))))
 
+    (testing "should handle message list"
+      (with-fake-resource "http://the_host/status.json" (json-response {:status "green"
+                                                                        :message ["up and running"]})
+        (sut/fetch-status (host-with-status-message-config "http://the_host/status.json"
+                                                           "status"
+                                                           "message")
+                          timeout
+                          (fn [status]
+                            (is (= "up and running"
+                                   (first (:message status))))))))
+
     (testing "should indicate JSON parse error"
       (with-fake-resource "http://the_host/status.json" {:status 200
                                                          :headers {"Content-Type" "application/json"}

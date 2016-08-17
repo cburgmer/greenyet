@@ -74,10 +74,10 @@
         [components components-message] (component-statuses json components-conf)
         [package-version package-version-message] (get-simple-key-with-warning json package-version-conf "package-version")]
     {:color color
-     :message (vec (remove nil? [color-message
-                                 package-version-message
-                                 components-message
-                                 (get-simple-key json message-conf)]))
+     :message (vec (remove nil? (flatten [color-message
+                                          package-version-message
+                                          components-message
+                                          (get-simple-key json message-conf)])))
      :package-version package-version
      :components components}))
 
