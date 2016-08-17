@@ -22,20 +22,20 @@
     (let [path (:json-path key-conf)]
       (json-path/at-path path json))))
 
-(defn- color-value [color-conf key default]
+(defn- configured-color-value [color-conf key default]
   (if (string? color-conf)
     default
     (or (get color-conf key)
         default)))
 
 (defn- status-color [json color-conf]
-  (let [color (get-complex-key json color-conf)
-        green-value (color-value color-conf :green-value "green")
-        yellow-value (color-value color-conf :yellow-value "yellow")]
-    (if color
+  (let [color-value (get-complex-key json color-conf)
+        green-value (configured-color-value color-conf :green-value "green")
+        yellow-value (configured-color-value color-conf :yellow-value "yellow")]
+    (if color-value
       (let [color (cond
-                    (= green-value color) :green
-                    (= yellow-value color) :yellow
+                    (= green-value color-value) :green
+                    (= yellow-value color-value) :yellow
                     :else :red)]
         [color nil])
       [:red (missing-item-warning "color" color-conf)])))
