@@ -5,7 +5,7 @@
   url: http://%hostname%:8000/not_found
 - system: SystemStatusRed
   url: http://%hostname%:8000/red.json
-  color: color
+  color: status
   message: message
   package-version: package-version
 - system: SystemStatusYellow

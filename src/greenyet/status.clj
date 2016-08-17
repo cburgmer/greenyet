@@ -6,6 +6,13 @@
 (defn- get-simple-key [json key]
   (get json (keyword key)))
 
+(defn- get-simple-key-with-warning [json key description]
+  (when key
+    (let [value (get-simple-key json key)]
+      (if value
+        [value nil]
+        [value (format "Cannot read %s for config '%s'" description key)]))))
+
 (defn- get-complex-key [json key-conf]
   (if (string? key-conf)
     (get-simple-key json key-conf)
@@ -28,15 +35,18 @@
                     (= yellow-value color) :yellow
                     :else :red)]
         [color nil])
-      [:red (format "Cannot read color for config %s" color-conf)])))
+      [:red (format "Cannot read color for config '%s'" color-conf)])))
 
 (defn- component-statuses [json {path :json-path color-conf :color name-conf :name message-conf :message}]
   (when path
-    (->> (json-path/at-path path json)
-         (map (fn [component]
-                {:color (first (status-color component color-conf))
-                 :name (get-simple-key component name-conf)
-                 :message (get-simple-key component message-conf)})))))
+    (if-let [components-json (json-path/at-path path json)]
+      [(map (fn [component]
+             {:color (first (status-color component color-conf))
+              :name (get-simple-key component name-conf)
+              :message (get-simple-key component message-conf)})
+            components-json)
+       nil]
+      [[] (format "Cannot read components for config '%s'" path)])))
 
 (defn- status-color-from-components [components]
   (let [colors (map :color components)]
@@ -51,17 +61,19 @@
 (defn- overall-status-color [json color-conf components-conf]
   (if color-conf
     (status-color json color-conf)
-    (status-color-from-components (component-statuses json components-conf))))
+    (status-color-from-components (first (component-statuses json components-conf)))))
 
 (defn- status-from-json [json {color-conf :color
                                message-conf :message
                                package-version-conf :package-version
                                components-conf :components}]
-  (let [[color color-message] (overall-status-color json color-conf components-conf)]
+  (let [[color color-message] (overall-status-color json color-conf components-conf)
+        [components components-message] (component-statuses json components-conf)
+        [package-version package-version-message] (get-simple-key-with-warning json package-version-conf "package-version")]
     {:color color
-     :message (or color-message (get-simple-key json message-conf))
-     :package-version (get-simple-key json package-version-conf)
-     :components (component-statuses json components-conf)}))
+     :message (or color-message package-version-message components-message (get-simple-key json message-conf))
+     :package-version package-version
+     :components components}))
 
 (defn- application-status [response {color-conf :color
                                      components-conf :components

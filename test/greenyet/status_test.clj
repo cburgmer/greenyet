@@ -198,23 +198,42 @@
                             (is (re-find #"token.+not_json"
                                          (:message status)))))))
 
-    (testing "should indicate a JsonPath selection failure"
-      (with-fake-resource "http://the_host/status.json" {:status 200
-                                                         :headers {"Content-Type" "application/json"}
-                                                         :body "{}"}
+    (testing "should indicate failure to read color"
+      (with-fake-resource "http://the_host/status.json" (json-response {})
         (sut/fetch-status (assoc (host-without-color-config "http://the_host/status.json")
                                  :config
                                  {:color {:json-path "$.color"}})
                           timeout
                           (fn [status]
                             (is (re-find #"read color.+\$\.color"
+                                         (:message status)))))))
+
+    (testing "should indicate failure to read components"
+      (with-fake-resource "http://the_host/status.json" (json-response {:color "green"})
+        (sut/fetch-status (assoc (host-without-color-config "http://the_host/status.json")
+                                 :config
+                                 {:color "color"
+                                  :components {:json-path "$.components"}})
+                          timeout
+                          (fn [status]
+                            (is (re-find #"read components.+\$\.components"
+                                         (:message status)))))))
+
+    (testing "should indicate failure to read package-version"
+      (with-fake-resource "http://the_host/status.json" (json-response {:color "green"})
+        (sut/fetch-status (assoc (host-without-color-config "http://the_host/status.json")
+                                 :config
+                                 {:color "color"
+                                  :package-version "package"})
+                          timeout
+                          (fn [status]
+                            (is (re-find #"read package-version.+package"
                                          (:message status))))))))
 
   (testing "package-version"
     (testing "should extract value"
       (with-fake-resource "http://the_host/status.json" (json-response {:color "green"
-                                                                        :version "the-package-1.0.0"
-                                                                        :body ""})
+                                                                        :version "the-package-1.0.0"})
         (sut/fetch-status (host-with-version-config "http://the_host/status.json"
                                                     "version")
                           timeout
