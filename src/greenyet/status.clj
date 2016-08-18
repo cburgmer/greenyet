@@ -29,26 +29,29 @@
         default)))
 
 (defn- status-color [json color-conf]
-  (let [color-value (get-complex-key json color-conf)
-        green-value (configured-color-value color-conf :green-value "green")
-        yellow-value (configured-color-value color-conf :yellow-value "yellow")]
-    (if color-value
-      (let [color (cond
-                    (= green-value color-value) :green
-                    (= yellow-value color-value) :yellow
-                    :else :red)]
-        [color nil])
-      [:red (missing-item-warning "color" color-conf)])))
+  (when-let [color-value (get-complex-key json color-conf)]
+    (let [green-value (configured-color-value color-conf :green-value "green")
+          yellow-value (configured-color-value color-conf :yellow-value "yellow")]
+      (cond
+        (= green-value color-value) :green
+        (= yellow-value color-value) :yellow
+        :else :red))))
 
 (defn- component-status [json {color-conf :color name-conf :name message-conf :message}]
-  {:color (first (status-color json color-conf))
-   :name (get-simple-key json name-conf)
-   :message (get-simple-key json message-conf)})
+  (let [color (status-color json color-conf)
+        status-color (or color :red)
+        color-message (when-not color
+                        (missing-item-warning "component color" color-conf))]
+    [{:color status-color
+      :name (get-simple-key json name-conf)
+      :message (get-simple-key json message-conf)}
+     color-message]))
 
 (defn- component-statuses [json {path :json-path color-conf :color name-conf :name message-conf :message :as component-conf}]
   (when path
     (if-let [components-json (json-path/at-path path json)]
-      [(map #(component-status % component-conf) components-json) nil]
+      (let [status-results (map #(component-status % component-conf) components-json)]
+        (apply mapv vector status-results))
       [[] (missing-item-warning "components" path)])))
 
 (defn- status-color-from-components [components]
@@ -63,7 +66,9 @@
 
 (defn- overall-status-color [json color-conf components-conf]
   (if color-conf
-    (status-color json color-conf)
+    (if-let [color (status-color json color-conf)]
+      [color nil]
+      [:red (missing-item-warning "color" color-conf)])
     (status-color-from-components (first (component-statuses json components-conf)))))
 
 (defn- status-from-json [json {color-conf :color
