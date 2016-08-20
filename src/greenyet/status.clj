@@ -64,19 +64,19 @@
                            :green))]
       [status-color nil])))
 
-(defn- overall-status-color [json color-conf components-conf]
+(defn- overall-status-color [json color-conf components]
   (if color-conf
     (if-let [color (status-color json color-conf)]
       [color nil]
       [:red (missing-item-warning "color" color-conf)])
-    (status-color-from-components (first (component-statuses json components-conf)))))
+    (status-color-from-components components)))
 
 (defn- status-from-json [json {color-conf :color
                                message-conf :message
                                package-version-conf :package-version
                                components-conf :components}]
-  (let [[color color-message] (overall-status-color json color-conf components-conf)
-        [components components-message] (component-statuses json components-conf)
+  (let [[components components-message] (component-statuses json components-conf)
+        [color color-message] (overall-status-color json color-conf components)
         [package-version package-version-message] (get-simple-key-with-warning json package-version-conf "package-version")]
     {:color color
      :message (vec (remove nil? (flatten [color-message
