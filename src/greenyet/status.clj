@@ -1,62 +1,7 @@
 (ns greenyet.status
   (:require [cheshire.core :as j]
-            json-path
+            [greenyet.parse :as parse]
             [org.httpkit.client :as http]))
-
-(defn- missing-item-warning [description config]
-  (format "greenyet: Cannot read %s for config '%s'" description config))
-
-(defn- get-simple-key [json key]
-  (get json (keyword key)))
-
-(defn- get-simple-key-with-warning [json key description]
-  (when key
-    (let [value (get-simple-key json key)]
-      (if value
-        [value nil]
-        [value (missing-item-warning description key)]))))
-
-(defn- get-complex-key [json key-conf]
-  (if (string? key-conf)
-    (get-simple-key json key-conf)
-    (let [path (:json-path key-conf)]
-      (json-path/at-path path json))))
-
-(defn- configured-color-value [color-conf key default]
-  (if (string? color-conf)
-    default
-    (or (get color-conf key)
-        default)))
-
-(defn- status-color [json color-conf]
-  (when-let [color-value (get-complex-key json color-conf)]
-    (let [green-value (configured-color-value color-conf :green-value "green")
-          yellow-value (configured-color-value color-conf :yellow-value "yellow")]
-      (cond
-        (= green-value color-value) :green
-        (= yellow-value color-value) :yellow
-        :else :red))))
-
-(defn- component-status [json {color-conf :color name-conf :name message-conf :message}]
-  (let [color (status-color json color-conf)
-        status-color (or color :red)
-        color-error (when-not color
-                      (missing-item-warning "component color" color-conf))
-        name (get-simple-key json name-conf)
-        name-error (when-not name
-                     (missing-item-warning "component name" name-conf))
-        [message message-error] (get-simple-key-with-warning json message-conf "component message")]
-    [{:color status-color
-      :name name
-      :message message}
-     [color-error name-error message-error]]))
-
-(defn- component-statuses [json {path :json-path color-conf :color name-conf :name message-conf :message :as component-conf}]
-  (when path
-    (if-let [components-json (json-path/at-path path json)]
-      (let [status-results (map #(component-status % component-conf) components-json)]
-        (apply mapv vector status-results))
-      [[] (missing-item-warning "components" path)])))
 
 (defn- status-color-from-components [components]
   (let [colors (map :color components)]
@@ -68,21 +13,16 @@
                            :green))]
       [status-color nil])))
 
-(defn- overall-status-color [json color-conf components]
-  (if color-conf
-    (if-let [color (status-color json color-conf)]
-      [color nil]
-      [:red (missing-item-warning "color" color-conf)])
+(defn- overall-status-color [json config components]
+  (if (:color config)
+    (parse/color json config)
     (status-color-from-components components)))
 
-(defn- status-from-json [json {color-conf :color
-                               message-conf :message
-                               package-version-conf :package-version
-                               components-conf :components}]
-  (let [[components components-error] (component-statuses json components-conf)
-        [color color-error] (overall-status-color json color-conf components)
-        [package-version package-version-error] (get-simple-key-with-warning json package-version-conf "package-version")
-        [message message-error] (get-simple-key-with-warning json message-conf "message")]
+(defn- status-from-json [json config]
+  (let [[components components-error] (parse/components json config)
+        [color color-error] (overall-status-color json config components)
+        [package-version package-version-error] (parse/package-version json config)
+        [message message-error] (parse/message json config)]
     {:color color
      :message (vec (remove nil? (flatten [color-error
                                           package-version-error
@@ -92,11 +32,10 @@
      :package-version package-version
      :components components}))
 
-(defn- application-status [response {color-conf :color
-                                     components-conf :components
-                                     :as config}]
-  (if (or color-conf components-conf)
-    (let [json (j/parse-string (:body response) true)]
+(defn- application-status [body config]
+  (if (or (:color config)
+          (:components config))
+    (let [json (j/parse-string body true)]
       (status-from-json json config))
     {:color :green
      :message "OK"}))
@@ -119,7 +58,7 @@
       {:color :red
        :message (format "Request timed out after %s milliseconds" timeout-in-ms)}
       (if (= 200 (:status response))
-        (application-status response config)
+        (application-status (:body response) config)
         {:color :red
          :message (message-for-http-response response)}))
     (catch Exception e
