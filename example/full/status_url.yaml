@@ -25,7 +25,6 @@
     json-path: $.subSystems
     color: status
     name: name
-    message: description
 - system: ComponentStatuses
   url: http://%hostname%:8000/component_status.json
   color: color

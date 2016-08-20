@@ -8,7 +8,8 @@
         "description": "Operational"
     }, {
         "name": "Another green system",
-        "status": "green"
+        "status": "green",
+        "description": ""
     }, {
         "name": "Another system ᶘᵒᴥᵒᶅ",
         "status": "yellow",
@@ -23,32 +24,40 @@
         "description": "Connection timeout"
     }, {
         "name": "Yellow system",
-        "status": "yellow"
+        "status": "yellow",
+        "description": ""
     }, {
         "name": "Yet another red system",
-        "status": "red"
+        "status": "red",
+        "description": ""
     },{
         "name": "I am a red system",
-        "status": "red"
+        "status": "red",
+        "description": ""
     },
     {
         "name": "I am a green system",
-        "status": "green"
+        "status": "green",
+        "description": ""
     },
     {
         "name": "I am a yellow system",
-        "status": "yellow"
+        "status": "yellow",
+        "description": ""
     },
     {
         "name": "I am yet another green system",
-        "status": "green"
+        "status": "green",
+        "description": ""
     },
     {
         "name": "I am yet another yellow system",
-        "status": "yellow"
+        "status": "yellow",
+        "description": ""
     },
     {
         "name": "I am yet another red system",
-        "status": "red"
+        "status": "red",
+        "description": ""
     }]
 }
