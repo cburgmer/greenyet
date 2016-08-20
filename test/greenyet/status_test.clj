@@ -233,6 +233,31 @@
                             (is (re-find #"read component color.+status"
                                          (first (:message status))))))))
 
+    (testing "should indicate failure to read name for components"
+      (with-fake-resource "http://the_host/status.json" (json-response {:color "green"
+                                                                        :components [{:color "green"
+                                                                                      :some_name nil}]})
+        (sut/fetch-status (host-with-component-config "http://the_host/status.json" {:json-path "$.components"
+                                                                                     :color "color"
+                                                                                     :name "some_name"})
+                          timeout
+                          (fn [status]
+                            (is (re-find #"read component name.+some_name"
+                                         (first (:message status))))))))
+
+    (testing "should indicate failure to read message for components"
+      (with-fake-resource "http://the_host/status.json" (json-response {:color "green"
+                                                                        :components [{:color "green"
+                                                                                      :name "a name"}]})
+        (sut/fetch-status (host-with-component-config "http://the_host/status.json" {:json-path "$.components"
+                                                                                     :color "color"
+                                                                                     :name "name"
+                                                                                     :message "the_message"})
+                          timeout
+                          (fn [status]
+                            (is (re-find #"read component message.+the_message"
+                                         (first (:message status))))))))
+
     (testing "should indicate failure to read package-version"
       (with-fake-resource "http://the_host/status.json" (json-response {:color "green"})
         (sut/fetch-status (host-with-version-config "http://the_host/status.json" "package")

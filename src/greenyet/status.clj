@@ -40,12 +40,16 @@
 (defn- component-status [json {color-conf :color name-conf :name message-conf :message}]
   (let [color (status-color json color-conf)
         status-color (or color :red)
-        color-message (when-not color
-                        (missing-item-warning "component color" color-conf))]
+        color-error (when-not color
+                      (missing-item-warning "component color" color-conf))
+        name (get-simple-key json name-conf)
+        name-error (when-not name
+                     (missing-item-warning "component name" name-conf))
+        [message message-error] (get-simple-key-with-warning json message-conf "component message")]
     [{:color status-color
-      :name (get-simple-key json name-conf)
-      :message (get-simple-key json message-conf)}
-     color-message]))
+      :name name
+      :message message}
+     [color-error name-error message-error]]))
 
 (defn- component-statuses [json {path :json-path color-conf :color name-conf :name message-conf :message :as component-conf}]
   (when path
