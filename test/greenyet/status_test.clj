@@ -16,11 +16,11 @@
    :status-url url
    :config {:color key}})
 
-(defn- host-with-status-message-config [url color-key message-key]
+(defn- host-with-status-message-config [url message-key]
   {:hostname "the_host"
    :service "the_service"
    :status-url url
-   :config {:color color-key
+   :config {:color "color"
             :message message-key}})
 
 (defn- host-with-version-config [url package-version]
@@ -178,10 +178,9 @@
                             (is (some? (:message status)))))))
 
     (testing "should return message if configured"
-      (with-fake-resource "http://the_host/status.json" (json-response {:status "green"
+      (with-fake-resource "http://the_host/status.json" (json-response {:color "green"
                                                                         :message "up and running"})
         (sut/fetch-status (host-with-status-message-config "http://the_host/status.json"
-                                                           "status"
                                                            "message")
                           timeout
                           (fn [status]
@@ -189,10 +188,9 @@
                                    (first (:message status))))))))
 
     (testing "should handle message list"
-      (with-fake-resource "http://the_host/status.json" (json-response {:status "green"
+      (with-fake-resource "http://the_host/status.json" (json-response {:color "green"
                                                                         :message ["up and running"]})
         (sut/fetch-status (host-with-status-message-config "http://the_host/status.json"
-                                                           "status"
                                                            "message")
                           timeout
                           (fn [status]
@@ -241,6 +239,14 @@
                           timeout
                           (fn [status]
                             (is (re-find #"read package-version.+package"
+                                         (first (:message status))))))))
+
+    (testing "should indicate failure to read message"
+      (with-fake-resource "http://the_host/status.json" (json-response {:color "green"})
+        (sut/fetch-status (host-with-status-message-config "http://the_host/status.json" "freetext")
+                          timeout
+                          (fn [status]
+                            (is (re-find #"read message.+freetext"
                                          (first (:message status)))))))))
 
   (testing "package-version"

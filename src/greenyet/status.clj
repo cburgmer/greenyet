@@ -75,14 +75,16 @@
                                message-conf :message
                                package-version-conf :package-version
                                components-conf :components}]
-  (let [[components components-message] (component-statuses json components-conf)
-        [color color-message] (overall-status-color json color-conf components)
-        [package-version package-version-message] (get-simple-key-with-warning json package-version-conf "package-version")]
+  (let [[components components-error] (component-statuses json components-conf)
+        [color color-error] (overall-status-color json color-conf components)
+        [package-version package-version-error] (get-simple-key-with-warning json package-version-conf "package-version")
+        [message message-error] (get-simple-key-with-warning json message-conf "message")]
     {:color color
-     :message (vec (remove nil? (flatten [color-message
-                                          package-version-message
-                                          components-message
-                                          (get-simple-key json message-conf)])))
+     :message (vec (remove nil? (flatten [color-error
+                                          package-version-error
+                                          components-error
+                                          message-error
+                                          message])))
      :package-version package-version
      :components components}))
 
