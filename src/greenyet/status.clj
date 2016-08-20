@@ -56,7 +56,7 @@
   (try
     (if (instance? org.httpkit.client.TimeoutException (:error response))
       {:color :red
-       :message (format "Request timed out after %s milliseconds" timeout-in-ms)}
+       :message (format "greenyet: Request timed out after %s milliseconds" timeout-in-ms)}
       (if (= 200 (:status response))
         (application-status (:body response) config)
         {:color :red
