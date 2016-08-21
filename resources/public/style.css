@@ -2,81 +2,81 @@
 The styleguide is hosted under http://localhost:3000/styleguide.html
 */
 body {
-  margin:0;
-  padding:1px;
-  background: #888888;
+    margin:0;
+    padding:1px;
+    background: #888888;
 }
 
 .environment-wrapper {
-  margin: 1px 1px 25px 1px;
-  padding:0px;
-  background: #888888;
+    margin: 1px 1px 25px 1px;
+    padding:0px;
+    background: #888888;
 }
 
 .patchwork {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-align-items: left;
-  align-items: left;
-  -webkit-justify-content: left;
-  justify-content: left;
-  -webkit-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-wrap: wrap;
-  flex-wrap: wrap;
-  -webkit-align-content: flex-end;
-  align-content: flex-end;
-  margin:1px;
-  padding:0;
-  position: relative;
-  perspective: 0px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: left;
+    align-items: left;
+    -webkit-justify-content: left;
+    justify-content: left;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-align-content: flex-end;
+    align-content: flex-end;
+    margin:1px;
+    padding:0;
+    position: relative;
+    perspective: 0px;
 }
 
 .column-patchwork {
-  -webkit-flex-direction: column;
-  flex-direction: column;
+    -webkit-flex-direction: column;
+    flex-direction: column;
 }
 
 .patch {
-  font-weight: 300;
-  border: 1px solid #C8C8C8;
-  display: table-cell;
-  vertical-align: middle;
-  width: 200px;
-  height: 200px;
-  font-family: Helvetica,Century Gothic,CenturyGothic,AppleGothic,sans-serif;
-  line-height: 26px;
-  font-size: 18px;
-  letter-spacing: 1px;
-  -webkit-transition: -webkit-transform 1s;
-  -moz-transition: -moz-transform 1s;
-  -o-transition: -o-transform 1s;
-  transition: transform 1s;
-  -webkit-transform-style: preserve-3d;
-  -moz-transform-style: preserve-3d;
-  -o-transform-style: preserve-3d;
-  transform-style: preserve-3d;
+    font-weight: 300;
+    border: 1px solid #C8C8C8;
+    display: table-cell;
+    vertical-align: middle;
+    width: 200px;
+    height: 200px;
+    font-family: Helvetica,Century Gothic,CenturyGothic,AppleGothic,sans-serif;
+    line-height: 26px;
+    font-size: 18px;
+    letter-spacing: 1px;
+    -webkit-transition: -webkit-transform 1s;
+    -moz-transition: -moz-transform 1s;
+    -o-transition: -o-transform 1s;
+    transition: transform 1s;
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    -o-transform-style: preserve-3d;
+    transform-style: preserve-3d;
 }
 
 .patch:hover {
-  height: auto;
-  max-height: 400px;
-  min-height: 200px;
+    height: auto;
+    max-height: 400px;
+    min-height: 200px;
 }
 
 .green {
-  background-color: #22A954;
-  color:white;
+    background-color: #22A954;
+    color:white;
 }
 
 .red {
-  background-color: #EA4F2F;
-  color:white;
+    background-color: #EA4F2F;
+    color:white;
 }
 
 .yellow {
-  background-color: #EA902F;
-  color:white;
+    background-color: #EA902F;
+    color:white;
 }
 
 .symbol {
@@ -103,154 +103,154 @@ body {
 }
 
 .status-patch {
-  padding:3px;
-  display: flex;
-  flex-direction: column;
-  margin:1px;
+    padding:3px;
+    display: flex;
+    flex-direction: column;
+    margin:1px;
 }
 
 .status-patch .system a {
-  font-size: 26px;
-  margin-top: 1px;
-  word-wrap:break-word;
-  text-decoration: none;
-  color:white;
-  text-transform: none;
+    font-size: 26px;
+    margin-top: 1px;
+    word-wrap:break-word;
+    text-decoration: none;
+    color:white;
+    text-transform: none;
 }
 
 .status-patch .environment {
     text-decoration: none;
     color: inherit;
-  font-size: 14px;
-  margin-top: 2px;
+    font-size: 14px;
+    margin-top: 2px;
 }
 
 .status-patch .state {
-  flex-grow: 1;
-  text-align: center;
-  overflow: hidden;
-  font-size: 18px;
+    flex-grow: 1;
+    text-align: center;
+    overflow: hidden;
+    font-size: 18px;
 }
 
 .status-patch:hover .state {
-  display:none;
-  overflow: hidden;
+    display:none;
+    overflow: hidden;
 }
 
 .status-patch .detail {
-  display:none;
-  overflow: hidden;
+    display:none;
+    overflow: hidden;
 }
 
 .status-patch:hover .detail {
-  overflow-y: auto;
-  overflow-x: hidden;
-  margin:8px 0px 10px 0px;
-  padding:0;
-  flex-grow: 1;
-  font-size: 11px;
-  line-height: 14px;
-  text-align: left;
-  display:block;
-  letter-spacing: 0.5px;
- }
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin:8px 0px 10px 0px;
+    padding:0;
+    flex-grow: 1;
+    font-size: 11px;
+    line-height: 14px;
+    text-align: left;
+    display:block;
+    letter-spacing: 0.5px;
+}
 
- .detail::-webkit-scrollbar-track {
+.detail::-webkit-scrollbar-track {
     background-color: rgba(0,0,0,0);
- }
+}
 
 .detail::-webkit-scrollbar {
-  width:5px;
+    width:5px;
     background-color: rgba(0,0,0,0);
- }
+}
 
- .detail::-webkit-scrollbar-thumb {
+.detail::-webkit-scrollbar-thumb {
     background-color: rgba(255,255,255,0.75);
- }
+}
 
- .status-patch .meta-data {
-  line-height: 5px;
-  font-size: 11px;
-  font-weight: 300;
- }
+.status-patch .meta-data {
+    line-height: 5px;
+    font-size: 11px;
+    font-weight: 300;
+}
 
 .overlay {
-  position:fixed;
-  opacity: 0.25;
-  bottom: 1%;
-  right: 1%;
-  z-index: 10;
-  padding:10px;
-  text-align: center;
-  font-size: 20px;
-  text-transform: uppercase;
+    position:fixed;
+    opacity: 0.25;
+    bottom: 1%;
+    right: 1%;
+    z-index: 10;
+    padding:10px;
+    text-align: center;
+    font-size: 20px;
+    text-transform: uppercase;
 
-  letter-spacing: 4px;
+    letter-spacing: 4px;
 }
 
 .overlay:hover {
-  opacity: 1;
+    opacity: 1;
 }
 
 .overlay a {
-  color: white;
-  text-decoration: none;
+    color: white;
+    text-decoration: none;
 }
 
 .joblist {
-  list-style: none;
-  margin:0;
-  padding:0;
-  margin: 20px 0px 10px 0px;
-  letter-spacing: 0.5px;
-  font-size: 11px;
+    list-style: none;
+    margin:0;
+    padding:0;
+    margin: 20px 0px 10px 0px;
+    letter-spacing: 0.5px;
+    font-size: 11px;
 }
 
 .job {
-  background-color: inherit;
-  border-bottom: 1px solid rgba(255, 255, 255, .5);
-  padding: 2px 2px 2px 2px;
+    background-color: inherit;
+    border-bottom: 1px solid rgba(255, 255, 255, .5);
+    padding: 2px 2px 2px 2px;
 }
 
 .job:last-child {
-  border-bottom: none;
+    border-bottom: none;
 }
 
 .job .symbol {
-  text-align: center;
-  vertical-align: middle;
-  width: 12px;
-  height: 12px;
-  border:1px solid white;
-  margin: 0 5px 0 0;
-  padding: 1px;
-  font-size: 10px;
+    text-align: center;
+    vertical-align: middle;
+    width: 12px;
+    height: 12px;
+    border:1px solid white;
+    margin: 0 5px 0 0;
+    padding: 1px;
+    font-size: 10px;
 }
 
 .url a {
-  font-size: 11px;
-  font-weight: 300;
-  letter-spacing: 0.5px;
-  color:#3E34C8;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    color:#3E34C8;
 }
 
 .url {
-  padding: 1px;
-  margin: 0;
-  line-height: 14px;
-  word-wrap: none;
-  overflow: hidden;
-  white-space: nowrap;
+    padding: 1px;
+    margin: 0;
+    line-height: 14px;
+    word-wrap: none;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .patch:hover .url {
-  padding:1px;
-  margin:0;
-  line-height: 14px;
-  word-break: break-all;
-  word-wrap: none;
-  overflow: visible;
-  white-space: normal;
+    padding:1px;
+    margin:0;
+    line-height: 14px;
+    word-break: break-all;
+    word-wrap: none;
+    overflow: visible;
+    white-space: normal;
 }
 
 /* Loading animation */
