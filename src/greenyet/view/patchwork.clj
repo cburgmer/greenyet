@@ -67,24 +67,23 @@
                "<!-- BODY -->"
                html))
 
-(defn- filter-systems [host-status-pairs selected-systems]
-  (if selected-systems
-    (let [selected-systems (map str/lower-case selected-systems)]
-      (filter (fn [[{system :system} _]]
-                (contains? (set selected-systems) (str/lower-case system)))
-              host-status-pairs))
-    host-status-pairs))
+(defn- filter-systems [host-status-pairs systems]
+  (let [selected-systems (set (map str/lower-case systems))]
+    (filter (fn [[{system :system} _]]
+              (contains? selected-systems (str/lower-case system)))
+            host-status-pairs)))
 
 (defn render [host-status-pairs selected-systems page-template environment-names]
-  (let [environments      (utils/prefer-order-of environment-names
-                                                 (->> host-status-pairs
-                                                      (map first)
-                                                      (map :environment)
-                                                      distinct)
-                                                 str/lower-case)
-        selected-entries  (filter-systems host-status-pairs selected-systems)
-        rows              (environment-table environments selected-entries)
+  (let [environments (utils/prefer-order-of environment-names
+                                            (->> host-status-pairs
+                                                 (map first)
+                                                 (map :environment)
+                                                 distinct)
+                                            str/lower-case)
+        selected-entries (cond-> host-status-pairs
+                           selected-systems (filter-systems selected-systems))
+        rows (environment-table environments selected-entries)
 
-        patchwork         (environment-table-to-patchwork environments rows)]
+        patchwork (environment-table-to-patchwork environments rows)]
     (in-template (patchwork-as-html patchwork)
                  page-template)))
