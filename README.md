@@ -2,13 +2,10 @@
 
 One status dashboard to rule them all, those lousy microservices. Are they green yet?
 
-## <s>Problem</s> Solution statement
+## Why?
 
-Show the applications statuses across the IT floor, to
-
-1. Encourage good status pages,
-2. Share application health with all stakeholders,
-3. Don't make humans check a list of machines manually.
+1. Microservices mean smaller and more services, machines become "cattle not pets". Keeping track becomes challenging.
+2. Smaller machines allows scalling teams, growing dependencies. Visibility becomes more important.
 
 Greenyet polls all your services for status information and gives a traffic light overview on the application health.
 
@@ -66,28 +63,6 @@ Config as YAML (remember JSON is a subset):
       system: SimpleSystem
     ```
 
-## Master greenyet
-
-### Monitor your whole lot together
-
-Put in your reverse proxy/load balancer together with your nodes. Most of the times your machines will be green, so only the first entry of the config will be shown per environment (e.g. the reverse proxy, your call). The list unfolds once one machine changes color.
-
-### Red is red is yellow
-
-A red component can indicate an overall red system, or just leave just the component affected (i.e. the overall system could just be yellow). Your service will probably have its own logic for when the overall status should change. Until you implement that, red will be red, and yellow will be yellow.
-
-### Visualise the flow to production
-
-Get your environments sorted in the order from dev to prod. Make use of the [environment names](resources/environment_names.yaml) that greenyet knows about to get the right ordering.
-
-### Start with little
-
-You can monitor just based on a HTTP 200 response, if you don't have an elaborate JSON available yet.
-
-### Understand the *time to failure*
-
-The polling interval duration configured in `POLLING_INTERVAL` matches the status page request timeout. Worst case duration for a failure to be reported on the dashboard is the sum of the request timeout/polling time (default 5 seconds) and the dashboard refresh (5 seconds).
-
 ## Development
 
     # Back-end unit tests
@@ -97,4 +72,4 @@ The polling interval duration configured in `POLLING_INTERVAL` matches the statu
 
 ## More
 
-Reach out to [@cburgmer](https://twitter.com/cburgmer) for feedback and ideas.
+[Master greenyet](https://github.com/cburgmer/greenyet/wiki/Master-greenyet)
