@@ -10,7 +10,7 @@
              [utils :as utils]]
             [greenyet.view
              [styleguide :as styleguide]
-             [patchwork :as view]]
+             [patchwork :as patchwork]]
             [ring.middleware
              [not-modified :as not-modified]
              [params :as params]
@@ -32,10 +32,11 @@
 
 (defn- render-environments [params]
   (let [[host-with-statuses last-changed] @poll/statuses]
-    (-> (utils/html-response (view/render host-with-statuses
-                                          (utils/query-param-as-vec params "systems")
-                                          (page-template)
-                                          (environment-names)))
+    (-> (utils/html-response (patchwork/render host-with-statuses
+                                               (utils/query-param-as-vec params "systems")
+                                               (utils/query-param-as-vec params "environments")
+                                               (page-template)
+                                               (environment-names)))
         (header "Last-Modified" (format-date (.toDate last-changed)))
         (header "Cache-Control" "max-age=0,must-revalidate"))))
 
