@@ -69,6 +69,11 @@ Config as YAML (remember JSON is a subset):
     $ ./lein test
     # UI unit tests, later `open http://localhost:3000/styleguide.html`
     $ CONFIG_DIR=example/simple lein ring server-headless
+    
+## Contributors
+
+* [Sandeep Rakhra](https://github.com/rakhra)
+* [Christoph Burgmer](https://github.com/cburgmer)
 
 ## More
 
