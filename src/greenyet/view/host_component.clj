@@ -22,7 +22,8 @@
                                           h)}
    [:span.system [:a {:href (str/join ["?systems=" (h (:system host))])}
                   (h (:system host))]]
-   [:span.environment (h (:environment host))]
+   [:a.environment {:href (str/join ["?environments=" (h (:environment host))])}
+    (h (:environment host))]
    [:span.state (status-symbol status)]
 
    [:span.detail (h (or (message status) "No details to report"))

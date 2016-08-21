@@ -119,6 +119,8 @@ body {
 }
 
 .status-patch .environment {
+    text-decoration: none;
+    color: inherit;
   font-size: 14px;
   margin-top: 2px;
 }

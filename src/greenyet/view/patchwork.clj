@@ -74,12 +74,15 @@
             host-status-pairs)))
 
 (defn- environments [host-status-pairs environments]
-  (let [selected-environments (set (map str/lower-case environments))]
-    (->> host-status-pairs
-         (map first)
-         (map :environment)
-         distinct
-         (filter #(contains? selected-environments (str/lower-case %))))))
+  (let [selected-environments (set (map str/lower-case environments))
+        all-environments (->> host-status-pairs
+                              (map first)
+                              (map :environment)
+                              distinct)]
+    (if (seq selected-environments)
+      (filter #(contains? selected-environments (str/lower-case %))
+              all-environments)
+      all-environments)))
 
 (defn render [host-status-pairs selected-systems selected-environments page-template environment-names]
   (let [the-environments (utils/prefer-order-of environment-names
