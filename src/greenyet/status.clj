@@ -4,18 +4,18 @@
             [org.httpkit.client :as http]))
 
 (defn- status-color-from-components [components]
-  (let [colors (map :color components)]
-    (let [status-color (if (or (empty? colors)
-                               (some #(= % :red) colors))
-                         :red
-                         (if (some #(= % :yellow) colors)
-                           :yellow
-                           :green))]
-      [status-color nil])))
+  (let [colors (map :color components)
+        status-color (if (or (empty? colors)
+                             (some #(= % :red) colors))
+                       :red
+                       (if (some #(= % :yellow) colors)
+                         :yellow
+                         :green))]
+    [status-color nil]))
 
 (defn- overall-status-color [json config components]
-  (if (:color config)
-    (parse/color json config)
+  (if-let [color (parse/color json config)]
+    color
     (status-color-from-components components)))
 
 (defn- status-from-json [json config]

@@ -57,9 +57,10 @@
       [[] (missing-item-warning "components" path)])))
 
 (defn color [json {color-conf :color}]
-  (if-let [color (status-color json color-conf)]
-    [color nil]
-    [:red (missing-item-warning "color" color-conf)]))
+  (when color-conf
+    (if-let [color (status-color json color-conf)]
+      [color nil]
+      [:red (missing-item-warning "color" color-conf)])))
 
 (defn package-version [json {package-version-conf :package-version}]
   (get-simple-key-with-warning json package-version-conf "package-version"))
