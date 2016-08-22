@@ -41,7 +41,10 @@
      :message "OK"}))
 
 (defn- message-for-http-response [response]
-  (format "Status %s: %s" (:status response) (:body response)))
+  (let [body (:body response)]
+    (if-not (empty? body)
+      (format "Status %s: %s" (:status response) body)
+      (format "Status %s" (:status response)))))
 
 
 (defn- http-get [status-url timeout-in-ms callback]
@@ -54,18 +57,16 @@
 
 (defn- identify-status [response timeout-in-ms config]
   (try
-    (if (instance? org.httpkit.client.TimeoutException (:error response))
+    (if (:error response)
       {:color :red
-       :message (format "greenyet: Request timed out after %s milliseconds" timeout-in-ms)}
+       :message (format "greenyet: %s" (.getMessage (:error response)))}
       (if (= 200 (:status response))
         (application-status (:body response) config)
         {:color :red
          :message (message-for-http-response response)}))
     (catch Exception e
       {:color :red
-       :message (if-let [response (ex-data e)]
-                  (message-for-http-response response)
-                  (.getMessage e))})))
+       :message (.getMessage e)})))
 
 (defn fetch-status [{:keys [status-url config]} timeout-in-ms callback]
   (http-get status-url
