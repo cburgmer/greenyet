@@ -7,12 +7,11 @@
 (defn- get-simple-key [json key]
   (get json (keyword key)))
 
-(defn- get-simple-key-with-warning [json key description]
-  (when key
-    (let [value (get-simple-key json key)]
-      (if value
-        [value nil]
-        [value (missing-item-warning description key)]))))
+(defn- get-simple-key-with-warning [json key-str description]
+  (when-let [key (keyword key-str)]
+    (if (contains? json key)
+      [(get-simple-key json key) nil]
+      [nil (missing-item-warning description key-str)])))
 
 (defn- get-complex-key [json key-conf]
   (if (string? key-conf)
@@ -63,7 +62,11 @@
       [:red (missing-item-warning "color" color-conf)])))
 
 (defn package-version [json {package-version-conf :package-version}]
-  (get-simple-key-with-warning json package-version-conf "package-version"))
+  (let [package-version (get-simple-key json package-version-conf)
+        package-version-warning (when (and package-version-conf
+                                           (not package-version))
+                                  (missing-item-warning "package-version" package-version-conf))]
+    [package-version package-version-warning]))
 
 (defn message [json {message-conf :message}]
   (get-simple-key-with-warning json message-conf "message"))
