@@ -5,7 +5,7 @@ One status dashboard to rule them all, those lousy microservices. Are they green
 ## Why?
 
 1. Microservices mean smaller and more services, machines become "cattle not pets". Keeping track becomes challenging.
-2. Smaller machines allows scalling teams, growing dependencies. Visibility becomes more important.
+2. Smaller machines allows scaling teams, increasing dependencies. Visibility becomes more important.
 
 Greenyet polls all your services for status information and gives a traffic light overview on the application health.
 
@@ -69,7 +69,7 @@ Config as YAML (remember JSON is a subset):
     $ ./lein test
     # UI unit tests, later `open http://localhost:3000/styleguide.html`
     $ CONFIG_DIR=example/simple lein ring server-headless
-    
+
 ## Contributors
 
 * [Sandeep Rakhra](https://github.com/rakhra)
