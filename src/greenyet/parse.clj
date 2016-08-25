@@ -34,14 +34,14 @@
         (= yellow-value color-value) :yellow
         :else :red))))
 
-(defn- component [json {color-conf :color name-conf :name message-conf :message}]
-  (let [color (status-color json (or color-conf
-                                     "color"))
+(defn- component [json {user-color-conf :color user-name-conf :name message-conf :message}]
+  (let [color-conf (or user-color-conf "color")
+        name-conf (or user-name-conf "name")
+        color (status-color json color-conf)
         status-color (or color :red)
         color-error (when-not color
                       (missing-item-warning "component color" color-conf))
-        name (get-simple-key json (or name-conf
-                                      "name"))
+        name (get-simple-key json name-conf)
         name-error (when-not name
                      (missing-item-warning "component name" name-conf))
         [message message-error] (get-simple-key-with-warning json message-conf "component message")]

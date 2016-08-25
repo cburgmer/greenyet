@@ -64,7 +64,21 @@
                                                 :name "the_name"
                                                 :color "status"
                                                 :message "message"}})
-                  first-non-nil-message)))))
+                  first-non-nil-message))))
+
+  (testing "should call out default color config on error"
+    (is (re-find #"component color.+'color'"
+                 (-> (sut/components {:jobs [{:name "the name"
+                                              :status "green"}]}
+                                     {:components "jobs"})
+                     first-non-nil-message))))
+
+  (testing "should call out default name config on error"
+    (is (re-find #"component name.+'name'"
+                 (-> (sut/components {:jobs [{:the_name "the name"
+                                              :color "green"}]}
+                                     {:components "jobs"})
+                     first-non-nil-message)))))
 
 (deftest test-message
   (testing "should return message"
