@@ -35,11 +35,13 @@
         :else :red))))
 
 (defn- component [json {color-conf :color name-conf :name message-conf :message}]
-  (let [color (status-color json color-conf)
+  (let [color (status-color json (or color-conf
+                                     "color"))
         status-color (or color :red)
         color-error (when-not color
                       (missing-item-warning "component color" color-conf))
-        name (get-simple-key json name-conf)
+        name (get-simple-key json (or name-conf
+                                      "name"))
         name-error (when-not name
                      (missing-item-warning "component name" name-conf))
         [message message-error] (get-simple-key-with-warning json message-conf "component message")]
@@ -49,11 +51,11 @@
      [color-error name-error message-error]]))
 
 (defn components [json {component-conf :components}]
-  (when-let [path (:json-path component-conf)]
-    (if-let [components-json (json-path/at-path path json)]
+  (when component-conf
+    (if-let [components-json (get-complex-key json component-conf)]
       (let [status-results (map #(component % component-conf) components-json)]
         (apply mapv vector status-results))
-      [[] (missing-item-warning "components" path)])))
+      [[] (missing-item-warning "components" component-conf)])))
 
 (defn color [json {color-conf :color}]
   (when color-conf

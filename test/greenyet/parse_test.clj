@@ -10,7 +10,15 @@
            first))
 
 (deftest test-components
-  (testing "should return components"
+  (testing "should accept simple config with key only"
+    (is (= [{:color :green
+             :name "the name"
+             :message nil}]
+           (first (sut/components {:jobs [{:name "the name"
+                                           :color "green"}]}
+                                  {:components "jobs"})))))
+
+  (testing "should return components for complex config"
     (is (= [{:color :green
              :name "the name"
              :message nil}]
@@ -19,6 +27,24 @@
                                   {:components {:json-path "$.jobs"
                                                 :name "the_name"
                                                 :color "status"}})))))
+
+  (testing "should assume default for name"
+    (is (= [{:color :green
+             :name "the name"
+             :message nil}]
+           (first (sut/components {:jobs [{:name "the name"
+                                           :status "green"}]}
+                                  {:components {:json-path "$.jobs"
+                                                :color "status"}})))))
+
+  (testing "should assume default for color"
+    (is (= [{:color :green
+             :name "the name"
+             :message nil}]
+           (first (sut/components {:jobs [{:the_name "the name"
+                                           :color "green"}]}
+                                  {:components {:json-path "$.jobs"
+                                                :name "the_name"}})))))
 
   (testing "should return warning if message is configured but missing"
     (is (re-find #"component message.+'message'"
