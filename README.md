@@ -62,6 +62,8 @@ Config as YAML (remember JSON is a subset):
       environment: PROD
       system: SimpleSystem
     ```
+    
+But read the [full description here](https://github.com/cburgmer/greenyet/wiki/Howto).
 
 ## Development
 
@@ -77,4 +79,5 @@ Config as YAML (remember JSON is a subset):
 
 ## More
 
-[Master greenyet](https://github.com/cburgmer/greenyet/wiki/Master-greenyet)
+* [Howto](https://github.com/cburgmer/greenyet/wiki/Howto)
+* [Master greenyet](https://github.com/cburgmer/greenyet/wiki/Master-greenyet)
