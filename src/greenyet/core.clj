@@ -9,9 +9,10 @@
              [poll :as poll]
              [utils :as utils]]
             [greenyet.view
-             [styleguide :as styleguide]
-             [patchwork :as patchwork]]
+             [patchwork :as patchwork]
+             [styleguide :as styleguide]]
             [ring.middleware
+             [content-type :as content-type]
              [not-modified :as not-modified]
              [params :as params]
              [resource :as resource]]
@@ -79,4 +80,5 @@
   (-> render
       params/wrap-params
       (resource/wrap-resource "public")
+      content-type/wrap-content-type
       not-modified/wrap-not-modified))
