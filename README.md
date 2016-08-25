@@ -29,7 +29,7 @@ Config as YAML (remember JSON is a subset):
     ``` yaml
     ---
     - system: SimpleSystem
-      url: http://%host%:8080/
+      url: http://%hostname%:8080/
     - system: SystemWithStatusJson
       url: http://%hostname%:8080/status.json
       color: "status"
