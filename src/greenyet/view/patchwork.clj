@@ -67,30 +67,17 @@
                "<!-- BODY -->"
                html))
 
-(defn- filter-systems [host-status-pairs systems]
-  (let [selected-systems (set (map str/lower-case systems))]
-    (filter (fn [[{system :system} _]]
-              (contains? selected-systems (str/lower-case system)))
-            host-status-pairs)))
+(defn- environments [host-status-pairs]
+  (->> host-status-pairs
+       (map first)
+       (map :environment)
+       distinct))
 
-(defn- environments [host-status-pairs environments]
-  (let [selected-environments (set (map str/lower-case environments))
-        all-environments (->> host-status-pairs
-                              (map first)
-                              (map :environment)
-                              distinct)]
-    (if (seq selected-environments)
-      (filter #(contains? selected-environments (str/lower-case %))
-              all-environments)
-      all-environments)))
-
-(defn render [host-status-pairs selected-systems selected-environments page-template environment-names]
+(defn render [host-status-pairs page-template environment-names]
   (let [the-environments (utils/prefer-order-of environment-names
-                                                (environments host-status-pairs selected-environments)
+                                                (environments host-status-pairs)
                                                 str/lower-case)
-        selected-entries (cond-> host-status-pairs
-                           selected-systems (filter-systems selected-systems))
-        rows (environment-table the-environments selected-entries)
+        rows (environment-table the-environments host-status-pairs)
 
         patchwork (environment-table-to-patchwork the-environments rows)]
     (in-template (patchwork-as-html patchwork)

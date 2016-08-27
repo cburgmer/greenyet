@@ -7,6 +7,7 @@
             [greenyet
              [config :as config]
              [poll :as poll]
+             [selection :as selection]
              [utils :as utils]]
             [greenyet.view
              [patchwork :as patchwork]
@@ -33,11 +34,12 @@
 
 (defn- render-environments [params]
   (let [[host-with-statuses last-changed] @poll/statuses]
-    (-> (utils/html-response (patchwork/render host-with-statuses
-                                               (utils/query-param-as-vec params "systems")
-                                               (utils/query-param-as-vec params "environments")
-                                               (page-template)
-                                               (environment-names)))
+    (-> host-with-statuses
+        (selection/filter-hosts (utils/query-param-as-vec params "systems")
+                                (utils/query-param-as-vec params "environments"))
+        (patchwork/render (page-template)
+                          (environment-names))
+        utils/html-response
         (header "Last-Modified" (format-date (.toDate last-changed)))
         (header "Cache-Control" "max-age=0,must-revalidate"))))
 
