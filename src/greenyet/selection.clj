@@ -13,7 +13,17 @@
               (contains? environments (str/lower-case environment)))
             host-status-pairs)))
 
-(defn filter-hosts [host-status-pairs selected-systems selected-environments]
+(defn- remove-green-systems [host-status-pairs]
+  (->> host-status-pairs
+       (group-by (fn [[{system :system} _]] system))
+       (map second)
+       (remove (fn [hosts]
+                 (every? (fn [[_ {color :color}]] (= :green color))
+                         hosts)))
+       (apply concat)))
+
+(defn filter-hosts [host-status-pairs selected-systems selected-environments hide-green]
   (cond-> host-status-pairs
     selected-systems (filter-by-systems selected-systems)
-    selected-environments (filter-by-environments selected-environments)))
+    selected-environments (filter-by-environments selected-environments)
+    hide-green remove-green-systems))
