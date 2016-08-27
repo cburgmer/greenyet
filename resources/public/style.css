@@ -5,6 +5,20 @@ body {
     margin:0;
     padding:1px;
     background: #888888;
+    font-family: Helvetica,Century Gothic,CenturyGothic,AppleGothic,sans-serif;
+}
+
+.hide-green {
+    display: block;
+    text-align: right;
+    padding: 3px;
+    font-size: 0.8rem;
+    line-height: 0.8rem;
+    color: inherit;
+    text-decoration: inherit;
+}
+.hide-green.selected::before {
+    content: "✔ ";
 }
 
 .environment-wrapper {
@@ -44,7 +58,6 @@ body {
     vertical-align: middle;
     width: 200px;
     height: 200px;
-    font-family: Helvetica,Century Gothic,CenturyGothic,AppleGothic,sans-serif;
     line-height: 26px;
     font-size: 18px;
     letter-spacing: 1px;

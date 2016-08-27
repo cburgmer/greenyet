@@ -33,13 +33,15 @@
 
 
 (defn- render-environments [params]
-  (let [[host-with-statuses last-changed] @poll/statuses]
+  (let [[host-with-statuses last-changed] @poll/statuses
+        hide-green (= (get params "hideGreen") "true")]
     (-> host-with-statuses
         (selection/filter-hosts (utils/query-param-as-vec params "systems")
                                 (utils/query-param-as-vec params "environments")
-                                (= (get params "hideGreen") "true"))
+                                hide-green)
         (patchwork/render (page-template)
-                          (environment-names))
+                          (environment-names)
+                          hide-green)
         utils/html-response
         (header "Last-Modified" (format-date (.toDate last-changed)))
         (header "Cache-Control" "max-age=0,must-revalidate"))))
