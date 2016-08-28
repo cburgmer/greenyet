@@ -36,8 +36,8 @@
   (let [[host-with-statuses last-changed] @poll/statuses
         hide-green (= (get params "hideGreen") "true")]
     (-> host-with-statuses
-        (selection/filter-hosts (utils/query-param-as-vec params "systems")
-                                (utils/query-param-as-vec params "environments")
+        (selection/filter-hosts (get params "systems")
+                                (get params "environments")
                                 hide-green)
         (patchwork/render (page-template)
                           (environment-names)
@@ -83,6 +83,7 @@
 
 (def handler
   (-> render
+      (utils/wrap-param-lists ["systems" "environments"])
       params/wrap-params
       (resource/wrap-resource "public")
       content-type/wrap-content-type

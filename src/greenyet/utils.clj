@@ -11,12 +11,27 @@
            coll-to-sort))
 
 
-(defn query-param-as-vec [params key]
-  (let [value (get params key)
-        value-vector (if (string? value)
+(defn- param-list-value [value]
+  (let [value-vector (if (string? value)
                        (vector value)
                        value)]
     (seq (mapcat #(str/split % #",") value-vector))))
+
+(defn- param-lists-request [request keys]
+  (let [query-params (->> request
+                          :query-params
+                          (map (fn [[key value]]
+                                 [key (if (contains? keys key)
+                                        (param-list-value value)
+                                        value)]))
+                          (into {}))]
+    (merge-with merge request {:query-params query-params
+                               :params query-params})))
+
+(defn wrap-param-lists [handler keys]
+  (let [key-set (set keys)]
+    (fn [request]
+      (handler (param-lists-request request key-set)))))
 
 (defn html-response [body]
   (-> (response body)
