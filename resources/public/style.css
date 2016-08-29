@@ -8,17 +8,30 @@ body {
     font-family: Helvetica,Century Gothic,CenturyGothic,AppleGothic,sans-serif;
 }
 
-.hide-green {
-    display: block;
-    text-align: right;
-    padding: 3px;
+header {
     font-size: 0.8rem;
     line-height: 0.8rem;
-    color: inherit;
+    padding: 3px;
+    text-align: right;
+    color: #aaaaaa;
+}
+header::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+header a {
+    color: #dddddd;
+}
+
+.reset-selection {
     text-decoration: inherit;
 }
-.hide-green.selected::before {
-    content: "✔ ";
+
+.hide-green {
+    text-decoration: inherit;
+    margin-left: 1em;
 }
 
 .environment-wrapper {

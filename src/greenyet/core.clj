@@ -41,7 +41,7 @@
                                 hide-green)
         (patchwork/render (page-template)
                           (environment-names)
-                          hide-green)
+                          params)
         utils/html-response
         (header "Last-Modified" (format-date (.toDate last-changed)))
         (header "Cache-Control" "max-age=0,must-revalidate"))))

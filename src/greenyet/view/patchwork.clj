@@ -54,11 +54,19 @@
                   (host-component/render host status))])])]]))
 
 
-(defn- patchwork-as-html [patchwork hide-green]
+(defn- patchwork-as-html [patchwork params]
   (html
-   [:a {:href (if hide-green "?" "?hideGreen=true")
-        :class (str/join ["hide-green " (if hide-green "selected" "unselected")])}
-    "Unhealthy systems only"]
+   [:header
+    (if-not (empty? params)
+      [:a.reset-selection {:href "?"}
+       "Reset selection"]
+      [:span.reset-selection
+       "Reset selection"])
+    (if-not (get params "hideGreen")
+      [:a.hide-green {:href "?hideGreen=true"}
+       "Unhealthy systems only"]
+      [:span.hide-green
+       "Unhealthy systems only"])]
    (for [[environment host-status] patchwork]
      [:div.environment-wrapper
       [:ol.patchwork {:class environment}
@@ -77,12 +85,12 @@
        (map :environment)
        distinct))
 
-(defn render [host-status-pairs page-template environment-names hide-green]
+(defn render [host-status-pairs page-template environment-names params]
   (let [the-environments (utils/prefer-order-of environment-names
                                                 (environments host-status-pairs)
                                                 str/lower-case)
         rows (environment-table the-environments host-status-pairs)
 
         patchwork (environment-table-to-patchwork the-environments rows)]
-    (in-template (patchwork-as-html patchwork hide-green)
+    (in-template (patchwork-as-html patchwork params)
                  page-template)))
