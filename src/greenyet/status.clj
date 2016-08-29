@@ -46,7 +46,6 @@
       (format "Status %s: %s" (:status response) body)
       (format "Status %s" (:status response)))))
 
-
 (defn- http-get [status-url timeout-in-ms callback]
   (http/get status-url
             {:headers {"Accept" "application/json"}
@@ -57,13 +56,12 @@
 
 (defn- identify-status [response timeout-in-ms config]
   (try
-    (if (:error response)
-      {:color :red
-       :message (format "greenyet: %s" (.getMessage (:error response)))}
-      (if (= 200 (:status response))
-        (application-status (:body response) config)
-        {:color :red
-         :message (message-for-http-response response)}))
+    (cond
+      (:error response) {:color :red
+                         :message (format "greenyet: %s" (.getMessage (:error response)))}
+      (= 200 (:status response)) (application-status (:body response) config)
+      :else {:color :red
+             :message (message-for-http-response response)})
     (catch Exception e
       {:color :red
        :message (.getMessage e)})))
