@@ -26,13 +26,14 @@
         default)))
 
 (defn- status-color [json color-conf]
-  (when-let [color-value (get-complex-key json color-conf)]
-    (let [green-value (configured-color-value color-conf :green-value "green")
-          yellow-value (configured-color-value color-conf :yellow-value "yellow")]
-      (cond
-        (= green-value color-value) :green
-        (= yellow-value color-value) :yellow
-        :else :red))))
+  (let [color-value (get-complex-key json color-conf)]
+    (when-not (nil? color-value)
+      (let [green-value (configured-color-value color-conf :green-value "green")
+            yellow-value (configured-color-value color-conf :yellow-value "yellow")]
+        (cond
+          (= green-value color-value) :green
+          (= yellow-value color-value) :yellow
+          :else :red)))))
 
 (defn- component [json {user-color-conf :color user-name-conf :name message-conf :message}]
   (let [color-conf (or user-color-conf "color")

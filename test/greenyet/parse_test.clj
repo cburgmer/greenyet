@@ -78,7 +78,15 @@
                  (-> (sut/components {:jobs [{:the_name "the name"
                                               :color "green"}]}
                                      {:components "jobs"})
-                     first-non-nil-message)))))
+                     first-non-nil-message))))
+
+  (testing "should correctly extract complex color with green-value"
+    (is (nil? (-> (sut/components {:jobs [{:name "the name"
+                                           :status false}]}
+                                  {:components {:json-path "$.jobs"
+                                                :color {:json-path "$.status"
+                                                        :green-value true}}})
+                  first-non-nil-message)))))
 
 (deftest test-message
   (testing "should return message"
