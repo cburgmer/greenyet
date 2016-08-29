@@ -5,7 +5,7 @@ One status dashboard to rule them all, those lousy microservices. Are they green
 ## Why?
 
 1. Microservices mean smaller and more services, machines become "cattle not pets". Keeping track becomes challenging.
-2. Smaller machines allows scaling teams, increasing dependencies. Visibility becomes more important.
+2. Breaking down big systems yields services with multiple dependencies. Visibility becomes more important.
 
 Greenyet polls all your services for status information and gives a traffic light overview on the application health.
 
