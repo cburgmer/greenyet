@@ -7,11 +7,18 @@
 (defn- get-simple-key [json key]
   (get json (keyword key)))
 
-(defn- get-simple-key-with-warning [json key-str description]
-  (when-let [key (keyword key-str)]
-    (if (contains? json key)
+(defn- optional-value [json key description]
+  (when key
+    (if (contains? json (keyword key))
       [(get-simple-key json key) nil]
-      [nil (missing-item-warning description key-str)])))
+      [nil (missing-item-warning description key)])))
+
+(defn- optional-non-nil-value [json key description]
+  (when key
+    (let [value (get-simple-key json key)]
+      (if (nil? value)
+        [nil (missing-item-warning description key)]
+        [value nil]))))
 
 (defn- get-complex-key [json key-conf]
   (if (string? key-conf)
@@ -42,10 +49,8 @@
         status-color (or color :red)
         color-error (when-not color
                       (missing-item-warning "component color" color-conf))
-        name (get-simple-key json name-conf)
-        name-error (when-not name
-                     (missing-item-warning "component name" name-conf))
-        [message message-error] (get-simple-key-with-warning json message-conf "component message")]
+        [name name-error] (optional-non-nil-value json name-conf "component name")
+        [message message-error] (optional-value json message-conf "component message")]
     [{:color status-color
       :name name
       :message message}
@@ -65,11 +70,7 @@
       [:red (missing-item-warning "color" color-conf)])))
 
 (defn package-version [json {package-version-conf :package-version}]
-  (let [package-version (get-simple-key json package-version-conf)
-        package-version-warning (when (and package-version-conf
-                                           (not package-version))
-                                  (missing-item-warning "package-version" package-version-conf))]
-    [package-version package-version-warning]))
+  (optional-non-nil-value json package-version-conf "package-version"))
 
 (defn message [json {message-conf :message}]
-  (get-simple-key-with-warning json message-conf "message"))
+  (optional-value json message-conf "message"))
