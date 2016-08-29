@@ -1,6 +1,8 @@
 (ns greenyet.utils
   (:require [clojure.string :as str]
-            [ring.util.response :refer [charset content-type response]]))
+            [ring.util
+             [codec :as codec]
+             [response :refer [charset content-type response]]]))
 
 (defn- index-of [list item]
   (count (take-while (partial not= item) list)))
@@ -32,6 +34,14 @@
   (let [key-set (set keys)]
     (fn [request]
       (handler (param-lists-request request key-set)))))
+
+
+(defn link-select [params key value]
+  (let [query (-> params
+                  (assoc key value)
+                  codec/form-encode)]
+    (format "?%s" query)))
+
 
 (defn html-response [body]
   (-> (response body)

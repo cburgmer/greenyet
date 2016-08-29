@@ -15,14 +15,14 @@
 
 (def ^:private color-by-importance [:red :yellow :green])
 
-(defn render [host status]
+(defn render [host status params]
   [:li.patch.status-patch {:class (some-> status
                                           :color
                                           name
                                           h)}
-   [:span.system [:a {:href (str/join ["?systems=" (h (:system host))])}
+   [:span.system [:a {:href (utils/link-select params "systems" (h (:system host)))}
                   (h (:system host))]]
-   [:a.environment {:href (str/join ["?environments=" (h (:environment host))])}
+   [:a.environment {:href (utils/link-select params "environments" (h (:environment host)))}
     (h (:environment host))]
    [:span.state (status-symbol status)]
 

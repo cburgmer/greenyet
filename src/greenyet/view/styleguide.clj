@@ -29,7 +29,8 @@
                           :message message
                           :components (seq (concat (n-component-statuses no-green-components :green component-name)
                                                    (n-component-statuses no-yellow-components :yellow component-name)
-                                                   (n-component-statuses no-red-components :red component-name)))}))
+                                                   (n-component-statuses no-red-components :red component-name)))}
+                         {}))
 
 (defn- a-cell [{:keys [color other-machine-color] :as params}]
   (if other-machine-color

@@ -32,28 +32,6 @@
 (defn- environment-table-to-patchwork [environments table]
   (apply merge-with concat (map (partial zipmap environments) table)))
 
-(defn- table-as-html [environments rows]
-  (html [:table
-         [:colgroup {:span 1}]
-         [:colgroup.environments {:span (count environments)}]
-         [:thead
-          [:tr
-           [:td.system-name]
-           (for [env environments]
-             [:td (h env)])]]
-         [:tbody
-          (for [row rows]
-            [:tr
-             [:td.system-name
-              (let [system-name (h (some :system (mapcat first row)))]
-                [:a {:href (str/join ["?systems=" (h system-name)])}
-                 (h system-name)])]
-             (for [cell row]
-               [:td.hosts
-                (for [[host status] cell]
-                  (host-component/render host status))])])]]))
-
-
 (defn- patchwork-as-html [patchwork params]
   (html
    [:header
@@ -63,7 +41,7 @@
       [:span.reset-selection
        "Reset selection"])
     (if-not (get params "hideGreen")
-      [:a.hide-green {:href "?hideGreen=true"}
+      [:a.hide-green {:href (utils/link-select params "hideGreen" "true")}
        "Unhealthy systems only"]
       [:span.hide-green
        "Unhealthy systems only"])]
@@ -71,7 +49,7 @@
      [:div.environment-wrapper
       [:ol.patchwork {:class environment}
        (for [[host status] host-status]
-         (host-component/render host status))]])))
+         (host-component/render host status params))]])))
 
 
 (defn- in-template [html template]
