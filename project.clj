@@ -1,4 +1,4 @@
-(defproject greenyet "0.3.1"
+(defproject greenyet "1.0.0"
   :description "Are my machines green yet?"
   :url "https://github.com/cburgmer/greenyet"
   :license {:name "BSD 2-Clause"
