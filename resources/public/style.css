@@ -84,7 +84,8 @@ header a {
     transform-style: preserve-3d;
 }
 
-.patch:hover {
+.patch:hover,
+.patch-hover {
     height: auto;
     max-height: 400px;
     min-height: 200px;
@@ -158,7 +159,8 @@ header a {
     font-size: 18px;
 }
 
-.status-patch:hover .state {
+.status-patch:hover .state,
+.status-patch-hover .state {
     display:none;
     overflow: hidden;
 }
@@ -168,7 +170,8 @@ header a {
     overflow: hidden;
 }
 
-.status-patch:hover .detail {
+.status-patch:hover .detail,
+.status-patch-hover .detail {
     overflow-y: auto;
     overflow-x: hidden;
     margin:8px 0px 10px 0px;
@@ -269,7 +272,8 @@ header a {
     white-space: nowrap;
 }
 
-.patch:hover .url {
+.patch:hover .url,
+.patch-hover .url {
     padding:1px;
     margin:0;
     line-height: 14px;
@@ -284,7 +288,7 @@ header a {
 .loading-animation {
     animation-name: foreground;
     animation-fill-mode: forwards;
-    animation-delay: 10s;
+    animation-delay: 1000s;
 
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;

@@ -16,17 +16,21 @@
 (def ^:private color-by-importance [:red :yellow :green])
 
 (defn render [host status params]
-  [:li.patch.status-patch {:class (some-> status
+  [:li.patch.status-patch {:id    (h (:system host))
+                           :class (some-> status
                                           :color
                                           name
-                                          h)}
+                                          h)
+                           :onmouseenter  "storeHoverState(this)",
+                           :onmouseleave  "removeHoverState(this)"}
    [:span.system [:a {:href (utils/link-select params "systems" (h (:system host)))}
                   (h (:system host))]]
    [:a.environment {:href (utils/link-select params "environments" (h (:environment host)))}
     (h (:environment host))]
    [:span.state (status-symbol status)]
 
-   [:span.detail (h (or (message status) "No details to report"))
+   [:span.detail {:onscroll "storeScrollPosition(this)"}
+    (h (or (message status) "No details to report"))
     (when (:components status)
       [:ol.joblist
        (for [comp (utils/prefer-order-of color-by-importance (:components status) :color)]
