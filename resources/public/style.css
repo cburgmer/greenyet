@@ -13,8 +13,10 @@ header {
     line-height: 0.8rem;
     padding: 3px;
     text-align: right;
-    color: #aaaaaa;
+    color: white;
+    text-transform: uppercase;
 }
+
 header::after {
     content: "";
     display: block;
@@ -22,7 +24,12 @@ header::after {
 }
 
 header a {
-    color: #dddddd;
+    color: white;
+    opacity: 0.25;
+}
+
+header a:hover {
+    opacity: 1;
 }
 
 .reset-selection {

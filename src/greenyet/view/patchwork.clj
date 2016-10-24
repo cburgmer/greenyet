@@ -37,14 +37,14 @@
    [:header
     (if-not (empty? params)
       [:a.reset-selection {:href "?"}
-       "Reset selection"]
+       "Show all"]
       [:span.reset-selection
-       "Reset selection"])
+       "Show all"])
     (if-not (get params "hideGreen")
       [:a.hide-green {:href (utils/link-select params "hideGreen" "true")}
-       "Unhealthy systems only"]
+       "Hide green systems"]
       [:span.hide-green
-       "Unhealthy systems only"])]
+       "Hide green systems"])]
    (for [[environment host-status] patchwork]
      [:div.environment-wrapper
       [:ol.patchwork {:class environment}
