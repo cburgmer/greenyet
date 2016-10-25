@@ -295,7 +295,7 @@ header a:hover {
 .loading-animation {
     animation-name: foreground;
     animation-fill-mode: forwards;
-    animation-delay: 1000s;
+    animation-delay: 10s;
 
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
