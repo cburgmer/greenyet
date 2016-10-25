@@ -63,6 +63,15 @@
        (map :environment)
        distinct))
 
+(defn render-json [host-status-pairs page-template environment-names params]
+  (let [the-environments (utils/prefer-order-of environment-names
+                                                (environments host-status-pairs)
+                                                str/lower-case)
+        rows (environment-table the-environments host-status-pairs)
+
+        patchwork (environment-table-to-patchwork the-environments rows)]
+        patchwork))
+
 (defn render [host-status-pairs page-template environment-names params]
   (let [the-environments (utils/prefer-order-of environment-names
                                                 (environments host-status-pairs)

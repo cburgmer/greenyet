@@ -12,10 +12,10 @@
   environment: PROD
   system: SystemWith404
 - hostname: localhost
-  environment: DEV
+  environment: PROD
   system: SystemMissingColor
 - hostname: localhost
-  environment: DEV
+  environment: PROD
   system: SystemStatusYellow
 - hostname: 127.0.0.1
   environment: DEV
@@ -27,10 +27,10 @@
   environment: DEV
   system: ComplexSystemStatus
 - hostname: localhost
-  environment: UAT
+  environment: DEV
   system: ComponentStatuses
 - hostname: localhost
-  environment: UAT
+  environment: DEV
   system: 4SecTimeout
 - hostname: localhost
   environment: UAT

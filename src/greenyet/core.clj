@@ -1,5 +1,6 @@
 (ns greenyet.core
-  (:require [clj-yaml.core :as yaml]
+  (:require [clojure.data.json :as json]
+            [clj-yaml.core :as yaml]
             [clojure
              [string :as str]
              [walk :refer [keywordize-keys]]]
@@ -46,6 +47,20 @@
         (header "Last-Modified" (format-date (.toDate last-changed)))
         (header "Cache-Control" "max-age=0,must-revalidate"))))
 
+(defn- render-all [params]
+  (let [[host-with-statuses last-changed] @poll/statuses]
+    (-> host-with-statuses
+        (selection/filter-hosts (get params "systems")
+                                (get params "environments")
+                                "false")
+        (patchwork/render-json (page-template)
+                          (environment-names)
+                          params)
+        json/write-str
+        utils/json-response
+        (header "Last-Modified" (format-date (.toDate last-changed)))
+        (header "Cache-Control" "max-age=0,must-revalidate"))))
+
 (defn- render-styleguide-entry [params]
   (utils/html-response (styleguide/render (keywordize-keys params) (styleguide-template))))
 
@@ -53,7 +68,10 @@
   (if (and config/development?
            (= "/styleguide" uri))
     (render-styleguide-entry params)
-    (render-environments params)))
+    (if (= "/all.json" uri)
+      (render-all params)
+      (render-environments params))
+    ))
 
 
 (def ^:private config-help (str/join "\n"

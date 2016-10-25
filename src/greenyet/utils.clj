@@ -47,3 +47,9 @@
   (-> (response body)
       (content-type "text/html")
       (charset "UTF-8")))
+
+
+(defn json-response [json]
+  (-> (response json)
+      (content-type "application/json")
+      (charset "UTF-8")))
