@@ -6,6 +6,8 @@
              [poll :as poll]])
   (:import java.io.FileNotFoundException))
 
+(def statuses (atom (poll/empty-statuses)))
+
 (def ^:private config-help (str/join "\n"
                                      ["To kick off, why don't you create a file hosts.yaml with"
                                       ""
@@ -21,7 +23,7 @@
 
 (defn init []
   (try
-    (poll/start-polling (config/hosts-with-config) config/polling-interval-in-ms)
+    (poll/start-polling statuses (config/hosts-with-config) config/polling-interval-in-ms)
     (catch FileNotFoundException e
       (binding [*out* *err*]
         (println (.getMessage e))
@@ -32,4 +34,4 @@
   (println (config/config-params-as-string)))
 
 (def handler
-  (handler/create poll/statuses))
+  (handler/create statuses))

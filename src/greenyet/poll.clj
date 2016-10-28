@@ -4,8 +4,8 @@
             [clojure.tools.logging :as log]
             [greenyet.status :as status]))
 
-(def statuses (atom [{} (tc/now)]))
-
+(defn empty-statuses []
+  [{} (tc/now)])
 
 (defn- update-status [[host-with-statuses last-changed] key new-status]
   (let [old-status (get host-with-statuses key)]
@@ -14,7 +14,7 @@
        last-changed
        (tc/now))]))
 
-(defn- poll-status [host polling-interval-in-ms]
+(defn- poll-status [statuses host polling-interval-in-ms]
   (go-loop []
     (log/info (format "Fetching status from %s" (:status-url host)))
     (status/fetch-status host
@@ -28,6 +28,6 @@
     (recur)))
 
 
-(defn start-polling [hosts-with-config polling-interval-in-ms]
+(defn start-polling [statuses hosts-with-config polling-interval-in-ms]
   (doall (for [host hosts-with-config]
-           (poll-status host polling-interval-in-ms))))
+           (poll-status statuses host polling-interval-in-ms))))
