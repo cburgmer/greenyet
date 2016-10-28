@@ -33,33 +33,37 @@
   (-> "environment_names.yaml" io/resource slurp yaml/parse-string))
 
 
-(defn- render-environments [params]
-  (let [[host-with-statuses last-changed] @poll/statuses
+(defn cache-headers [response last-changed]
+  (-> response
+      (header "Last-Modified" (format-date (.toDate last-changed)))
+      (header "Cache-Control" "max-age=0,must-revalidate")))
+
+(defn- host-with-statuses [params]
+  (let [[host-with-statuses _] @poll/statuses
         hide-green (= (get params "hideGreen") "true")]
-    (-> host-with-statuses
-        (selection/filter-hosts (get params "systems")
-                                (get params "environments")
-                                hide-green)
+    (selection/filter-hosts host-with-statuses
+                            (get params "systems")
+                            (get params "environments")
+                            hide-green)))
+
+(defn- render-environments [params]
+  (let [[_ last-changed] @poll/statuses]
+    (-> (host-with-statuses params)
         (patchwork/render (page-template)
                           (environment-names)
                           params)
         utils/html-response
-        (header "Last-Modified" (format-date (.toDate last-changed)))
-        (header "Cache-Control" "max-age=0,must-revalidate"))))
+        (cache-headers last-changed))))
 
 (defn- render-all [params]
-  (let [[host-with-statuses last-changed] @poll/statuses]
-    (-> host-with-statuses
-        (selection/filter-hosts (get params "systems")
-                                (get params "environments")
-                                "false")
+  (let [[_ last-changed] @poll/statuses]
+    (-> (host-with-statuses params)
         (patchwork/render-json (page-template)
                           (environment-names)
                           params)
         j/generate-string
         utils/json-response
-        (header "Last-Modified" (format-date (.toDate last-changed)))
-        (header "Cache-Control" "max-age=0,must-revalidate"))))
+        (cache-headers last-changed))))
 
 (defn- render-styleguide-entry [params]
   (utils/html-response (styleguide/render (keywordize-keys params) (styleguide-template))))
@@ -70,8 +74,7 @@
     (render-styleguide-entry params)
     (if (= "/all.json" uri)
       (render-all params)
-      (render-environments params))
-    ))
+      (render-environments params))))
 
 
 (def ^:private config-help (str/join "\n"
