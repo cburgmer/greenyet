@@ -4,33 +4,34 @@
             [greenyet.view.host-component :as host-component]
             [hiccup.core :refer [h html]]))
 
-(defn- collapse-all-green-hosts [host-entries]
-  (if (every? (fn [[_ {color :color}]] (= :green color)) host-entries)
-    (take 1 host-entries)
-    host-entries))
+(defn- collapse-all-green-hosts [hosts]
+  (let [sorted-hosts (sort-by (fn [[{index :index} _]] index) hosts)]
+    (if (every? (fn [[_ {color :color}]] (= :green color)) sorted-hosts)
+      (take 1 sorted-hosts)
+      sorted-hosts)))
 
 (defn- hosts-for-environment [host-list environment]
   (->> host-list
        (filter (fn [[{host-environment :environment} _]]
                  (= environment host-environment)))
-       (sort-by (fn [[{index :index} _]] index))
-       collapse-all-green-hosts))
-
-(defn- system-row [environments host-list]
-  (map (fn [environment]
-         (hosts-for-environment host-list environment))
-       environments))
-
-(defn- environment-table [environments host-list]
-  (->> host-list
        (group-by (fn [[{system :system} _]] system))
-       (sort (fn [[system1 _] [system2 _]]
-               (compare system1 system2)))
-       (map (fn [[_ system-host-list]]
-              (system-row environments system-host-list)))))
+       (mapcat (fn [[_ hosts]]
+                 (collapse-all-green-hosts hosts)))
+       (sort-by (fn [[{system :system} _]] system))))
 
-(defn- environment-table-to-patchwork [environments table]
-  (apply merge-with concat (map (partial zipmap environments) table)))
+(defn- environments [host-status-pairs]
+  (->> host-status-pairs
+       (map first)
+       (map :environment)
+       distinct))
+
+(defn systems-by-environment [environment-names host-status-pairs]
+  (let [the-environments (utils/prefer-order-of environment-names
+                                                (environments host-status-pairs)
+                                                str/lower-case)]
+    (zipmap the-environments
+            (map #(hosts-for-environment host-status-pairs %) the-environments))))
+
 
 (defn- patchwork-as-html [patchwork params]
   (html
@@ -57,27 +58,10 @@
                "<!-- BODY -->"
                html))
 
-(defn- environments [host-status-pairs]
-  (->> host-status-pairs
-       (map first)
-       (map :environment)
-       distinct))
-
-(defn render-json [host-status-pairs page-template environment-names params]
-  (let [the-environments (utils/prefer-order-of environment-names
-                                                (environments host-status-pairs)
-                                                str/lower-case)
-        rows (environment-table the-environments host-status-pairs)
-
-        patchwork (environment-table-to-patchwork the-environments rows)]
-        patchwork))
+(defn render-json [host-status-pairs environment-names]
+  (systems-by-environment environment-names host-status-pairs))
 
 (defn render [host-status-pairs page-template environment-names params]
-  (let [the-environments (utils/prefer-order-of environment-names
-                                                (environments host-status-pairs)
-                                                str/lower-case)
-        rows (environment-table the-environments host-status-pairs)
-
-        patchwork (environment-table-to-patchwork the-environments rows)]
+  (let [patchwork (systems-by-environment environment-names host-status-pairs)]
     (in-template (patchwork-as-html patchwork params)
                  page-template)))

@@ -55,9 +55,7 @@
   (let [[host-with-statuses last-changed] @statuses]
     (-> host-with-statuses
         (selected-host-with-statuses params)
-        (patchwork/render-json (page-template)
-                          (environment-names)
-                          params)
+        (patchwork/render-json (environment-names))
         j/generate-string
         utils/json-response
         (cache-headers last-changed))))
