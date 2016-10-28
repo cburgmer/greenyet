@@ -1,6 +1,6 @@
 (ns greenyet.core
-  (:require [clojure.data.json :as json]
-            [clj-yaml.core :as yaml]
+  (:require [clj-yaml.core :as yaml]
+            [cheshire.core :as j]
             [clojure
              [string :as str]
              [walk :refer [keywordize-keys]]]
@@ -56,7 +56,7 @@
         (patchwork/render-json (page-template)
                           (environment-names)
                           params)
-        json/write-str
+        j/generate-string
         utils/json-response
         (header "Last-Modified" (format-date (.toDate last-changed)))
         (header "Cache-Control" "max-age=0,must-revalidate"))))
