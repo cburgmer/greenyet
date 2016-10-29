@@ -1,6 +1,5 @@
 (ns greenyet.handler
-  (:require [cheshire.core :as j]
-            [clj-yaml.core :as yaml]
+  (:require [clj-yaml.core :as yaml]
             [clojure.java.io :as io]
             [clojure.walk :refer [keywordize-keys]]
             [greenyet
@@ -56,7 +55,6 @@
     (-> host-with-statuses
         (selected-host-with-statuses params)
         (patchwork/render-json (environment-names))
-        j/generate-string
         utils/json-response
         (cache-headers last-changed))))
 
@@ -64,12 +62,11 @@
   (utils/html-response (styleguide/render (keywordize-keys params) (styleguide-template))))
 
 (defn- render [{params :params uri :uri} statuses]
-  (if (and config/development?
-           (= "/styleguide" uri))
-    (render-styleguide-entry params)
-    (if (= "/all.json" uri)
-      (render-all params statuses)
-      (render-environments params statuses))))
+  (cond
+    (and config/development?
+         (= "/styleguide" uri)) (render-styleguide-entry params)
+    (= "/all.json" uri) (render-all params statuses)
+    :else (render-environments params statuses)))
 
 
 (defn create [statuses]

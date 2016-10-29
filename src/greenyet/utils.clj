@@ -1,5 +1,6 @@
 (ns greenyet.utils
-  (:require [clojure.string :as str]
+  (:require [cheshire.core :as j]
+            [clojure.string :as str]
             [ring.util
              [codec :as codec]
              [response :refer [charset content-type response]]]))
@@ -50,6 +51,8 @@
 
 
 (defn json-response [json]
-  (-> (response json)
+  (-> json
+      j/generate-string
+      response
       (content-type "application/json")
       (charset "UTF-8")))
