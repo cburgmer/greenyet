@@ -21,16 +21,25 @@
                                       "  system: greenyet"
                                       ""]))
 
-(defn init []
+(defn- read-config []
   (try
-    (let [[host-entries _] (config/hosts-with-config)]
-      (poll/start-polling statuses host-entries config/polling-interval-in-ms))
+    (config/hosts-with-config)
     (catch FileNotFoundException e
       (binding [*out* *err*]
         (println (.getMessage e))
         (println)
         (println config-help))
-      (System/exit 1)))
+      (System/exit 1))))
+
+(defn init []
+  (let [[host-entries errors] (read-config)]
+    (if (empty? errors)
+      (poll/start-polling statuses host-entries config/polling-interval-in-ms)
+      (do
+        (binding [*out* *err*]
+          (println "Found the following issues. Please assist.")
+          (println (str/join "\n" errors)))
+        (System/exit 1))))
   (println "Starting greenyet with config")
   (println (config/config-params-as-string)))
 

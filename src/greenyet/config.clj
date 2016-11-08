@@ -42,12 +42,18 @@
                                  [host (when-not (contains? host :hostname)
                                          "Missing 'hostname'")])
                                host-lists)
-        [ok-hosts bad-hosts] (split-with (fn [[host checks]] (empty? checks)) hosts-with-checks)]
-    [(map first ok-hosts) (map (fn [[host checks]] (format "%s for entry %s" checks host)) bad-hosts)]))
+        successful-hosts (->> hosts-with-checks
+                              (filter (fn [[host checks]] (nil? checks)))
+                              (map first))
+        errors (->> hosts-with-checks
+                    (filter (fn [[host checks]] (not (nil? checks))))
+                    (map (fn [[host checks]] (format "%s for entry %s" checks host))))]
+    [successful-hosts errors]))
 
 (defn- parse-from-yaml [build-file file-name]
   (let [config-file (build-file config-dir file-name)]
     (yaml/parse-string (slurp config-file))))
+
 
 (defn hosts-with-config [& [build-file]]
   (let [parse (fn [file-name] (parse-from-yaml (or build-file
