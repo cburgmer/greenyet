@@ -37,33 +37,26 @@
            :status-url url
            :config host-config)))
 
-(defn- validate-hosts [host-lists]
+
+(defn validate-keys [entries required-keys]
   (let [hosts-with-checks (map (fn [host]
-                                 [host (cond
-                                         (not (contains? host :hostname)) "Missing 'hostname'"
-                                         (not (contains? host :system)) "Missing 'system'")])
-                               host-lists)
+                                 [host (first (filter #(not (contains? host %)) required-keys))])
+                               entries)
         successful-hosts (->> hosts-with-checks
                               (filter (fn [[host checks]] (nil? checks)))
                               (map first))
         errors (->> hosts-with-checks
                     (filter (fn [[host checks]] (not (nil? checks))))
-                    (map (fn [[host checks]] (format "%s for entry %s" checks host))))]
+                    (map (fn [[host checks]] (format "missing '%s' for entry %s" (name checks) host))))]
     [successful-hosts errors]))
 
+(defn- validate-hosts [host-lists]
+  (let [[successful-hosts errors] (validate-keys host-lists #{:hostname :system :environment})]
+    [successful-hosts (map #(format "Host: %s" %) errors)]))
+
 (defn validate-status-url-config [status-url-entries]
-  (let [entries-with-checks (map (fn [entry]
-                                   [entry (cond
-                                            (not (contains? entry :system)) "Missing 'system'"
-                                            (not (contains? entry :url)) "Missing 'url'")])
-                                 status-url-entries)
-        successful-entries (->> entries-with-checks
-                                (filter (fn [[entry checks]] (nil? checks)))
-                                (map first))
-        errors (->> entries-with-checks
-                    (filter (fn [[entry checks]] (not (nil? checks))))
-                    (map (fn [[entry checks]] (format "%s for entry %s" checks entry))))]
-    [successful-entries errors]))
+  (let [[successful-entries errors] (validate-keys status-url-entries #{:system :url})]
+    [successful-entries (map #(format "Status URL: %s" %) errors)]))
 
 (defn- parse-from-yaml [build-file file-name]
   (let [config-file (build-file config-dir file-name)]

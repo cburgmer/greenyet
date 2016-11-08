@@ -47,21 +47,21 @@
                                           (yaml-list {"hostname" "my_host"
                                                       "system" "my_system"
                                                       "environment" "prod"})))))))
-  (testing "throws error on missing parameters in hosts.yaml entry"
-    (is (= ["Missing 'hostname' for entry {:system \"my_system\", :environment \"prod\"}"]
+  (testing "returns error on missing parameters in hosts.yaml entry"
+    (is (= ["Host: missing 'hostname' for entry {:system \"my_system\", :environment \"prod\"}"]
            (last (sut/hosts-with-config (with-config
                                           (yaml-list {"system" "my_system"
                                                       "url" "http://%hostname%/some_url"})
                                           (yaml-list {"system" "my_system"
                                                       "environment" "prod"}))))))
-    (is (= ["Missing 'system' for entry {:hostname \"my_host\", :environment \"prod\"}"]
+    (is (= ["Host: missing 'system' for entry {:hostname \"my_host\", :environment \"prod\"}"]
            (last (sut/hosts-with-config (with-config
                                           (yaml-list {"system" "my_system"
                                                       "url" "http://%hostname%/some_url"})
                                           (yaml-list {"hostname" "my_host"
                                                       "environment" "prod"})))))))
-  (testing "throws error on missing parameters in status_url.yaml entry"
-    (is (= ["Missing 'system' for entry {:url \"http://%hostname%/some_url\"}"]
+  (testing "returns error on missing parameters in status_url.yaml entry"
+    (is (= ["Status URL: missing 'system' for entry {:url \"http://%hostname%/some_url\"}"]
            (last (sut/hosts-with-config (with-config
                                           (yaml-list {"url" "http://%hostname%/some_url"})
                                           (yaml-list {"hostname" "my_host"
