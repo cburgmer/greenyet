@@ -37,6 +37,14 @@
            :status-url url
            :config host-config)))
 
+(defn- validate-hosts [host-lists]
+  (let [hosts-with-checks (map (fn [host]
+                                 [host (when-not (contains? host :hostname)
+                                         "Missing 'hostname'")])
+                               host-lists)
+        [ok-hosts bad-hosts] (split-with (fn [[host checks]] (empty? checks)) hosts-with-checks)]
+    [(map first ok-hosts) (map (fn [[host checks]] (format "%s for entry %s" checks host)) bad-hosts)]))
+
 (defn- parse-from-yaml [build-file file-name]
   (let [config-file (build-file config-dir file-name)]
     (yaml/parse-string (slurp config-file))))
@@ -45,9 +53,10 @@
   (let [parse (fn [file-name] (parse-from-yaml (or build-file
                                                    io/file)
                                                file-name))
-        host-list (parse "hosts.yaml")
-        status-url-config (parse "status_url.yaml")]
-    (->> host-list
-         (map #(with-config % status-url-config))
-         (map-indexed (fn [idx host]
-                        (assoc host :index idx))))))
+        [host-list errors] (validate-hosts (parse "hosts.yaml"))
+        status-url-config (parse "status_url.yaml")
+        good-hosts-with-config (->> host-list
+                                    (map #(with-config % status-url-config))
+                                    (map-indexed (fn [idx host]
+                                                   (assoc host :index idx))))]
+    [good-hosts-with-config errors]))

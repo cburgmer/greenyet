@@ -24,7 +24,7 @@
 (deftest hosts-with-config-test
   (testing "returns an emoty list for an empty config"
     (is (= []
-           (sut/hosts-with-config (with-config "" "")))))
+           (first (sut/hosts-with-config (with-config "" ""))))))
   (testing "compiles an entry"
     (is (= [{:system "my_system"
              :status-url "http://my_host/some_url"
@@ -33,9 +33,24 @@
              :index 0
              :config {:system "my_system"
                       :url "http://%hostname%/some_url"}}]
-           (sut/hosts-with-config (with-config
-                                    (yaml-list {"system" "my_system"
-                                                "url" "http://%hostname%/some_url"})
-                                    (yaml-list {"hostname" "my_host"
-                                                "system" "my_system"
-                                                "environment" "prod"})))))))
+           (first (sut/hosts-with-config (with-config
+                                           (yaml-list {"system" "my_system"
+                                                       "url" "http://%hostname%/some_url"})
+                                           (yaml-list {"hostname" "my_host"
+                                                       "system" "my_system"
+                                                       "environment" "prod"})))))))
+  (testing "finds no errors"
+    (is (= []
+           (last (sut/hosts-with-config (with-config
+                                          (yaml-list {"system" "my_system"
+                                                      "url" "http://%hostname%/some_url"})
+                                          (yaml-list {"hostname" "my_host"
+                                                      "system" "my_system"
+                                                      "environment" "prod"})))))))
+  (testing "throws error on missing hostname in hosts.yaml entry"
+    (is (= ["Missing 'hostname' for entry {:system \"my_system\", :environment \"prod\"}"]
+           (last (sut/hosts-with-config (with-config
+                                          (yaml-list {"system" "my_system"
+                                                      "url" "http://%hostname%/some_url"})
+                                          (yaml-list {"system" "my_system"
+                                                      "environment" "prod"}))))))))

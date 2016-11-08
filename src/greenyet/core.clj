@@ -23,7 +23,8 @@
 
 (defn init []
   (try
-    (poll/start-polling statuses (config/hosts-with-config) config/polling-interval-in-ms)
+    (let [[host-entries _] (config/hosts-with-config)]
+      (poll/start-polling statuses host-entries config/polling-interval-in-ms))
     (catch FileNotFoundException e
       (binding [*out* *err*]
         (println (.getMessage e))
