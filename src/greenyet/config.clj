@@ -37,18 +37,16 @@
            :status-url url
            :config host-config)))
 
-(defn- read-host-list [config-dir]
-  (let [host-list-file (io/file config-dir "hosts.yaml")]
-    (yaml/parse-string (slurp host-list-file))))
-
-(defn- read-status-url-config [config-dir]
-  (let [config-file (io/file config-dir "status_url.yaml")]
+(defn- parse-from-yaml [build-file file-name]
+  (let [config-file (build-file config-dir file-name)]
     (yaml/parse-string (slurp config-file))))
 
-
-(defn hosts-with-config []
-  (let [host-list (read-host-list config-dir)
-        status-url-config (read-status-url-config config-dir)]
+(defn hosts-with-config [& [build-file]]
+  (let [parse (fn [file-name] (parse-from-yaml (or build-file
+                                                   io/file)
+                                               file-name))
+        host-list (parse "hosts.yaml")
+        status-url-config (parse "status_url.yaml")]
     (->> host-list
          (map #(with-config % status-url-config))
          (map-indexed (fn [idx host]
