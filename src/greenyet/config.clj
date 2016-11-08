@@ -39,8 +39,9 @@
 
 (defn- validate-hosts [host-lists]
   (let [hosts-with-checks (map (fn [host]
-                                 [host (when-not (contains? host :hostname)
-                                         "Missing 'hostname'")])
+                                 [host (cond
+                                         (not (contains? host :hostname)) "Missing 'hostname'"
+                                         (not (contains? host :system)) "Missing 'system'")])
                                host-lists)
         successful-hosts (->> hosts-with-checks
                               (filter (fn [[host checks]] (nil? checks)))
@@ -49,6 +50,20 @@
                     (filter (fn [[host checks]] (not (nil? checks))))
                     (map (fn [[host checks]] (format "%s for entry %s" checks host))))]
     [successful-hosts errors]))
+
+(defn validate-status-url-config [status-url-entries]
+  (let [entries-with-checks (map (fn [entry]
+                                   [entry (cond
+                                            (not (contains? entry :system)) "Missing 'system'"
+                                            (not (contains? entry :url)) "Missing 'url'")])
+                                 status-url-entries)
+        successful-entries (->> entries-with-checks
+                                (filter (fn [[entry checks]] (nil? checks)))
+                                (map first))
+        errors (->> entries-with-checks
+                    (filter (fn [[entry checks]] (not (nil? checks))))
+                    (map (fn [[entry checks]] (format "%s for entry %s" checks entry))))]
+    [successful-entries errors]))
 
 (defn- parse-from-yaml [build-file file-name]
   (let [config-file (build-file config-dir file-name)]
@@ -59,10 +74,11 @@
   (let [parse (fn [file-name] (parse-from-yaml (or build-file
                                                    io/file)
                                                file-name))
-        [host-list errors] (validate-hosts (parse "hosts.yaml"))
-        status-url-config (parse "status_url.yaml")
+        [host-list hosts-errors] (validate-hosts (parse "hosts.yaml"))
+        [status-url-entries status-url-errors] (validate-status-url-config (parse "status_url.yaml"))
         good-hosts-with-config (->> host-list
-                                    (map #(with-config % status-url-config))
+                                    (map #(with-config % status-url-entries))
                                     (map-indexed (fn [idx host]
                                                    (assoc host :index idx))))]
-    [good-hosts-with-config errors]))
+    [good-hosts-with-config (concat hosts-errors
+                                    status-url-errors)]))
