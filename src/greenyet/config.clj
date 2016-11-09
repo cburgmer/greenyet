@@ -42,12 +42,11 @@
   (let [hosts-with-checks (map (fn [host]
                                  [host (first (filter #(not (contains? host %)) required-keys))])
                                entries)
-        successful-hosts (->> hosts-with-checks
-                              (filter (fn [[host checks]] (nil? checks)))
-                              (map first))
-        errors (->> hosts-with-checks
-                    (filter (fn [[host checks]] (not (nil? checks))))
-                    (map (fn [[host checks]] (format "missing '%s' for entry %s" (name checks) host))))]
+        {good-entries true bad-entries false} (group-by (fn [[host checks]] (nil? checks)) hosts-with-checks)
+        successful-hosts (map first good-entries)
+        errors (map (fn [[host checks]]
+                      (format "missing '%s' for entry %s" (name checks) host))
+                    bad-entries)]
     [successful-hosts errors]))
 
 (defn- validate-known-system [hosts status-url-by-system]
