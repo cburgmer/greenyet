@@ -38,7 +38,7 @@
            :config host-config)))
 
 
-(defn validate-keys [entries required-keys]
+(defn- validate-keys [entries required-keys]
   (let [hosts-with-checks (map (fn [host]
                                  [host (first (filter #(not (contains? host %)) required-keys))])
                                entries)
@@ -50,9 +50,18 @@
                     (map (fn [[host checks]] (format "missing '%s' for entry %s" (name checks) host))))]
     [successful-hosts errors]))
 
-(defn- validate-hosts [host-lists]
-  (let [[successful-hosts errors] (validate-keys host-lists #{:hostname :system :environment})]
-    [successful-hosts (map #(format "Host: %s" %) errors)]))
+(defn- validate-known-system [hosts status-url-by-system]
+  (let [{good-hosts true bad-hosts false} (group-by (fn [{system :system}] (contains? status-url-by-system system))
+                                                    hosts)
+        errors (map #(format "no status URL config found for entry %s" %)
+                    bad-hosts)]
+    [good-hosts errors]))
+
+(defn- validate-hosts [host-lists status-url-by-system]
+  (let [[hosts-with-valid-keys key-errors] (validate-keys host-lists #{:hostname :system :environment})
+        [successful-hosts unknown-system-errors] (validate-known-system hosts-with-valid-keys status-url-by-system)]
+    [successful-hosts (map #(format "Host: %s" %) (concat key-errors
+                                                          unknown-system-errors))]))
 
 (defn validate-status-url-config [status-url-entries]
   (let [[successful-entries errors] (validate-keys status-url-entries #{:system :url})]
@@ -67,8 +76,9 @@
   (let [parse (fn [file-name] (parse-from-yaml (or build-file
                                                    io/file)
                                                file-name))
-        [host-list hosts-errors] (validate-hosts (parse "hosts.yaml"))
         [status-url-entries status-url-errors] (validate-status-url-config (parse "status_url.yaml"))
+        status-url-by-system (into {} (map (fn [entry] [(:system entry) entry]) status-url-entries))
+        [host-list hosts-errors] (validate-hosts (parse "hosts.yaml") status-url-by-system)
         good-hosts-with-config (->> host-list
                                     (map #(with-config % status-url-entries))
                                     (map-indexed (fn [idx host]

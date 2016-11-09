@@ -60,10 +60,15 @@
                                                       "url" "http://%hostname%/some_url"})
                                           (yaml-list {"hostname" "my_host"
                                                       "environment" "prod"})))))))
+  (testing "returns error if a host entry is not backed by a status url entry"
+    (is (= ["Host: no status URL config found for entry {:hostname \"my_host\", :system \"my_system\", :environment \"prod\"}"]
+           (last (sut/hosts-with-config (with-config
+                                          (yaml-list)
+                                          (yaml-list {"hostname" "my_host"
+                                                      "system" "my_system"
+                                                      "environment" "prod"})))))))
   (testing "returns error on missing parameters in status_url.yaml entry"
     (is (= ["Status URL: missing 'system' for entry {:url \"http://%hostname%/some_url\"}"]
            (last (sut/hosts-with-config (with-config
                                           (yaml-list {"url" "http://%hostname%/some_url"})
-                                          (yaml-list {"hostname" "my_host"
-                                                      "system" "my_system"
-                                                      "environment" "prod"}))))))))
+                                          (yaml-list))))))))
