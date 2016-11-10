@@ -60,7 +60,8 @@
                       :systems (count (distinct (map :system machine-configs)))
                       :machines (count machine-configs)
                       :statuses (merge {:green 0 :yellow 0 :red 0}
-                                       (frequencies (map :color statuses)))}}
+                                       (frequencies (map :color statuses)))}
+         :greenyet-version (some-> (io/resource "project.clj") slurp read-string (nth 2))} ; the version will be incorrect as long as it's run from ./lein ring server
         utils/json-response)))
 
 (defn- render-all [params statuses]

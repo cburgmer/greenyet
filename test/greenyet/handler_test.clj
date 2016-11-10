@@ -19,6 +19,11 @@
         (is (contains? (-> (app (request :get "/status.json"))
                            json-body)
                        :host))))
+    (testing "returns the version of greenyet"
+      (let [app (the-app)]
+        (is (contains? (-> (app (request :get "/status.json"))
+                           json-body)
+                       :greenyet-version))))
     (testing "returns time of last update"
       (let [app (the-app)]
         (is (= "2016-11-10T00:00:00.000Z"
