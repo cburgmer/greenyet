@@ -50,6 +50,19 @@
         utils/html-response
         (cache-headers last-changed))))
 
+(defn- render-status [statuses]
+  (let [[host-with-statuses last-changed] @statuses
+        machine-configs (keys host-with-statuses)
+        statuses (vals host-with-statuses)]
+    (-> {:host (.getCanonicalHostName (java.net.InetAddress/getLocalHost))
+         :last-changed (str last-changed)
+         :statistics {:environments (count (distinct (map :environment machine-configs)))
+                      :systems (count (distinct (map :system machine-configs)))
+                      :machines (count machine-configs)
+                      :statuses (merge {:green 0 :yellow 0 :red 0}
+                                       (frequencies (map :color statuses)))}}
+        utils/json-response)))
+
 (defn- render-all [params statuses]
   (let [[host-with-statuses last-changed] @statuses]
     (-> host-with-statuses
@@ -66,6 +79,7 @@
     (and config/development?
          (= "/styleguide" uri)) (render-styleguide-entry params)
     (= "/all.json" uri) (render-all params statuses)
+    (= "/status.json" uri) (render-status statuses)
     :else (render-environments params statuses)))
 
 
