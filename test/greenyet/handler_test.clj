@@ -67,4 +67,18 @@
                (-> (app (request :get "/status.json"))
                    json-body
                    :statistics
-                   :statuses)))))))
+                   :statuses)))))
+    (testing "contains status statistics by service"
+      (let [app (the-app {{:url 1 :environment "PROD" :system "my_system"} {:color "red"}
+                          {:url 2 :environment "DEV" :system "different_system"} {:color "yellow"}
+                          {:url 3 :environment "DEV" :system "different_system"} {:color "yellow"}})]
+        (is (= {:PROD {:my_system {:green 0
+                                   :yellow 0
+                                   :red 1}}
+                :DEV {:different_system {:green 0
+                                         :yellow 2
+                                         :red 0}}}
+               (-> (app (request :get "/status.json"))
+                   json-body
+                   :statistics
+                   :statuses-by-system)))))))
