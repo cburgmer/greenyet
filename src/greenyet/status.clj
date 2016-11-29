@@ -5,18 +5,15 @@
 
 (defn- status-color-from-components [components]
   (let [colors (map :color components)
-        status-color (if (or (empty? colors)
-                             (some #(= % :red) colors))
-                       :red
-                       (if (some #(= % :yellow) colors)
-                         :yellow
-                         :green))]
+        status-color (cond
+                       (or (some #(= % :red) colors) (empty? colors)) :red
+                       (some #(= % :yellow) colors) :yellow
+                       :else :green)]
     [status-color nil]))
 
 (defn- overall-status-color [json config components]
-  (if-let [color (parse/color json config)]
-    color
-    (status-color-from-components components)))
+  (or (parse/color json config)
+      (status-color-from-components components)))
 
 (defn- status-from-json [json config]
   (let [[components components-error] (parse/components json config)
