@@ -18,6 +18,12 @@
                                            :color "green"}]}
                                   {:components "jobs"})))))
 
+  (testing "should return warning if match is not a list"
+    (is (re-find #"components.+'jobs'"
+                 (-> (sut/components {:jobs "a_string"}
+                                     {:components "jobs"})
+                     first-non-nil-message))))
+
   (testing "should return components for complex config"
     (is (= [{:color :green
              :name "the name"
@@ -27,6 +33,12 @@
                                   {:components {:json-path "$.jobs"
                                                 :name "the_name"
                                                 :color "status"}})))))
+
+  (testing "should return warning if match is not a list"
+    (is (re-find #"components.+'\{:json-path \"\$\.string\"\}'"
+                 (-> (sut/components {:string "a_string"}
+                                     {:components {:json-path "$.string"}})
+                     first-non-nil-message))))
 
   (testing "should assume default for name"
     (is (= [{:color :green
