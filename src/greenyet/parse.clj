@@ -63,7 +63,7 @@
         (let [status-results (map #(component % component-conf) components-json)]
           (apply mapv vector status-results))
         [[] [(format "greenyet: List expected from components for config '%s'" component-conf)]])
-      [[] (missing-item-warning "components" component-conf)])))
+      [[] [(missing-item-warning "components" component-conf)]])))
 
 (defn color [json {color-conf :color}]
   (when color-conf

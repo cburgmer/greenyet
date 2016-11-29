@@ -215,14 +215,6 @@
                             (is (re-find #"read color.+\$\.color"
                                          (first (:message status))))))))
 
-    (testing "should indicate failure to read components"
-      (with-fake-resource "http://the_host/status.json" (json-response {:color "green"})
-        (sut/fetch-status (host-with-component-config "http://the_host/status.json" {:json-path "$.components"})
-                          timeout
-                          (fn [status]
-                            (is (re-find #"read components.+\$\.components"
-                                         (first (:message status))))))))
-
     (testing "should indicate failure to read color for components"
       (with-fake-resource "http://the_host/status.json" (json-response {:color "green"
                                                                         :components [{}]})

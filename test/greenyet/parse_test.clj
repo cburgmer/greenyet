@@ -18,6 +18,12 @@
                                            :color "green"}]}
                                   {:components "jobs"})))))
 
+  (testing "should return warning if components not found"
+    (is (re-find #"read components.+\$\.components"
+                 (-> (sut/components {}
+                                     {:components {:json-path "$.components"}})
+                     first-non-nil-message))))
+
   (testing "should return warning if match is not a list"
     (is (re-find #"components.+'jobs'"
                  (-> (sut/components {:jobs "a_string"}
