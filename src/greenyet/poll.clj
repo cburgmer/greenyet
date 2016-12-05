@@ -7,12 +7,14 @@
 (defn empty-statuses []
   [{} (tc/now)])
 
-(defn- update-status [[host-with-statuses last-changed] key new-status]
-  (let [old-status (get host-with-statuses key)]
-    [(assoc host-with-statuses key new-status)
-     (if (= new-status old-status)
-       last-changed
-       (tc/now))]))
+(defn- update-status [[host-with-statuses _] key new-status]
+  [(assoc host-with-statuses key new-status) (tc/now)])
+
+(defn- do-update! [statuses host new-status]
+  (let [[host-with-statuses _] @statuses
+        old-status (get host-with-statuses host)]
+    (when-not (= new-status old-status)
+      (swap! statuses update-status host new-status))))
 
 (defn fetch-and-update! [statuses host timeout]
   (log/info (format "Fetching status from %s" (:status-url host)))
@@ -22,7 +24,7 @@
                          (log/info (format "Received status %s from %s"
                                            (:color status)
                                            (:status-url host)))
-                         (swap! statuses update-status host status))))
+                         (do-update! statuses host status))))
 
 (defn- poll-status [statuses host polling-interval-in-ms]
   (go-loop []
