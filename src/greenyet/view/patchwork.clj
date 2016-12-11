@@ -58,9 +58,6 @@
                "<!-- BODY -->"
                html))
 
-(defn render-json [host-status-pairs environment-names]
-  (systems-by-environment environment-names host-status-pairs))
-
 (defn render [host-status-pairs page-template environment-names params]
   (let [patchwork (systems-by-environment environment-names host-status-pairs)]
     (in-template (patchwork-as-html patchwork params)

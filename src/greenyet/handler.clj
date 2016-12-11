@@ -82,11 +82,15 @@
          :greenyet-version (some-> (io/resource "project.clj") slurp read-string (nth 2))} ; the version will be incorrect as long as it's run from ./lein ring server
         utils/json-response)))
 
+(defn- sort-by-system [host-with-statuses]
+  (->> host-with-statuses
+       (sort-by (fn [[{system :system} _]] system))))
+
 (defn- render-all [params statuses]
   (let [[host-with-statuses last-changed] @statuses]
     (-> host-with-statuses
         (selected-host-with-statuses params)
-        (patchwork/render-json (environment-names))
+        (sort-by-system)
         utils/json-response
         (cache-headers last-changed))))
 
