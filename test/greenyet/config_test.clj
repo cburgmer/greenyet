@@ -22,7 +22,7 @@
 
 
 (deftest hosts-with-config-test
-  (testing "returns an emoty list for an empty config"
+  (testing "returns an empty list for an empty config"
     (is (= []
            (first (sut/hosts-with-config (with-config "" ""))))))
   (testing "compiles an entry"

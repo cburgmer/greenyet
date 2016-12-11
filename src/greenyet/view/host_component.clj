@@ -16,7 +16,7 @@
 (def ^:private color-by-importance [:red :yellow :green])
 
 (defn render [host status params]
-  [:li.patch.status-patch {:id    (h (:system host))
+  [:li.patch.status-patch {:id    (h (hash host))
                            :class (some-> status
                                           :color
                                           name

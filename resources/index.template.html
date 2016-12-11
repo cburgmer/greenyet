@@ -49,12 +49,16 @@
         }
 
         function addClass(o, c) {
+            if (o === null) return;
+
             var re = new RegExp("(^|\\s)" + c + "(\\s|$)", "g");
             if (re.test(o.className)) return;
             o.className = (o.className + " " + c).replace(/\s+/g, " ").replace(/(^ | $)/g, "");
         }
 
         function removeClass(o, c) {
+            if (o === null) return;
+
             var re = new RegExp("(^|\\s)" + c + "(\\s|$)", "g");
             o.className = o.className.replace(re, "$1").replace(/\s+/g, " ").replace(/(^ | $)/g, "");
         }
@@ -62,13 +66,15 @@
         if (localStorageAvailable()) {
           var systemUnderInspection = sessionStorage.getItem("systemUnderInspection");
 
-          if (systemUnderInspection != null && systemUnderInspection != "null") {
+          if (systemUnderInspection !== null && systemUnderInspection !== "null") {
             var system = document.getElementById(systemUnderInspection);
-            addClass(system, "status-patch-hover patch-hover");
+            if (system !== null) {
+              addClass(system, "status-patch-hover patch-hover");
 
-            var detail = system.getElementsByClassName("detail");
-            if (detail != null && detail.length > 0) {
-              detail[0].scrollTop = sessionStorage.getItem("systemUnderInspection-ScrollPosition");
+              var detail = system.getElementsByClassName("detail");
+              if (detail != null && detail.length > 0) {
+                detail[0].scrollTop = sessionStorage.getItem("systemUnderInspection-ScrollPosition");
+              }
             }
           }
         }

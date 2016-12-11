@@ -30,6 +30,12 @@
   environment: DEV
   system: ComponentStatuses
 - hostname: localhost
+  environment: UAT
+  system: ComponentStatuses
+- hostname: localhost
+  environment: PROD
+  system: ComponentStatuses
+- hostname: localhost
   environment: DEV
   system: 4SecTimeout
 - hostname: localhost
