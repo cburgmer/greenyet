@@ -37,6 +37,11 @@
     {:color :green
      :message "OK"}))
 
+(defn- http-status-code-trumps-app-status [http-status-code status]
+  (if (>= http-status-code 300)
+    (assoc status :color :red)
+    status))
+
 (defn- message-for-http-response [response]
   (let [body (:body response)]
     (if-not (empty? body)
@@ -52,16 +57,20 @@
             callback))
 
 (defn- identify-status [response timeout-in-ms config]
-  (try
-    (cond
-      (:error response) {:color :red
-                         :message (format "greenyet: %s" (.getMessage (:error response)))}
-      (= 200 (:status response)) (application-status (:body response) config)
-      :else {:color :red
-             :message (message-for-http-response response)})
-    (catch Exception e
-      {:color :red
-       :message (.getMessage e)})))
+  (let [known-status-codes (set (or (:known-status-codes config)
+                                    [200]))]
+    (try
+      (cond
+        (:error response) {:color :red
+                           :message (format "greenyet: %s" (.getMessage (:error response)))}
+        (contains? known-status-codes (:status response)) (->> config
+                                                               (application-status (:body response))
+                                                               (http-status-code-trumps-app-status (:status response)))
+        :else {:color :red
+               :message (message-for-http-response response)})
+      (catch Exception e
+        {:color :red
+         :message (.getMessage e)}))))
 
 (defn fetch-status [{:keys [status-url config]} timeout-in-ms callback]
   (http-get status-url

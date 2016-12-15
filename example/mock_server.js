@@ -13,17 +13,27 @@ var port = 8000;
 
 express()
     .use(express.static(dir))
-    .get('/requestTimeout4s', function(req, res, next) {
+    .get('/requestTimeout4s', function (req, res, next) {
         simulateLatency(res, 4);
     })
-    .get('/requestTimeout5s', function(req, res, next) {
+    .get('/requestTimeout5s', function (req, res, next) {
         simulateLatency(res, 5);
     })
     .get('/found', function (req, res, next) {
         res.send();
     })
-    .get('/redirect', function(req, res, next) {
+    .get('/redirect', function (req, res, next) {
         res.status(301).redirect('/found');
+    })
+    .get('/jsonVia503', function (req, res, next) {
+        res.status(503)
+            .header('Content-Type', 'application/json')
+            .send(JSON.stringify({
+                color: "yellow",
+                components: [
+                    {name: "component", color: "green"}
+                ]
+            }));
     })
     .listen(port, function (err) {
         if (err) {

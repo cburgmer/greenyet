@@ -44,3 +44,6 @@
 - hostname: localhost
   environment: UAT
   system: redirect
+- hostname: localhost
+  environment: UAT
+  system: 503WithJson

@@ -393,4 +393,48 @@
                           timeout
                           (fn [status]
                             (is (= [{:color :green :name "child 1" :message "swell"}]
-                                   (:components status)))))))))
+                                   (:components status))))))))
+
+  (testing "custom accepted HTTP return codes"
+    (testing "for 503"
+      (with-fake-resource "http://the_host/status503" {:status 503
+                                                       :headers {"Content-Type" "application/json"}
+                                                       :body (j/generate-string {:color "green"
+                                                                                 :components [{:color "green"
+                                                                                               :name "a_component"}]})}
+        (sut/fetch-status {:hostname "the_host"
+                           :service "the_service"
+                           :status-url "http://the_host/status503"
+                           :config {:color "color"
+                                    :components {:json-path "$.components"}
+                                    :known-status-codes [503]}}
+                          timeout
+                          (fn [status]
+                            (is (= :red
+                                   (:color status)))
+                            (is (= [{:color :green :name "a_component" :message nil}]
+                                   (:components status)))))))
+    (testing "for 300"
+      (with-fake-resource "http://the_host/status300" {:status 300
+                                                       :headers {"Content-Type" "application/json"}
+                                                       :body (j/generate-string {:color "green"})}
+        (sut/fetch-status {:hostname "the_host"
+                           :service "the_service"
+                           :status-url "http://the_host/status300"
+                           :config {:color "color"
+                                    :known-status-codes [300]}}
+                          timeout
+                          (fn [status]
+                            (is (= :red
+                                   (:color status)))))))
+    (testing "for 200"
+      (with-fake-resource "http://the_host/status200" (json-response {:color "yellow"})
+        (sut/fetch-status {:hostname "the_host"
+                           :service "the_service"
+                           :status-url "http://the_host/status200"
+                           :config {:color "color"
+                                    :known-status-codes [200]}}
+                          timeout
+                          (fn [status]
+                            (is (= :yellow
+                                   (:color status)))))))))

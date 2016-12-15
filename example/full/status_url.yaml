@@ -41,3 +41,9 @@
   url: http://%hostname%:8000/requestTimeout5s
 - system: redirect
   url: http://%hostname%:8000/redirect
+- system: 503WithJson
+  url: http://%hostname%:8000/jsonVia503
+  color: color
+  components:
+    json-path: $.components
+  known-status-codes: [200, 503]
