@@ -18,13 +18,17 @@
 
 (defn fetch-and-update! [statuses host timeout]
   (log/info (format "Fetching status from %s" (:status-url host)))
-  (status/fetch-status host
-                       timeout
-                       (fn [status]
-                         (log/info (format "Received status %s from %s"
-                                           (:color status)
-                                           (:status-url host)))
-                         (do-update! statuses host status))))
+  (try
+    (status/fetch-status host
+                         timeout
+                         (fn [status]
+                           (log/info (format "Received status %s from %s"
+                                             (:color status)
+                                             (:status-url host)))
+                           (do-update! statuses host status)))
+    (catch Error e
+      (do-update! statuses host {})
+      (log/error e (format "Error fetching status for %s" (:status-url host))))))
 
 (defn- poll-status [statuses host polling-interval-in-ms]
   (go-loop []

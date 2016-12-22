@@ -36,4 +36,14 @@
                                           (callback {:color "yellow"}))]
         (sut/fetch-and-update! statuses host 42)
         (is (= time-now
-               (last @statuses)))))))
+               (last @statuses))))))
+
+  (testing "resets the status on an internal error"
+    (let [statuses (atom (sut/empty-statuses))
+          host {:hostname "host"}]
+      (with-redefs [status/fetch-status (fn [host _ _] (throw (Error. "internal error")))]
+        (sut/fetch-and-update! statuses host 42)
+        (is (= {}
+               (-> @statuses
+                   first
+                   (get host))))))))
