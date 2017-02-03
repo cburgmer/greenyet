@@ -400,8 +400,7 @@
       (with-fake-resource "http://the_host/status503" {:status 503
                                                        :headers {"Content-Type" "application/json"}
                                                        :body (j/generate-string {:color "green"
-                                                                                 :components [{:color "green"
-                                                                                               :name "a_component"}]})}
+                                                                                 :components [{:color "green"}]})}
         (sut/fetch-status {:hostname "the_host"
                            :service "the_service"
                            :status-url "http://the_host/status503"
@@ -412,7 +411,7 @@
                           (fn [status]
                             (is (= :red
                                    (:color status)))
-                            (is (= [{:color :green :name "a_component" :message nil}]
+                            (is (= [{:color :green :name "components 0" :message nil}]
                                    (:components status)))))))
     (testing "for 300"
       (with-fake-resource "http://the_host/status300" {:status 300

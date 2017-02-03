@@ -12,10 +12,9 @@
 (deftest test-components
   (testing "should accept simple config with key only"
     (is (= [{:color :green
-             :name "the name"
+             :name "jobs 0"
              :message nil}]
-           (first (sut/components {:jobs [{:name "the name"
-                                           :color "green"}]}
+           (first (sut/components {:jobs [{:color "green"}]}
                                   {:components "jobs"})))))
 
   (testing "should return warning if components not found"
@@ -46,13 +45,20 @@
                                      {:components {:json-path "$.string"}})
                      first-non-nil-message))))
 
-  (testing "should assume default for name"
+  (testing "should assume key path as default for name for json-path"
     (is (= [{:color :green
-             :name "the name"
+             :name "jobs 0"
              :message nil}]
-           (first (sut/components {:jobs [{:name "the name"
-                                           :status "green"}]}
+           (first (sut/components {:jobs [{:status "green"}]}
                                   {:components {:json-path "$.jobs"
+                                                :color "status"}})))))
+
+  (testing "should assume key path as default for name for json-path with multiple individual matches"
+    (is (= [{:color :green
+             :name "jobs 0"
+             :message nil}]
+           (first (sut/components {:jobs [{:status "green"}]}
+                                  {:components {:json-path "$.jobs[*]"
                                                 :color "status"}})))))
 
   (testing "should assume default for color"
@@ -92,10 +98,10 @@
                      first-non-nil-message))))
 
   (testing "should call out default name config on error"
-    (is (re-find #"component name.+'name'"
-                 (-> (sut/components {:jobs [{:the_name "the name"
-                                              :color "green"}]}
-                                     {:components "jobs"})
+    (is (re-find #"component name.+'the_name'"
+                 (-> (sut/components {:jobs [{:color "green"}]}
+                                     {:components {:json-path "$.jobs"
+                                                   :name "the_name"}})
                      first-non-nil-message))))
 
   (testing "should correctly extract complex color with green-value"
