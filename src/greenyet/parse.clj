@@ -38,21 +38,21 @@
       (conj key)
       key-path-to-str))
 
+(defn- keyed-entries-from-obj [key-path obj]
+  (cond
+    (sequential? obj) (map-indexed (fn [idx value] [(path-with-key key-path idx) value]) obj)
+    (map? obj) (map (fn [[key value]] [(path-with-key key-path key) value]) obj)
+    (nil? obj) '()))
+
 (defn- get-entries [json key-conf]
   (if (string? key-conf)
     (let [match (get-simple-key json key-conf)]
-      (cond
-        (sequential? match) (map-indexed (fn [idx value] [(path-with-key [key-conf] idx) value]) match)
-        (nil? match) '()))
-    (let [path (:json-path key-conf)
-          match (json-path/query path json)]
-      (cond
-        (sequential? match) (map (fn [m] [(key-path-to-str (:path m)) (:value m)]) match)
-        (sequential? (:value match)) (map-indexed (fn [idx value] [(path-with-key (:path match) idx) value])
-                                                  (:value match))
-        (map? (:value match)) (map (fn [[key value]] [(path-with-key (:path match) key) value])
-                                   (:value match))
-        (nil? (:value match)) '()))))
+      (keyed-entries-from-obj [key-conf] match))
+    (let [path-query (:json-path key-conf)
+          match (json-path/query path-query json)]
+      (if (sequential? match)
+        (map (fn [m] [(key-path-to-str (:path m)) (:value m)]) match)
+        (keyed-entries-from-obj (:path match) (:value match))))))
 
 (defn- configured-color-value [color-conf key default]
   (if (string? color-conf)

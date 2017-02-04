@@ -68,6 +68,13 @@
                                                 :color "status"}})))))
 
   (testing "should assume key path as default for name for json-path with map structure"
+    (is (= [{:color :red
+             :name "jobs one"
+             :message nil}]
+           (first (sut/components {:jobs {:one {:color "red"}}}
+                                  {:components "jobs"})))))
+
+  (testing "should assume key path as default for name for json-path with map structure with json-path"
     (is (= [{:color :green
              :name "jobs one"
              :message nil}]
