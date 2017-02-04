@@ -18,13 +18,19 @@
                                   {:components "jobs"})))))
 
   (testing "should return warning if components not found"
+    (is (re-find #"read components.+components"
+                 (-> (sut/components {}
+                                     {:components "components"})
+                     first-non-nil-message))))
+
+  (testing "should return warning if components not found for json-path"
     (is (re-find #"read components.+\$\.components"
                  (-> (sut/components {}
                                      {:components {:json-path "$.components"}})
                      first-non-nil-message))))
 
   (testing "should return warning if match is not a list"
-    (is (re-find #"components.+'jobs'"
+    (is (re-find #"List expected.+components.+'jobs'"
                  (-> (sut/components {:jobs "a_string"}
                                      {:components "jobs"})
                      first-non-nil-message))))
@@ -39,10 +45,10 @@
                                                 :name "the_name"
                                                 :color "status"}})))))
 
-  (testing "should return warning if match is not a list"
-    (is (re-find #"components.+'\{:json-path \"\$\.string\"\}'"
-                 (-> (sut/components {:string "a_string"}
-                                     {:components {:json-path "$.string"}})
+  (testing "should return warning if match is not a list for json-path"
+    (is (re-find #"List expected.+components.+'\{:json-path \"\$\.int\"\}'"
+                 (-> (sut/components {:int 1}
+                                     {:components {:json-path "$.int"}})
                      first-non-nil-message))))
 
   (testing "should assume key path as default for name for json-path"
@@ -59,6 +65,14 @@
              :message nil}]
            (first (sut/components {:jobs [{:status "green"}]}
                                   {:components {:json-path "$.jobs[*]"
+                                                :color "status"}})))))
+
+  (testing "should assume key path as default for name for json-path with map structure"
+    (is (= [{:color :green
+             :name "jobs one"
+             :message nil}]
+           (first (sut/components {:jobs {:one {:status "green"}}}
+                                  {:components {:json-path "$.jobs"
                                                 :color "status"}})))))
 
   (testing "should assume default for color"

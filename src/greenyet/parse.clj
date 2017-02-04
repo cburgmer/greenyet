@@ -29,26 +29,30 @@
 
 (defn- key-path-to-str [path]
   (->> path
-       (map #(if (keyword? %)
-               (name %)
-               (str %)))))
+       (mapv #(if (keyword? %)
+                (name %)
+                (str %)))))
+
+(defn- path-with-key [path key]
+  (-> path
+      (conj key)
+      key-path-to-str))
 
 (defn- get-entries [json key-conf]
   (if (string? key-conf)
     (let [match (get-simple-key json key-conf)]
-      (when (sequential? match)
-        (map-indexed (fn [idx value] [[key-conf idx] value]) match)))
+      (cond
+        (sequential? match) (map-indexed (fn [idx value] [(path-with-key [key-conf] idx) value]) match)
+        (nil? match) '()))
     (let [path (:json-path key-conf)
           match (json-path/query path json)]
       (cond
         (sequential? match) (map (fn [m] [(key-path-to-str (:path m)) (:value m)]) match)
-        (sequential? (:value match)) (map-indexed (fn [idx value]
-                                                    [(-> (:path match)
-                                                         key-path-to-str
-                                                         vec
-                                                         (conj idx))
-                                                     value])
-                                                  (:value match))))))
+        (sequential? (:value match)) (map-indexed (fn [idx value] [(path-with-key (:path match) idx) value])
+                                                  (:value match))
+        (map? (:value match)) (map (fn [[key value]] [(path-with-key (:path match) key) value])
+                                   (:value match))
+        (nil? (:value match)) '()))))
 
 (defn- configured-color-value [color-conf key default]
   (if (string? color-conf)
@@ -85,20 +89,11 @@
 (defn components [json {component-conf :components}]
   (when component-conf
     (if-let [components-json (get-entries json component-conf)]
-      (if (sequential? components-json)
+      (if (empty? components-json)
+        [[] [(missing-item-warning "components" component-conf)]]
         (let [status-results (map (fn [[key entry]] (component key entry component-conf)) components-json)]
-          (apply mapv vector status-results))
-        [[] [(format "greenyet: List expected from components for config '%s'" component-conf)]])
-      [[] [(missing-item-warning "components" component-conf)]])))
-
-(components {:jobs [{:status "green"}]}
-                {:components {:json-path "$.jobs[*]"
-                              :color "status"}})
-
-(components {:jobs [{:color "green"}]}
-            {:components {:json-path "$.jobs"}})
-
-(component [0] {:color "green"} {})
+          (apply mapv vector status-results)))
+      [[] [(format "greenyet: List expected from components for config '%s'" component-conf)]])))
 
 (defn color [json {color-conf :color}]
   (when color-conf
