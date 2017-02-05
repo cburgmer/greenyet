@@ -1,8 +1,11 @@
 # Change Log
 
 ## [Unreleased]
+### Added
+- Components are now also understood as a map (not just a list)
+
 ### Changed
-- Component names if not configured, will now be derived from the key structure of the JSON payload (#16)
+- Component names if not configured, will now be derived from the key structure of the JSON payload, instead of assuming that a `name` field exists (#16)
 
 ## 1.1.0
 ### Added
