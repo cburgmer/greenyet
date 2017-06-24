@@ -1,10 +1,11 @@
 {
-    "color": "yellow",
-    "subSystems": [{
-        "name": "A green system",
+    "greenSystem": {
         "status": "green"
-    }, {
-        "name": "Yellow system",
+    },
+    "yellowSystem": {
         "status": "yellow"
-    }]
+    },
+    "someKey": {
+        "dont": "care"
+    }
 }

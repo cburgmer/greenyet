@@ -22,9 +22,8 @@
 - system: ComponentsOnly
   url: http://%hostname%:8000/components_only.json
   components:
-    json-path: $.subSystems
+    json-path: $[?(@.status)]
     color: status
-    name: name
 - system: ComponentStatuses
   url: http://%hostname%:8000/component_status.json
   color: color
