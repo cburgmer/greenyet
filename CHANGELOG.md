@@ -1,11 +1,12 @@
 # Change Log
 
-## [Unreleased]
+## 2.0.0
 ### Added
 - Components are now also understood as a map (not just a list)
 
 ### Changed
 - Component names if not configured, will now be derived from the key structure of the JSON payload, instead of assuming that a `name` field exists (#16)
+- Interpretation of json-path queries closer to the standard (see https://github.com/gga/json-path/blob/master/CHANGELOG.md)
 
 ## 1.1.0
 ### Added

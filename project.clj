@@ -1,5 +1,5 @@
-(defproject greenyet "1.1.0"
-  :description "Are my machines green yet?"
+(defproject greenyet "2.0.0"
+  :description "Microservices status dashboard"
   :url "https://github.com/cburgmer/greenyet"
   :license {:name "BSD 2-Clause"
             :url "http://opensource.org/licenses/BSD-2-Clause"}
