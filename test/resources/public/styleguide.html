@@ -90,6 +90,36 @@
                     width: 500,
                     hover: '.status-patch'
                 })
+                .component('Long hostname')
+                .add({
+                    desc: 'Hostname is split across multiple lines',
+                    url: 'styleguide?color=green&package-version=greenyet-1.3.2.vrs1&system=Green Yet?&environment=PROD&hostname=a-humongously-long-hostname.net:8080',
+                    width: 500,
+                    hover: '.status-patch'
+                })
+                .add({
+                    desc: 'Hostname is truncated',
+                    url: 'styleguide?color=green&package-version=greenyet-1.3.2.vrs1&system=Green Yet?&environment=PROD&hostname=a-humongously-long-hostname.net:8080',
+                    width: 500
+                })
+                .component('Collapsed hosts')
+                .add({
+                    desc: 'look good',
+                    url: 'styleguide?color=green&package-version=greenyet-1.3.2.vrs1&system=Green Yet?&environment=PROD&no-collapsed-hosts=5',
+                    width: 500,
+                    hover: '.status-patch'
+                })
+                .add({
+                    desc: 'look good',
+                    url: 'styleguide?color=green&package-version=greenyet-1.3.2.vrs1&system=Green Yet?&environment=PROD&no-collapsed-hosts=5',
+                    width: 500
+                })
+                .component('Long system name')
+                .add({
+                    desc: 'look good',
+                    url: 'styleguide?color=green&package-version=greenyet-1.3.2.vrs1&system=HumongouslyLongName&environment=PROD',
+                    width: 500
+                })
                 .execute();
     </script>
 </body>

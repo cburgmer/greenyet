@@ -19,12 +19,24 @@
     (take count
           (repeat (a-component-status color component-name)))))
 
-(defn- a-host-entry [{:keys [environment color message system package-version no-green-components no-yellow-components no-red-components component-name]}]
+(defn- n-collapsed-hosts [count-param package-version]
+  (let [count (if count-param
+                (Integer/parseInt count-param)
+                0)]
+    (if (= count 0)
+      nil
+      (take count
+          (repeat {:package-version package-version
+                   :status-url "/internal/status"
+                   :hostname "greenyet-prod.net:8080"})))))
+
+(defn- a-host-entry [{:keys [environment color message system hostname package-version no-green-components no-yellow-components no-red-components component-name no-collapsed-hosts]}]
   (host-component/render {:status-url "/internal/status"
-                          :hostname "greenyet-prod.net:8080"
+                          :hostname (if hostname hostname "greenyet-prod.net:8080")
                           :system system
                           :environment environment}
                          {:color (keyword color)
+                          :collapsed-hosts (n-collapsed-hosts no-collapsed-hosts package-version)
                           :package-version package-version
                           :message message
                           :components (seq (concat (n-component-statuses no-green-components :green component-name)

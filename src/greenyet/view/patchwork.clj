@@ -4,10 +4,27 @@
             [greenyet.view.host-component :as host-component]
             [hiccup.core :refer [h html]]))
 
+(defn- extract-host-details [[host status]]
+  {
+    :hostname (:hostname host)
+    :status-url (:status-url host)
+    :package-version (:package-version status)
+  }
+)
+
+(defn- collapse-hosts [hosts]
+  (let [[first-host _] (first hosts)]
+    [[{:environment (:environment first-host)
+       :system      (:system first-host)}
+      {:color :green
+       :collapsed-hosts (map extract-host-details hosts)}
+    ]])
+)
+
 (defn- collapse-all-green-hosts [hosts]
-    (if (every? (fn [[_ {color :color}]] (= :green color)) hosts)
-      (take 1 hosts)
-      hosts))
+  (if (every? (fn [[_ {color :color}]] (and (= :green color) (> (count hosts) 1))) hosts)
+    (collapse-hosts hosts)
+    hosts))
 
 (defn- hosts-for-environment [host-list environment collapse]
   (let [collapse (if (= collapse true) 
