@@ -5,19 +5,23 @@
             [hiccup.core :refer [h html]]))
 
 (defn- collapse-all-green-hosts [hosts]
-  (let [sorted-hosts (sort-by (fn [[{index :index} _]] index) hosts)]
-    (if (every? (fn [[_ {color :color}]] (= :green color)) sorted-hosts)
-      (take 1 sorted-hosts)
-      sorted-hosts)))
+    (if (every? (fn [[_ {color :color}]] (= :green color)) hosts)
+      (take 1 hosts)
+      hosts))
 
-(defn- hosts-for-environment [host-list environment]
+(defn- hosts-for-environment [host-list environment collapse]
+  (let [collapse (if (= collapse true) 
+                  (fn [[_ hosts]]
+                    (collapse-all-green-hosts hosts))
+                  (fn [[_ hosts]] hosts))
+        sort-hosts (fn [hosts] (sort-by (fn [[{index :index} _]] index) hosts))]
   (->> host-list
        (filter (fn [[{host-environment :environment} _]]
                  (= environment host-environment)))
        (group-by (fn [[{system :system} _]] system))
-       (mapcat (fn [[_ hosts]]
-                 (collapse-all-green-hosts hosts)))
-       (sort-by (fn [[{system :system} _]] system))))
+       sort-hosts
+       (mapcat collapse)
+       (sort-by (fn [[{system :system} _]] system)))))
 
 (defn- environments [host-status-pairs]
   (->> host-status-pairs
@@ -25,12 +29,12 @@
        (map :environment)
        distinct))
 
-(defn systems-by-environment [environment-names host-status-pairs]
+(defn systems-by-environment [environment-names host-status-pairs dont-collapse]
   (let [the-environments (utils/prefer-order-of environment-names
                                                 (environments host-status-pairs)
                                                 str/lower-case)]
     (zipmap the-environments
-            (map #(hosts-for-environment host-status-pairs %) the-environments))))
+            (map #(hosts-for-environment host-status-pairs % dont-collapse) the-environments))))
 
 
 (defn- patchwork-as-html [patchwork params]
@@ -59,6 +63,7 @@
                html))
 
 (defn render [host-status-pairs page-template environment-names params]
-  (let [patchwork (systems-by-environment environment-names host-status-pairs)]
+  (let [collapse  (= (get params "collapse") "true")
+        patchwork (systems-by-environment environment-names host-status-pairs collapse)]
     (in-template (patchwork-as-html patchwork params)
                  page-template)))
