@@ -80,7 +80,7 @@
                html))
 
 (defn render [host-status-pairs page-template environment-names params]
-  (let [collapse  (= (get params "collapse") "true")
+  (let [collapse  (not (= (get params "expand") "true"))
         patchwork (systems-by-environment environment-names host-status-pairs collapse)]
     (in-template (patchwork-as-html patchwork params)
                  page-template)))
