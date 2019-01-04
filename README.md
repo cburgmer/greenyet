@@ -81,3 +81,7 @@ But read the [full description here](https://github.com/cburgmer/greenyet/wiki/H
 
 * [Howto](https://github.com/cburgmer/greenyet/wiki/Howto)
 * [Master greenyet](https://github.com/cburgmer/greenyet/wiki/Master-greenyet)
+
+## Similar projects
+
+* [otto-de/tesla-xray](https://github.com/otto-de/tesla-xray)
